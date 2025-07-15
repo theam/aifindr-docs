@@ -53,12 +53,6 @@ const config: Config = {
         },
         items: [
           {
-            type: "doc",
-            docId: "api/ai-findr-api",
-            position: "left",
-            label: "API",
-          },
-          {
             href: "https://github.com/facebook/docusaurus",
             label: "GitHub",
             position: "right",
