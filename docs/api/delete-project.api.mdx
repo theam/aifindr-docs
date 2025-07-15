@@ -1,0 +1,76 @@
+---
+id: delete-project
+title: "Delete project"
+description: "Performs a soft delete of a project and its associated data within the AI Findr platform. This endpoint marks the project as deleted while preserving data integrity and maintaining referential relationships for audit and recovery purposes. The deletion is suitable for decommissioning completed projects, removing test environments from active lists, organizational cleanup, and temporary project deactivation with recovery options."
+sidebar_label: "Delete project"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "delete api-method"
+info_path: docs/api/ai-findr-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete project"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"delete"}
+  path={"/admin/api/projects/{projectId}"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Performs a soft delete of a project and its associated data within the AI Findr platform. This endpoint marks the project as deleted while preserving data integrity and maintaining referential relationships for audit and recovery purposes. The deletion is suitable for decommissioning completed projects, removing test environments from active lists, organizational cleanup, and temporary project deactivation with recovery options.
+
+**Permission Required:** ProjectDelete
+
+**Soft Delete Process:**
+The deletion process uses GORM's soft delete functionality, setting a DeletedAt timestamp rather than physically removing data. This approach preserves data relationships, enables recovery if needed, and maintains system integrity while hiding the project from normal operations.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"description":"Project ID","in":"path","name":"projectId","required":true,"schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"204":{"description":"Project deleted successfully"},"401":{"description":"Unauthorized - invalid or missing bearer token","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"403":{"description":"Forbidden - insufficient permissions (ProjectDelete required)","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"404":{"description":"Project not found - invalid project ID","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"500":{"description":"Internal server error","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

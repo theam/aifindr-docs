@@ -1,0 +1,76 @@
+---
+id: delete-tag
+title: "Delete tag"
+description: "Deletes a tag from an organization within the AI Findr platform. This endpoint removes the tag entity while maintaining referential integrity with associated conversations. The deletion is scoped to the organization to ensure proper tenant isolation and prevent unauthorized access to tags from other organizations."
+sidebar_label: "Delete tag"
+hide_title: true
+hide_table_of_contents: true
+api: eJztWUtz2zgS/itdyGFtFSU7mcxFp1USe0abZKKKnZ3dilxriGiRGJMABwAlKyr9960GwIdoZWorhz35JIoA+oWvn9wzgTY1snJSKzZl77BAhxY4OJ7B2ugSuAJtMq7kN06bYCtdLhW4HGE2h2uphIGq4G6tTTmB21xaQCUqLZUDg6XeoPWbiSAqJ90OtrksEEouleNSSZWBwTUaWuUFSOUwM36fdDlwa3UquUMBqVYbNNbLYYkXgiCBSSxpwaa6QgFOe35HQjsNqGxtECqjKzTgUHHlQFpdhB1cCagMblA5qBWvXa6N/IYCeJqitZ4qz2ywiXY5miMOdrJUSzUaLdCU0lqi+Bn/rKVBMR2N4JZnwbRh17tG6oXRRH06Gi3VAg3ZkIyfcyOCagh63ZrPYKqNCGbpMx9HzTe8kMK/mcDstNnGgU5Q2uayslDyHawQcq5EgQJWOxDc8RW3SCetM3RPFrQBixU33CGkBXJVV2RMEh8tCKxQCbpKHbCx1gZlpuABd0RmLbPaBNFYwohMiQ6NZdOv+wEGb3kG83csYZL+VdzlLGGKl8imzPFsLljCTLQtmzpTY8JsmmPJ2XTP3K6ijdYZqTJ2ONzRZltpZdHS+qvL1/TzlGUwtwBb+wtf10WxY4eEvb68fHrgDRdAMqB1MAZ/46S6Aan8Jfjr8kqkWjlUjkiMLkb008kasOhkkCzVAukXVV2y6Vdm0WzQsITV1v8o7cZrXSvSX6xYwjaYOm3G/hkfHRrFC3aXDEyQsMcxkRynuixROc/rrRb47g05fHPVaIw2liV+6aqhNmXNI5A4Mm02JvDr7e0Cfr58FY/8pt21F27KPqPVtUkRlHbgJY67X1++jrtvgm5TNlc98mgG1B8f4/4v1u+mn+Mtr9st//TW8EqFxw7GUbdDa4oNNwQoQl9fnB6vgVJJY7EBr4G57g4Jk+IEDBNWorU8w1MQbW9Mr/7A1LHD4eBx9/Ip7r70I9O4RZs2LQZXyA3FN/2A6hl+z/D7cfj99BR+19qspBCoPPZsvV7LVFLGrNq0Z+GsTXbQhOnzZyQ+I/FHkfjzqQR80lzPKHtG2Y+h7JAwi2lNXYevSN/4LDqrXc6mX+8OyZ59MtlctC/o2nnmFbql3zvStRcE40IIg7RKgFHN0p494I5NB0cStuFFjYOjxKpEl2u66lCj+gKaBGEXXJRSXfBKXpA4F3tfHx9YEtEcmNWGkJU7V9npBW2eWM7thMs1NW8TLhkxafS/IX8JLjKr5HvcBaWHDjhbzOE97qjOh5KnuVQ4dnocH4HKFOrn0tiO/IIKfevgcqPrLD/uH3+tVxP4jMFlBApPNagwtlJg7AlD0+JbNV47XfruZqvNw7rQWztpWoYcuQguHJqGf41ni/n4/dW/WXv13GtGQOnf9FDHf/x+C2969ZQXi8LDuKcetp2AncC1NiV3U1hGurD/Y+v+4w8flmwCn1bU8bZG2OnaDEwFdmcdlhA5QaEzqYAUnLQdpZfDXz1QROuZxQvnY+Cja9vw71tmFotJT+GUdXqoHxrnU7+/nr8LQKgLJ8ext6Z40DXYA+lLbfsCehwEc+gB3eGsQXCbrzQ1yNqAQWckbhCkg9rXv7T3vucXfXL39y3LCdygA0fTCq1S9O09NXO8KDqxmlnHU7miif8Ccn3zjH3POjAuxS611iEVKcdTn7Sw5JK8tTJa1KlDXv6956fdxTXWWIR9cIu8pAs7vqOF0ZnhZcmdTPuDjJOzGxpNtG9R8VWB9njGQWdTg+TGs/m40ls0g/ECLwAfKzQSVYq2uxJpQG+j2ZSDB6W3BYoMgRLGBD7VnRw0VNhIQUOoNKWZASaNucd8yw1VlbGfj4OklFeupuBOA5Ca5AaueLFzMrXAV7p2kNbW6RKNDySGp53HdKJkvApTnBcvYK5cMKzUaqn8UIsCnrQgdFpTXkdByByNPlWoaGntPX80ioOkqEKqy8pgTqF/g//DDcxda3mBGyzIvf2BJgD2HUEaTF2xozUdjcyrqoiBxCag12v0duEKeOGTpiM5nAZCNJYrFMLbaytFhg6sLmrvrGFMRfH9GrmrDYYR1RhGo7fH1z2bj0ZTmNkH8DGwtavBFIkXCV4UMkM/Dmwujq5d0KjIu5ZUGdo4qSJ8TFpOHi0fueIZktGJ1dxv9jxKv/DUPf9mBwhrA+6GG6lrC6FispHRZ+TF2MkSYdbghjjdGp4+HA8dE5CCYvV6NwBOEsKvEmiso8cWcQpRNIze+pfwxnA/KyMm4ZX8hh4TnfOEKd8p1VbxtOdo3a6QKov0b5xBXtLaTV1V2niD/YJk+UbDnvMQg1CKjW/Izlc0/LRwdnNzde6D9Aqdw5iHOskaH5kd5a1e7LCBtwW31cPsFkoZOw00XkBTRhwTg7NhMfDx1cfzpbo+XWz0q4OExPVkafI44L4iZ0mLWrSZoq0N7iHEcGjifZvUlypSs5ByRaPSLBYz4vvVTKNfLANuffkwtNh1U040GbvL5kENKkD6Ax3bZMP7o8zdyu6vNE5ffR1y35QhoQS5b8Q6St5vA/el+khJmZTtMmDs4BtjDbJay9hpsBWm5BfbXKb5yWzp404VysCQWScxtobZvG2G88eVQ6j3QugkSkYXLQQXc7hxpk4pRBEtbMJ05O+jNEXHrfbfG4AKtkwbiQRBcplFvSpkSsfIV65axQl0g8zWzx0JyUrtA1ASJ2NLrUIQ6HKPowAiVRY4zXzBFhl1Ma1nbOJ5lHBbLjZpc2cIlk+5RZN8Jut+kKV0NgC3wTFQ6rS173noJvw1FLTRO0P7gWTNJaGSAqsPMKEctY6vZCHdbhI4+IOW4umOvKr94hNr86cu31zZLQkfvW+2mC/V7zkqX3vR284WEeg3W55laODLfLpULycU49CdhK8PpoVMH/y5ZVvb4pLBqnYuAolStwkePqxgI8tlV/UuGawlFmKpXhHrt7nWFFyO9AuwIaIo/WchT7uJa2ddD3VOBetRPDjrmo/zpfqJWJB5OhT61FoU3R1uZVGA0tsYxoJfNlO26Iy2aY5kyotiF+0eE0IIOg7TXNFyE6u9adoEHsDGUxfKBJVJhaGQoIIUuIOvJ+vTuzOqXp2enlw99xD4gNwoKLXBWJq1YZPItk1qj+bTd+dUdzvpiqNSeLaY+ymNsaH4vZy8nFxSTVxp60quqLyO5XMcTzpO85qjknnfTZCeP4Y+fwz9f3wMjX0hxbCLquBSEWb9zGYf5zxfme9nWULNI4ujp4RNw9fQu4Tl2jratt+TpF9McTjQ6z9rNDTPuqPRkpFU6YfvrdLSs2DTNS8s/oULnDX3dg7tZ9mT8jbNrdp1cyzGkjjoCoIeaF4XO+VuCDZLU6xc7xTNbY+mXu+uPlzdXpH2cRDRddJEImkeiOZJOYZjjsD4wY84vnNkvw99+uHQ7g9L3z3RjgDCbjLL3eFw+C+cT7yN
+sidebar_class_name: "delete api-method"
+info_path: docs/api/ai-findr-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete tag"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"delete"}
+  path={"/admin/api/tags/{tagId}"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Deletes a tag from an organization within the AI Findr platform. This endpoint removes the tag entity while maintaining referential integrity with associated conversations. The deletion is scoped to the organization to ensure proper tenant isolation and prevent unauthorized access to tags from other organizations.
+
+**Permission Required:** TagDelete
+
+**Deletion Process:**
+Performs a hard delete of the tag record with organization-scoped validation. Associated conversation-tag relationships may be handled by database constraints or separate cleanup processes depending on the foreign key configuration.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"description":"Tag ID","in":"path","name":"tagId","required":true,"schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"204":{"description":"Tag deleted successfully"},"400":{"description":"Bad request - missing or invalid tag ID","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"401":{"description":"Unauthorized - invalid or missing bearer token","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"403":{"description":"Forbidden - insufficient permissions (TagDelete required)","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"500":{"description":"Internal server error","content":{"*/*":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

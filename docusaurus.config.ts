@@ -54,7 +54,7 @@ const config: Config = {
         items: [
           {
             type: "doc",
-            docId: "aifindr/ai-findr-api",
+            docId: "api/ai-findr-api",
             position: "left",
             label: "API",
           },
@@ -228,12 +228,12 @@ const config: Config = {
         config: {
           api: {
             specPath: "examples/swagger.yaml",
-            outputDir: "docs/aifindr",
+            outputDir: "docs/api",
             downloadUrl:
               "https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml",
             sidebarOptions: {
               groupPathsBy: "tagGroup",
-              categoryLinkSource: "info",
+              categoryLinkSource: "tag",
               sidebarCollapsed: true,
             },
           } satisfies OpenApiPlugin.Options,

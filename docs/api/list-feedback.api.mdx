@@ -1,0 +1,83 @@
+---
+id: list-feedback
+title: "List feedback"
+description: "Retrieves a paginated list of feedback entries for a project within the AI Findr platform. This endpoint provides comprehensive feedback data including user queries, AI responses, vote types, selected options, and feedback text for analysis, reporting, and quality improvement purposes. The response includes deduplication logic to prioritize complete feedback submissions over simple vote selections."
+sidebar_label: "List feedback"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: docs/api/ai-findr-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"List feedback"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/admin/api/projects/{projectId}/feedback"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Retrieves a paginated list of feedback entries for a project within the AI Findr platform. This endpoint provides comprehensive feedback data including user queries, AI responses, vote types, selected options, and feedback text for analysis, reporting, and quality improvement purposes. The response includes deduplication logic to prioritize complete feedback submissions over simple vote selections.
+
+**Permission Required:** FeedbackList
+
+**Query Parameters:**
+- `startDate` (optional): Start date in YYYY-MM-DD format (defaults to 7 days ago)
+- `endDate` (optional): End date in YYYY-MM-DD format (defaults to today)
+- `page` (optional): Page number for pagination (defaults to 1)
+- `perPage` (optional): Items per page (defaults to 20, max 100)
+- `search` (optional): Filter feedback by user query text
+
+**Deduplication Logic:**
+When the same query within the same context has both feedback:submit and feedback:select actions, feedback:submit is prioritized to avoid duplicates. Same queries in different contexts maintain separate feedback entries for accurate analytics.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"description":"Project ID","in":"path","name":"projectId","required":true,"schema":{"type":"string"}},{"description":"Start date (YYYY-MM-DD format)","in":"query","name":"startDate","schema":{"type":"string"}},{"description":"End date (YYYY-MM-DD format)","in":"query","name":"endDate","schema":{"type":"string"}},{"description":"Page number for pagination","in":"query","name":"page","schema":{"type":"integer"}},{"description":"Items per page (max 100)","in":"query","name":"perPage","schema":{"type":"integer"}},{"description":"Filter by user query text","in":"query","name":"search","schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Paginated list of feedback entries with deduplication","content":{"application/json":{"schema":{"properties":{"items":{"items":{"properties":{"action":{"type":"string"},"contextId":{"type":"string"},"createdAt":{"type":"string"},"feedbackText":{"type":"string"},"id":{"type":"string"},"query":{"type":"string"},"reasoning":{"type":"string"},"requestId":{"type":"string"},"response":{"type":"string"},"selectedOptions":{"items":{"type":"string"},"type":"array"},"sources":{"items":{"properties":{"quote":{"type":"string"},"title":{"type":"string"},"url":{"type":"string"}},"type":"object"},"type":"array"},"voteType":{"type":"string"}},"type":"object"},"type":"array"},"pagination":{"properties":{"currentPage":{"type":"integer"},"perPage":{"type":"integer"},"total":{"type":"integer"}},"type":"object"}},"type":"object"}}}},"400":{"description":"Bad request - invalid date range, pagination parameters, or search query","content":{"application/json":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"401":{"description":"Unauthorized - invalid or missing bearer token","content":{"application/json":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"403":{"description":"Forbidden - insufficient permissions (FeedbackList required)","content":{"application/json":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"404":{"description":"Project not found - invalid project ID","content":{"application/json":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}},"500":{"description":"Internal server error","content":{"application/json":{"schema":{"properties":{"code":{"enum":["server","user","not-found","db","vector-db","external"],"type":"string","x-enum-comments":{"CodeDB":"Database errors","CodeExternal":"External service errors, HTTP 502","CodeNotFound":"Resource not found, HTTP 404","CodeServer":"Internal server errors, HTTP 5xx","CodeUser":"User errors, HTTP 4xx","CodeVectorDB":"Vector database errors"},"x-enum-varnames":["CodeServer","CodeUser","CodeNotFound","CodeDB","CodeVectorDB","CodeExternal"]},"id":{"type":"string"},"message":{"type":"string"}},"type":"object"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
