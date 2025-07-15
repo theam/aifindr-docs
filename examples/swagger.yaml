@@ -1,0 +1,1632 @@
+basePath: /
+definitions:
+  admin.CreateProjectRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  admin.CreateProjectResponse:
+    properties:
+      demoKey:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+    type: object
+  api.AskRequest:
+    properties:
+      context:
+        additionalProperties: true
+        type: object
+      conversationId:
+        type: string
+      filters:
+        type: string
+      query:
+        type: string
+      stream:
+        description: True by default.
+        type: boolean
+    type: object
+  api.BasicProject:
+    properties:
+      branding:
+        $ref: '#/definitions/api.BasicProjectBranding'
+      demoKey:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+    type: object
+  api.BasicProjectBranding:
+    properties:
+      brandColor:
+        type: string
+      logoImage:
+        type: string
+      sloganLineOne:
+        type: string
+      sloganLineTwo:
+        type: string
+    type: object
+  api.BrandingResponse:
+    properties:
+      brandColor:
+        type: string
+      logoImage:
+        type: string
+      searchPlaceholder:
+        type: string
+      searchSuggestions:
+        items:
+          type: string
+        type: array
+      showSources:
+        type: boolean
+      sloganLineOne:
+        type: string
+      sloganLineTwo:
+        type: string
+      widgetConfig:
+        $ref: '#/definitions/model.WidgetConfig'
+    type: object
+  api.CreateConversationResponse:
+    properties:
+      conversationId:
+        type: string
+    type: object
+  api.ProjectResponse:
+    properties:
+      branding:
+        $ref: '#/definitions/api.BrandingResponse'
+      id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+    type: object
+  apierror.Response:
+    properties:
+      code:
+        $ref: '#/definitions/apperror.Code'
+      id:
+        type: string
+      message:
+        type: string
+    type: object
+  apitypes.AskFullResponse:
+    properties:
+      content:
+        type: string
+      responseMessageId:
+        type: string
+    type: object
+  apperror.Code:
+    enum:
+    - server
+    - user
+    - not-found
+    - db
+    - vector-db
+    - external
+    type: string
+    x-enum-comments:
+      CodeDB: Database errors
+      CodeExternal: External service errors, HTTP 502
+      CodeNotFound: Resource not found, HTTP 404
+      CodeServer: Internal server errors, HTTP 5xx
+      CodeUser: User errors, HTTP 4xx
+      CodeVectorDB: Vector database errors
+    x-enum-varnames:
+    - CodeServer
+    - CodeUser
+    - CodeNotFound
+    - CodeDB
+    - CodeVectorDB
+    - CodeExternal
+  model.ButtonStyle:
+    properties:
+      advancedMode:
+        type: boolean
+      backgroundColor:
+        type: string
+      borderColor:
+        type: string
+      borderRadius:
+        type: string
+      borderWidth:
+        type: string
+      boxShadow:
+        type: string
+      customCSS:
+        type: string
+      fontSize:
+        type: string
+      fontWeight:
+        type: string
+      gap:
+        type: string
+      hoverOpacity:
+        type: string
+      padding:
+        type: string
+      textColor:
+        type: string
+    type: object
+  model.FloatingStyle:
+    properties:
+      borderRadius:
+        type: string
+      boxShadow:
+        type: string
+      height:
+        type: string
+      margin:
+        type: string
+      position:
+        type: string
+      width:
+        type: string
+    type: object
+  model.InputStyle:
+    properties:
+      advancedMode:
+        type: boolean
+      backgroundColor:
+        type: string
+      borderColor:
+        type: string
+      borderRadius:
+        type: string
+      borderWidth:
+        type: string
+      customCSS:
+        type: string
+      fontSize:
+        type: string
+      padding:
+        type: string
+      placeholder:
+        type: string
+      placeholderColor:
+        type: string
+      textColor:
+        type: string
+      width:
+        type: string
+    type: object
+  model.WidgetConfig:
+    properties:
+      button:
+        $ref: '#/definitions/model.ButtonStyle'
+      displayMode:
+        type: string
+      floating:
+        $ref: '#/definitions/model.FloatingStyle'
+      input:
+        $ref: '#/definitions/model.InputStyle'
+    type: object
+host: api.saas.aifindr.ai
+info:
+  contact:
+    email: producteam@aifindr.ai
+    name: AI Findr Product Team
+  description: |-
+    Programmatic access to the AI Findr platform.
+
+    AI Findr enables organizations to create AI-powered conversational experiences using their own content knowledge base. Our platform provides accurate, context-aware responses while capturing valuable analytics about customer interactions and knowledge gaps.
+
+    ## Introduction
+    This API is documented in **OpenAPI format** and provides comprehensive access to the AI Findr platform.
+    It enables developers to integrate AI Findr directly into their applications, offering an alternative to our embeddable widget solution.
+
+    **Key Features:**
+    - **Conversational AI**: Ask questions and receive intelligent responses based on your ingested content.
+    - **Content Management**: Ingest and manage your organization's knowledge base through various sources.
+    - **Real-time Analytics**: Track conversations, identify knowledge gaps, and understand customer needs.
+    - **Custom Branding**: Customize the experience with your organization's branding and styling.
+    - **Streaming Support**: Get real-time responses with Server-Sent Events (SSE) for better user experience.
+
+    ## Authentication
+    AI Findr supports two authentication methods:
+
+    ### API Key Authentication (Recommended for M2M)
+    For machine-to-machine integrations, use API key authentication by including the `X-API-KEY` header in your requests.
+    API keys can be generated through the AI Findr hub.
+
+    ### Bearer Token Authentication
+    For user-context operations, use JWT bearer tokens in the `Authorization` header with the format: `Bearer {token}`
+
+    ### Organization Context
+    Most API endpoints require the `X-Organization-Id` header to specify which organization context to operate within.
+    This ensures proper data isolation and access control.
+
+    ## API Structure
+    The API is organized into two main categories:
+    - **Public API**: Endpoints for conversational interactions, project information, and analytics tracking
+    - **Admin API**: Management endpoints for organizations, projects, content ingestion, and analytics
+
+    ## Rate Limits
+    API requests are subject to rate limiting to ensure fair usage and system stability. Rate limits vary by endpoint and authentication method.
+
+    ## Testing the API
+    When testing endpoints in the Swagger UI:
+    1. **Set Organization Context**: Click the "Authorize" button and enter your Organization ID in the "OrgIdAuth" field
+    2. **Choose Authentication**: Enter either your API Key (ApiKeyAuth) or Bearer Token (BearerAuth)
+    3. **Test Endpoints**: All requests will now include the required headers automatically
+
+    ## Support
+    For technical support and questions, contact our engineering team at [producteam@aifindr.ai](mailto:producteam@aifindr.ai).
+
+    Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
+  title: AI Findr API
+  version: 0.1.0
+paths:
+  /admin/api/answerComponents/{answerComponentId}:
+    delete:
+      description: Requires permission **AnswerComponentDelete**. Deletes an existing
+        answer component.
+      parameters:
+      - description: Answer component ID
+        in: path
+        name: answerComponentId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Answer component deleted successfully
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Answer component not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Delete answer component
+      tags:
+      - AnswerComponent
+      x-permissions:
+      - AnswerComponentDelete
+    patch:
+      consumes:
+      - application/json
+      description: Requires permission **AnswerComponentUpdate**. Updates an existing
+        answer component.
+      parameters:
+      - description: Answer component ID
+        in: path
+        name: answerComponentId
+        required: true
+        type: string
+      - description: Answer component update request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated answer component
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Answer component not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Update answer component
+      tags:
+      - AnswerComponent
+      x-permissions:
+      - AnswerComponentUpdate
+  /admin/api/conversations/{conversationId}:
+    get:
+      description: Requires permission **ConversationGet**. Gets conversation details.
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation details
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Get conversation
+      tags:
+      - Conversation
+      x-permissions:
+      - ConversationGet
+    patch:
+      consumes:
+      - application/json
+      description: Requires permission **ConversationUpdate**. Updates conversation
+        details such as tags.
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        type: string
+      - description: Conversation update request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated conversation
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Update conversation
+      tags:
+      - Conversation
+      x-permissions:
+      - ConversationUpdate
+  /admin/api/conversations/{conversationId}/summary:
+    post:
+      description: Requires permission **ConversationSummaryCreate**. Creates an AI-generated
+        summary for a conversation.
+      parameters:
+      - description: Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created conversation summary
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Conversation not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Create conversation summary
+      tags:
+      - Conversation
+      x-permissions:
+      - ConversationSummaryCreate
+  /admin/api/ingestions/{ingestionId}:
+    get:
+      description: Requires permission **IngestionGet**. Retrieves an ingestion record
+        by its ID.
+      parameters:
+      - description: Ingestion ID
+        in: path
+        name: ingestionId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ingestion details
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Ingestion not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Get ingestion
+      tags:
+      - Ingestion
+      x-permissions:
+      - IngestionGet
+  /admin/api/ingestions/{ingestionJobId}/notify:
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **IngestionNotificationCreate**. Receives notification
+        of ingestion completion.
+      parameters:
+      - description: Ingestion job ID
+        in: path
+        name: ingestionJobId
+        required: true
+        type: string
+      - description: Ingestion notification data
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Notification processed
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Notify ingestion completion
+      tags:
+      - Ingestion
+      x-permissions:
+      - IngestionNotificationCreate
+  /admin/api/organization:
+    get:
+      description: Requires permission **OrganizationGet**. Gets organization details.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Organization details
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Organization not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Get organization
+      tags:
+      - Organization
+      x-permissions:
+      - OrganizationGet
+    patch:
+      consumes:
+      - application/json
+      description: Requires permission **OrganizationUpdate**. Updates organization
+        details.
+      parameters:
+      - description: Organization update request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated organization
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Organization not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Update organization
+      tags:
+      - Organization
+      x-permissions:
+      - OrganizationUpdate
+  /admin/api/organizations:
+    get:
+      description: Requires permission **OrganizationList**. Lists all organizations.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of organizations
+          schema:
+            items:
+              type: object
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      summary: List organizations
+      tags:
+      - Organization
+      x-permissions:
+      - OrganizationList
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **OrganizationCreate**. Creates a new organization.
+      parameters:
+      - description: Organization creation request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created organization
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      summary: Create organization
+      tags:
+      - Organization
+      x-permissions:
+      - OrganizationCreate
+  /admin/api/projects:
+    get:
+      description: Requires permission **ProjectList**. Returns the list of active
+        (non-deleted) projects for the organization.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of projects
+          schema:
+            items:
+              type: object
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: List projects
+      tags:
+      - Project
+      x-permissions:
+      - ProjectList
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **ProjectCreate**. Creates a new project in
+        the organization.
+      parameters:
+      - description: Project creation request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created project
+          schema:
+            $ref: '#/definitions/admin.CreateProjectResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Create project
+      tags:
+      - Project
+      x-permissions:
+      - ProjectCreate
+  /admin/api/projects/{projectId}:
+    delete:
+      description: Requires permission **ProjectDelete**. Soft deletes a project and
+        its associated data.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Project deleted successfully
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Delete project
+      tags:
+      - Project
+      x-permissions:
+      - ProjectDelete
+    get:
+      description: Requires permission **ProjectGet**. Retrieves an active (non-deleted)
+        project by its ID.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project details
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Get project
+      tags:
+      - Project
+      x-permissions:
+      - ProjectGet
+    patch:
+      consumes:
+      - application/json
+      description: Requires permission **ProjectUpdate**. Updates an existing project,
+        allowing partial updates.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Project update request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated project
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Update project
+      tags:
+      - Project
+      x-permissions:
+      - ProjectUpdate
+  /admin/api/projects/{projectId}/add-ingestion-source:
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **ProjectAddSource**. Adds an ingestion source
+        to a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Ingestion source data
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created ingestion source
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Add ingestion source
+      tags:
+      - IngestionSource
+      x-permissions:
+      - ProjectAddSource
+  /admin/api/projects/{projectId}/answerComponents:
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **AnswerComponentCreate**. Creates multiple
+        answer components at once.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Answer components creation request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created answer components
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Create answer components
+      tags:
+      - AnswerComponent
+      x-permissions:
+      - AnswerComponentCreate
+  /admin/api/projects/{projectId}/conversations:
+    get:
+      description: Requires permission **ConversationList**. Lists conversations for
+        a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of conversations
+          schema:
+            items:
+              type: object
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: List conversations
+      tags:
+      - Conversation
+      x-permissions:
+      - ConversationList
+  /admin/api/projects/{projectId}/conversations/leads:
+    get:
+      description: Requires permission **ConversationGet**. Lists conversations that
+        are marked as leads.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of lead conversations
+          schema:
+            items:
+              type: object
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: List lead conversations
+      tags:
+      - Conversation
+      x-permissions:
+      - ConversationGet
+  /admin/api/projects/{projectId}/feedback:
+    get:
+      description: Requires permission **FeedbackList**. Lists feedback for a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of feedback
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: List feedback
+      tags:
+      - Feedback
+      x-permissions:
+      - FeedbackList
+  /admin/api/projects/{projectId}/feedback/{feedbackId}:
+    get:
+      description: Requires permission **FeedbackGet**. Retrieves feedback details
+        by its ID.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Feedback ID
+        in: path
+        name: feedbackId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Feedback details
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Feedback not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Get feedback
+      tags:
+      - Feedback
+      x-permissions:
+      - FeedbackGet
+  /admin/api/projects/{projectId}/ingest:
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **ProjectIngest**. Starts data ingestion for
+        a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ingestion started
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Ingest project data
+      tags:
+      - Ingestion
+      x-permissions:
+      - ProjectIngest
+  /admin/api/projects/{projectId}/keys:
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **APIKeyCreate**. Creates a new API key for
+        a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created API key
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Create project API key
+      tags:
+      - APIKey
+      x-permissions:
+      - APIKeyCreate
+  /admin/api/projects/{projectId}/metrics:
+    get:
+      description: Requires permission **AnalyticRead**. Retrieves analytics and metrics
+        for a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project metrics
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Get project metrics
+      tags:
+      - Analytics
+      x-permissions:
+      - AnalyticRead
+  /admin/api/projects/{projectId}/regenerate-demo-key:
+    post:
+      description: Requires permission **ProjectGenerateDemoURL**. Regenerates the
+        demo key for a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: projectId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: New demo key
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Regenerate demo key
+      tags:
+      - Project
+      x-permissions:
+      - ProjectGenerateDemoURL
+  /admin/api/tags:
+    get:
+      description: Requires permission **TagList**. Lists all tags for the organization.
+      parameters:
+      - description: Include additional data (e.g., counts)
+        in: query
+        name: include
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tags
+          schema:
+            items:
+              type: object
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: List tags
+      tags:
+      - Tag
+      x-permissions:
+      - TagList
+    post:
+      consumes:
+      - application/json
+      description: Requires permission **TagCreate**. Creates a new tag for the organization.
+      parameters:
+      - description: Tag creation request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created tag
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Create tag
+      tags:
+      - Tag
+      x-permissions:
+      - TagCreate
+  /admin/api/tags/{tagId}:
+    delete:
+      description: Requires permission **TagDelete**. Deletes a tag from the organization.
+      parameters:
+      - description: Tag ID
+        in: path
+        name: tagId
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Tag deleted successfully
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Delete tag
+      tags:
+      - Tag
+      x-permissions:
+      - TagDelete
+    patch:
+      consumes:
+      - application/json
+      description: Requires permission **TagUpdate**. Updates a tag's properties.
+      parameters:
+      - description: Tag ID
+        in: path
+        name: tagId
+        required: true
+        type: string
+      - description: Tag update request
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated tag
+          schema:
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Tag not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - BearerAuth: []
+      - OrgIdAuth: []
+      summary: Update tag
+      tags:
+      - Tag
+      x-permissions:
+      - TagUpdate
+  /api/answerComponents/{answerComponentId}:
+    get:
+      description: Retrieves an answer component by its ID.
+      parameters:
+      - description: Answer component ID
+        in: path
+        name: answerComponentId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Answer component data
+          schema:
+            type: object
+        "404":
+          description: Answer component not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      summary: Get answer component
+      tags:
+      - AnswerComponent
+  /api/demo/{demoKey}:
+    get:
+      description: Returns public information of a project identified by a demo key.
+      parameters:
+      - description: Demo key
+        in: path
+        name: demoKey
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BasicProject'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      summary: Get project by demo key
+      tags:
+      - Project
+  /api/projects/{projectSlug}/analytics:
+    post:
+      consumes:
+      - application/json
+      description: Records analytics events for a project.
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        type: string
+      - description: Analytics payload
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      summary: Track analytics event
+      tags:
+      - Analytics
+  /api/projects/{projectSlug}/ask:
+    post:
+      consumes:
+      - application/json
+      description: Ask a question within a project conversation. Supports both streaming
+        and non-streaming responses.
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        type: string
+      - description: Ask request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.AskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Streaming response (SSE)
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      summary: Ask question
+      tags:
+      - Conversation
+  /api/projects/{projectSlug}/conversation:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new conversation for a project.
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        type: string
+      - description: Conversation request with metadata
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.CreateConversationResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      summary: Create conversation
+      tags:
+      - Conversation
+  /api/widget/{projectSlug}:
+    get:
+      description: Returns project information for widget integration by project slug.
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ProjectResponse'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      summary: Get project by slug
+      tags:
+      - Project
+schemes:
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    description: API Key for machine-to-machine authentication. Generate through Admin
+      API endpoint /admin/api/projects/{projectId}/keys or the AI Findr dashboard.
+      Recommended for server-side integrations and automated workflows.
+    in: header
+    name: X-API-KEY
+    type: apiKey
+  BearerAuth:
+    description: 'JWT Bearer token for user-authenticated requests. Format: "Bearer
+      {jwt_token}". Obtain through your authentication system or user login flow.
+      Required for admin operations and user-context endpoints.'
+    in: header
+    name: Authorization
+    type: apiKey
+  OrgIdAuth:
+    description: Organization ID for multi-tenant data isolation. Required for most
+      endpoints. Find your organization ID in the AI Findr dashboard or retrieve it
+      using the /admin/api/organization endpoint. Set this once to test all endpoints
+      within your organization context.
+    in: header
+    name: X-Organization-Id
+    type: apiKey
+swagger: "2.0"
+x-tagGroups:
+- name: Public API
+  tags:
+  - Project
+  - Conversation
+  - AnswerComponent
+  - Analytics
+- name: Admin API
+  tags:
+  - Organization
+  - Project
+  - Conversation
+  - AnswerComponent
+  - Ingestion
+  - IngestionSource
+  - Tag
+  - Feedback
+  - APIKey
+  - Analytics
+- name: Webhooks
+  tags:
+  - Webhook
