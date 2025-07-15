@@ -231,10 +231,10 @@ const config: Config = {
             outputDir: "docs/aifindr",
             downloadUrl:
               "https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml",
-              sidebarOptions: {
-                groupPathsBy: "tag",
-                categoryLinkSource: "tag",
-              },
+            sidebarOptions: {
+              groupPathsBy: "tagGroup",
+              categoryLinkSource: "tag",
+            },
           } satisfies OpenApiPlugin.Options,
         } satisfies Plugin.PluginOptions,
       },
