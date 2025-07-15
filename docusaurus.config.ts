@@ -233,7 +233,7 @@ const config: Config = {
               "https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml",
             sidebarOptions: {
               groupPathsBy: "tagGroup",
-              categoryLinkSource: "tag",
+              categoryLinkSource: "info",
             },
           } satisfies OpenApiPlugin.Options,
         } satisfies Plugin.PluginOptions,
