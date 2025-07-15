@@ -54,12 +54,6 @@ const config: Config = {
         items: [
           {
             type: "doc",
-            docId: "intro",
-            position: "left",
-            label: "Guides",
-          },
-          {
-            type: "doc",
             docId: "aifindr/ai-findr-api",
             position: "left",
             label: "API",
