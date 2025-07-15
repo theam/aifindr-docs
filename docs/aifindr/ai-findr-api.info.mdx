@@ -2,8 +2,7 @@
 id: ai-findr-api
 title: "AI Findr API"
 description: "Programmatic access to the AI Findr platform."
-sidebar_label: Introduction
-sidebar_position: 0
+sidebar_label: "AI Findr API"
 hide_title: true
 custom_edit_url: null
 ---
@@ -56,7 +55,7 @@ AI Findr supports two authentication methods:
 
 ### API Key Authentication (Recommended for M2M)
 For machine-to-machine integrations, use API key authentication by including the `X-API-KEY` header in your requests.
-API keys can be generated through the AI Findr hub.
+API keys can be generated through the AI Findr Hub.
 
 ### Bearer Token Authentication
 For user-context operations, use JWT bearer tokens in the `Authorization` header with the format: `Bearer {token}`
@@ -102,7 +101,7 @@ Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
     >
       
       
-      API Key for machine-to-machine authentication. Generate through Admin API endpoint /admin/api/projects/\{projectId\}/keys or the AI Findr dashboard. Recommended for server-side integrations and automated workflows.
+      API Key for machine-to-machine authentication. Generate through the AI Findr Hub. Recommended for server-side integrations and automated workflows.
       
       <div>
         <table>
@@ -156,7 +155,7 @@ Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
     >
       
       
-      Organization ID for multi-tenant data isolation. Required for most endpoints. Find your organization ID in the AI Findr dashboard or retrieve it using the /admin/api/organization endpoint. Set this once to test all endpoints within your organization context.
+      Organization ID for multi-tenant data isolation. Required for most endpoints. Find your organization ID in the AI Findr dashboard or retrieve it using the `/admin/api/organization`` endpoint. Set this once to test all endpoints within your organization context.
       
       <div>
         <table>
@@ -190,4 +189,11 @@ Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
     AI Findr Product Team: [producteam@aifindr.ai](mailto:producteam@aifindr.ai)
   </span>
 </div>
+
+```mdx-code-block
+import DocCardList from '@theme/DocCardList';
+import {useCurrentSidebarCategory} from '@docusaurus/theme-common';
+
+<DocCardList items={useCurrentSidebarCategory().items}/>
+```
       
