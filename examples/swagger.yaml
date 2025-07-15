@@ -1,5 +1,147 @@
 basePath: /
 definitions:
+  admin.AnswerComponentError:
+    properties:
+      answerComponentId:
+        type: string
+      error:
+        type: string
+    type: object
+  admin.BasicMetrics:
+    properties:
+      previousPeriod:
+        type: integer
+      total:
+        type: integer
+      variance:
+        type: integer
+    type: object
+  admin.BrandingUpdate:
+    properties:
+      brandColor:
+        type: string
+      logoImage:
+        type: string
+      searchPlaceholder:
+        type: string
+      searchSuggestions:
+        items:
+          type: string
+        type: array
+      showSources:
+        type: boolean
+      sloganLineOne:
+        type: string
+      sloganLineTwo:
+        type: string
+      widgetConfig:
+        $ref: '#/definitions/model.WidgetConfig'
+    type: object
+  admin.ClickRateDataPoint:
+    properties:
+      clicks:
+        type: integer
+      searches:
+        type: integer
+      timeUnit:
+        type: string
+    type: object
+  admin.ConversationDetailResponse:
+    properties:
+      contextId:
+        type: string
+      events:
+        items:
+          $ref: '#/definitions/admin.ConversationEvent'
+        type: array
+      metadata:
+        type: object
+      summary:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+    type: object
+  admin.ConversationEvent:
+    properties:
+      actionType:
+        type: string
+      date:
+        type: string
+      eventId:
+        type: string
+      feedbackText:
+        type: string
+      formId:
+        type: string
+      formTitle:
+        type: string
+      id:
+        type: string
+      query:
+        description: Optional fields based on action type
+        type: string
+      reasoning:
+        type: string
+      response:
+        type: string
+      selectedOptions:
+        items:
+          type: string
+        type: array
+      sources:
+        items:
+          $ref: '#/definitions/model.Source'
+        type: array
+      submittedData: {}
+      title:
+        type: string
+      url:
+        type: string
+      voteType:
+        type: string
+    type: object
+  admin.ConversationSummary:
+    properties:
+      contextId:
+        type: string
+      date:
+        type: string
+      firstUserMessage:
+        type: string
+      metadata:
+        type: object
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+    type: object
+  admin.ConversationSummaryResponse:
+    properties:
+      summary:
+        type: string
+    type: object
+  admin.CreateAnswerComponentRequest:
+    properties:
+      answerComponentId:
+        type: string
+      answerComponentType:
+        type: string
+      content:
+        type: object
+    type: object
+  admin.CreateAnswerComponentsResponse:
+    properties:
+      created:
+        items:
+          $ref: '#/definitions/model.AnswerComponent'
+        type: array
+      errors:
+        items:
+          $ref: '#/definitions/admin.AnswerComponentError'
+        type: array
+    type: object
   admin.CreateProjectRequest:
     properties:
       name:
@@ -18,6 +160,308 @@ definitions:
       slug:
         type: string
     type: object
+  admin.CreateTagRequest:
+    properties:
+      color:
+        type: string
+      createdBy:
+        type: string
+      value:
+        type: string
+    type: object
+  admin.FeedbackCategoryOptions:
+    properties:
+      negative:
+        items:
+          $ref: '#/definitions/admin.FeedbackOption'
+        type: array
+      neutral:
+        items:
+          $ref: '#/definitions/admin.FeedbackOption'
+        type: array
+      positive:
+        items:
+          $ref: '#/definitions/admin.FeedbackOption'
+        type: array
+    type: object
+  admin.FeedbackDistribution:
+    properties:
+      down:
+        type: integer
+      neutral:
+        type: integer
+      up:
+        type: integer
+    type: object
+  admin.FeedbackItem:
+    properties:
+      action:
+        type: string
+      contextId:
+        type: string
+      createdAt:
+        type: string
+      feedbackText:
+        type: string
+      id:
+        type: string
+      query:
+        type: string
+      reasoning:
+        type: string
+      requestId:
+        type: string
+      response:
+        type: string
+      selectedOptions:
+        items:
+          type: string
+        type: array
+      sources:
+        items:
+          $ref: '#/definitions/model.Source'
+        type: array
+      voteType:
+        type: string
+    type: object
+  admin.FeedbackMetrics:
+    properties:
+      distribution:
+        $ref: '#/definitions/admin.FeedbackDistribution'
+      total:
+        type: integer
+    type: object
+  admin.FeedbackOption:
+    properties:
+      count:
+        type: integer
+      optionText:
+        type: string
+    type: object
+  admin.ListConversationsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.ConversationSummary'
+        type: array
+      pagination:
+        properties:
+          currentPage:
+            type: integer
+          perPage:
+            type: integer
+          total:
+            type: integer
+        type: object
+    type: object
+  admin.ListFeedbackResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.FeedbackItem'
+        type: array
+      pagination:
+        properties:
+          currentPage:
+            type: integer
+          perPage:
+            type: integer
+          total:
+            type: integer
+        type: object
+    type: object
+  admin.ListTagsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.TagResponse'
+        type: array
+    type: object
+  admin.MetricsResponse:
+    properties:
+      clickRateData:
+        items:
+          $ref: '#/definitions/admin.ClickRateDataPoint'
+        type: array
+      conversations:
+        $ref: '#/definitions/admin.BasicMetrics'
+      conversationsGrowthData:
+        items:
+          $ref: '#/definitions/admin.TimeSeriesDataPoint'
+        type: array
+      feedback:
+        $ref: '#/definitions/admin.FeedbackMetrics'
+      feedbackGrowthData:
+        items:
+          $ref: '#/definitions/admin.TimeSeriesDataPoint'
+        type: array
+      interval:
+        type: string
+      linkClicks:
+        $ref: '#/definitions/admin.BasicMetrics'
+      queryWords:
+        $ref: '#/definitions/admin.BasicMetrics'
+      responsesWithLinks:
+        $ref: '#/definitions/admin.BasicMetrics'
+      topFeedbackOptions:
+        $ref: '#/definitions/admin.FeedbackCategoryOptions'
+      userActions:
+        items:
+          $ref: '#/definitions/admin.UserActionDataPoint'
+        type: array
+    type: object
+  admin.OrganizationCreateRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  admin.ProjectUpdateRequest:
+    properties:
+      branding:
+        $ref: '#/definitions/admin.BrandingUpdate'
+      name:
+        type: string
+    type: object
+  admin.ProjectWithLastTenIngestions:
+    properties:
+      branding:
+        $ref: '#/definitions/model.ProjectBranding'
+      createdAt:
+        type: string
+      demoKey:
+        type: string
+      iaModel:
+        type: string
+      iaProvider:
+        $ref: '#/definitions/model.IAProvider'
+      id:
+        type: string
+      ingestionSources:
+        items:
+          $ref: '#/definitions/model.IngestionSource'
+        type: array
+      ingestions:
+        items:
+          $ref: '#/definitions/model.Ingestion'
+        type: array
+      lastTenIngestions:
+        items:
+          $ref: '#/definitions/model.Ingestion'
+        type: array
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/model.Organization'
+      organizationId:
+        type: string
+      slug:
+        type: string
+      storagePath:
+        type: string
+      updatedAt:
+        type: string
+      whatsapp:
+        $ref: '#/definitions/model.Whatsapp'
+      workflow:
+        $ref: '#/definitions/model.Workflow'
+    type: object
+  admin.TagResponse:
+    properties:
+      color:
+        type: string
+      conversations:
+        items:
+          $ref: '#/definitions/model.Conversation'
+        type: array
+      count:
+        type: integer
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      id:
+        type: string
+      organizationId:
+        type: string
+      updatedAt:
+        type: string
+      value:
+        type: string
+    type: object
+  admin.TimeSeriesDataPoint:
+    properties:
+      timeUnit:
+        type: string
+      total:
+        type: integer
+    type: object
+  admin.UpdateAnswerComponentRequest:
+    properties:
+      answerComponentType:
+        type: string
+      content:
+        type: object
+    type: object
+  admin.UpdateConversationRequest:
+    properties:
+      tagIds:
+        items:
+          type: string
+        type: array
+    type: object
+  admin.UpdateConversationResponse:
+    properties:
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+    type: object
+  admin.UpdateTagRequest:
+    properties:
+      color:
+        type: string
+      value:
+        type: string
+    type: object
+  admin.UserActionDataPoint:
+    properties:
+      action:
+        type: string
+      visitors:
+        type: integer
+    type: object
+  admin.createAPIKeyResp:
+    properties:
+      last6:
+        type: string
+      plainText:
+        description: show once
+        type: string
+    type: object
+  api.AnalyticsEventRequest:
+    properties:
+      action:
+        enum:
+        - query:initial
+        - query:suggestion
+        - query:followup
+        - response:generated
+        - feedback:select
+        - feedback:submit
+        - click:responselink
+        - click:sourcelink
+        - click:cta:*
+        - form:submit
+        - widget:open
+        type: string
+      conversationId:
+        type: string
+      datetime:
+        type: string
+      payload:
+        additionalProperties: true
+        type: object
+    type: object
   api.AskRequest:
     properties:
       context:
@@ -32,30 +476,6 @@ definitions:
       stream:
         description: True by default.
         type: boolean
-    type: object
-  api.BasicProject:
-    properties:
-      branding:
-        $ref: '#/definitions/api.BasicProjectBranding'
-      demoKey:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      slug:
-        type: string
-    type: object
-  api.BasicProjectBranding:
-    properties:
-      brandColor:
-        type: string
-      logoImage:
-        type: string
-      sloganLineOne:
-        type: string
-      sloganLineTwo:
-        type: string
     type: object
   api.BrandingResponse:
     properties:
@@ -77,6 +497,11 @@ definitions:
         type: string
       widgetConfig:
         $ref: '#/definitions/model.WidgetConfig'
+    type: object
+  api.CreateConversationRequest:
+    properties:
+      metadata:
+        type: object
     type: object
   api.CreateConversationResponse:
     properties:
@@ -133,6 +558,23 @@ definitions:
     - CodeDB
     - CodeVectorDB
     - CodeExternal
+  model.AnswerComponent:
+    properties:
+      answerComponentId:
+        type: string
+      answerComponentType:
+        type: string
+      content:
+        type: object
+      createdAt:
+        type: string
+      id:
+        type: string
+      projectId:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   model.ButtonStyle:
     properties:
       advancedMode:
@@ -162,6 +604,27 @@ definitions:
       textColor:
         type: string
     type: object
+  model.Conversation:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      messages:
+        items:
+          $ref: '#/definitions/model.Message'
+        type: array
+      metadata:
+        type: object
+      project:
+        $ref: '#/definitions/model.Project'
+      projectId:
+        type: string
+      summary:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   model.FloatingStyle:
     properties:
       borderRadius:
@@ -177,6 +640,105 @@ definitions:
       width:
         type: string
     type: object
+  model.IAProvider:
+    enum:
+    - openai
+    - openai
+    type: string
+    x-enum-varnames:
+    - IAProviderOpenAI
+    - DefaultIAProvider
+  model.Ingestion:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      ingestionSourcesStatus:
+        items:
+          $ref: '#/definitions/model.IngestionSourceStatus'
+        type: array
+      projectId:
+        type: string
+      status:
+        $ref: '#/definitions/model.IngestionStatus'
+      updatedAt:
+        type: string
+    type: object
+  model.IngestionSource:
+    properties:
+      aiProvider:
+        description: This is the default provider. Can be overridden in manifest
+        type: string
+      concurrentFiles:
+        type: integer
+      concurrentPages:
+        type: integer
+      createdAt:
+        type: string
+      extractMethod:
+        description: This is the default method. Can be overridden in manifest
+        type: string
+      filterExt:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      kind:
+        description: So far it only supports "google-cloud-storage"
+        type: string
+      mergeLimit:
+        type: integer
+      name:
+        type: string
+      output:
+        type: string
+      outputFilePrefix:
+        type: string
+      projectId:
+        type: string
+      separators:
+        items:
+          type: string
+        type: array
+      source:
+        type: string
+      splitMethod:
+        description: This is the default method. Can be overridden in manifest
+        type: string
+      updatedAt:
+        type: string
+      webConfig:
+        type: string
+    type: object
+  model.IngestionSourceStatus:
+    properties:
+      createdAt:
+        type: string
+      error:
+        type: string
+      ingestionId:
+        type: string
+      ingestionJobId:
+        type: string
+      ingestionSourceId:
+        type: string
+      status:
+        $ref: '#/definitions/model.IngestionStatus'
+      updatedAt:
+        type: string
+    type: object
+  model.IngestionStatus:
+    enum:
+    - running
+    - finished
+    - failed
+    type: string
+    x-enum-varnames:
+    - IngestionStatusRunning
+    - IngestionStatusFinished
+    - IngestionStatusFailed
   model.InputStyle:
     properties:
       advancedMode:
@@ -204,6 +766,210 @@ definitions:
       width:
         type: string
     type: object
+  model.Message:
+    properties:
+      content:
+        type: string
+      conversationId:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      role:
+        description: '"user" or "assistant"'
+        type: string
+      updatedAt:
+        type: string
+      usedPrompt:
+        description: |-
+          UsedPrompt is the prompt that was used, for the user message, to send it to the LLM,
+          after aplying the project prompt template with the sources and rules
+        type: string
+    type: object
+  model.Organization:
+    properties:
+      activeSubscription:
+        $ref: '#/definitions/model.Subscription'
+      activeSubscriptionId:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  model.Plan:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      maxDefinedRules:
+        type: integer
+      maxIngestedMB:
+        type: integer
+      maxMonthlyIngestedMB:
+        type: integer
+      maxMonthlyQueries:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+  model.PlanInfo:
+    properties:
+      maxDefinedRules:
+        type: integer
+      maxIngestedMB:
+        type: integer
+      maxMonthlyIngestedMB:
+        type: integer
+      maxMonthlyQueries:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  model.Project:
+    properties:
+      branding:
+        $ref: '#/definitions/model.ProjectBranding'
+      createdAt:
+        type: string
+      demoKey:
+        type: string
+      iaModel:
+        type: string
+      iaProvider:
+        $ref: '#/definitions/model.IAProvider'
+      id:
+        type: string
+      ingestionSources:
+        items:
+          $ref: '#/definitions/model.IngestionSource'
+        type: array
+      ingestions:
+        items:
+          $ref: '#/definitions/model.Ingestion'
+        type: array
+      name:
+        type: string
+      organization:
+        $ref: '#/definitions/model.Organization'
+      organizationId:
+        type: string
+      slug:
+        type: string
+      storagePath:
+        type: string
+      updatedAt:
+        type: string
+      whatsapp:
+        $ref: '#/definitions/model.Whatsapp'
+      workflow:
+        $ref: '#/definitions/model.Workflow'
+    type: object
+  model.ProjectBranding:
+    properties:
+      brandColor:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      logoImage:
+        type: string
+      projectId:
+        type: string
+      searchPlaceholder:
+        type: string
+      searchSuggestions:
+        items:
+          type: string
+        type: array
+      showSources:
+        type: boolean
+      sloganLineOne:
+        type: string
+      sloganLineTwo:
+        type: string
+      updatedAt:
+        type: string
+      widgetConfig:
+        type: object
+    type: object
+  model.Source:
+    properties:
+      quote:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+    type: object
+  model.Subscription:
+    properties:
+      createdAt:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: string
+      organization:
+        $ref: '#/definitions/model.Organization'
+      organizationId:
+        type: string
+      plan:
+        $ref: '#/definitions/model.Plan'
+      planId:
+        type: string
+      startDate:
+        type: string
+      subscribedPlan:
+        allOf:
+        - $ref: '#/definitions/model.PlanInfo'
+        description: An immutable copy of the plan terms at subscription time
+      updatedAt:
+        type: string
+    type: object
+  model.Tag:
+    properties:
+      color:
+        type: string
+      conversations:
+        items:
+          $ref: '#/definitions/model.Conversation'
+        type: array
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      id:
+        type: string
+      organizationId:
+        type: string
+      updatedAt:
+        type: string
+      value:
+        type: string
+    type: object
+  model.Whatsapp:
+    properties:
+      twilioSubaccountSid:
+        type: string
+      wabaId:
+        type: string
+      whatsappSenderId:
+        type: string
+    type: object
   model.WidgetConfig:
     properties:
       button:
@@ -214,6 +980,31 @@ definitions:
         $ref: '#/definitions/model.FloatingStyle'
       input:
         $ref: '#/definitions/model.InputStyle'
+    type: object
+  model.Workflow:
+    properties:
+      knowledgeCollectionVersion:
+        type: string
+      rulesCollectionVersion:
+        type: string
+      summaryPromptCached:
+        description: SummaryPromptCached is the cached prompt template that comes
+          from the prompt store
+        type: string
+      summaryPromptID:
+        type: string
+      systemPromptCached:
+        description: SystemPromptCached is the cached prompt template that comes from
+          the prompt store
+        type: string
+      systemPromptID:
+        type: string
+      userPromptCached:
+        description: UserPromptCached is the cached prompt template that comes from
+          the prompt store
+        type: string
+      userPromptID:
+        type: string
     type: object
 host: api.saas.aifindr.ai
 info:
@@ -241,7 +1032,7 @@ info:
 
     ### API Key Authentication (Recommended for M2M)
     For machine-to-machine integrations, use API key authentication by including the `X-API-KEY` header in your requests.
-    API keys can be generated through the AI Findr hub.
+    API keys can be generated through the AI Findr Hub.
 
     ### Bearer Token Authentication
     For user-context operations, use JWT bearer tokens in the `Authorization` header with the format: `Bearer {token}`
@@ -273,8 +1064,13 @@ info:
 paths:
   /admin/api/answerComponents/{answerComponentId}:
     delete:
-      description: Requires permission **AnswerComponentDelete**. Deletes an existing
-        answer component.
+      description: |-
+        Performs a soft delete of an answer component within the AI Findr platform. This endpoint removes the component from active use while preserving data integrity and maintaining referential relationships for audit purposes and potential recovery.
+
+        **Permission Required:** AnswerComponentDelete
+
+        **Deletion Process:**
+        The component is removed from the system and will no longer be available for use in AI responses or conversations. This operation is suitable for removing obsolete components, cleaning up test configurations, or decommissioning unused interactive elements.
       parameters:
       - description: Answer component ID
         in: path
@@ -285,15 +1081,20 @@ paths:
         "204":
           description: Answer component deleted successfully
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (AnswerComponentDelete
+            required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Answer component not found
+          description: Answer component not found - invalid component ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -301,47 +1102,62 @@ paths:
       - OrgIdAuth: []
       summary: Delete answer component
       tags:
-      - AnswerComponent
+      - Answer Components
       x-permissions:
       - AnswerComponentDelete
     patch:
       consumes:
       - application/json
-      description: Requires permission **AnswerComponentUpdate**. Updates an existing
-        answer component.
+      description: |-
+        Updates an existing answer component within the AI Findr platform. This endpoint allows administrators to modify answer component properties including type and content configuration for customizing AI response elements and interactive components within conversations.
+
+        **Permission Required:** AnswerComponentUpdate
+
+        **Request Fields:**
+        - `answerComponentType` (optional): Update the component type (e.g., form, tutorial, action-button)
+        - `content` (optional): Update the component's content configuration as JSON
+
+        **Content Validation:**
+        The content field is validated against the specified component type to ensure proper structure and required fields are present for the component to function correctly.
       parameters:
       - description: Answer component ID
         in: path
         name: answerComponentId
         required: true
         type: string
-      - description: Answer component update request
+      - description: Answer component update request with optional fields
         in: body
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/admin.UpdateAnswerComponentRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: Updated answer component
+          description: Updated answer component with modified configuration
           schema:
-            type: object
+            $ref: '#/definitions/model.AnswerComponent'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON, malformed content, or validation
+            errors
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (AnswerComponentUpdate
+            required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Answer component not found
+          description: Answer component not found - invalid component ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -349,12 +1165,21 @@ paths:
       - OrgIdAuth: []
       summary: Update answer component
       tags:
-      - AnswerComponent
+      - Answer Components
       x-permissions:
       - AnswerComponentUpdate
   /admin/api/conversations/{conversationId}:
     get:
-      description: Requires permission **ConversationGet**. Gets conversation details.
+      description: |-
+        Retrieves detailed information about a specific conversation within the AI Findr platform. This endpoint provides comprehensive conversation data including all events, user queries, AI responses with reasoning and sources, feedback submissions, link clicks, and form submissions for complete conversation analysis and quality assessment.
+
+        **Permission Required:** ConversationGet
+
+        **Response Details:**
+        Returns complete conversation information including context identifier, custom metadata, chronological event list with detailed payloads, associated tags, and AI-generated summary for thorough conversation review and analysis.
+
+        **Event Types:**
+        Includes query events (initial, followup, suggestion), response generation with reasoning and sources, feedback submissions with vote types and options, link clicks with URLs and titles, and form submissions with data for comprehensive conversation tracking.
       parameters:
       - description: Conversation ID
         in: path
@@ -365,19 +1190,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: Conversation details
+          description: Detailed conversation information with complete event history
           schema:
-            type: object
+            $ref: '#/definitions/admin.ConversationDetailResponse'
+        "400":
+          description: Bad request - missing or invalid conversation ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ConversationGet required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Conversation not found
+          description: Conversation not found - invalid conversation ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -385,47 +1218,59 @@ paths:
       - OrgIdAuth: []
       summary: Get conversation
       tags:
-      - Conversation
+      - Conversations
       x-permissions:
       - ConversationGet
     patch:
       consumes:
       - application/json
-      description: Requires permission **ConversationUpdate**. Updates conversation
-        details such as tags.
+      description: |-
+        Updates conversation details within the AI Findr platform, specifically managing tag associations for conversation categorization and organization. This endpoint enables conversation management workflows by allowing administrators to assign, modify, or remove tags for improved organization and analytics tracking.
+
+        **Permission Required:** ConversationUpdate
+
+        **Request Fields:**
+        - `tagIds` (optional): Array of tag IDs to associate with the conversation
+
+        **Tag Management:**
+        The operation replaces all existing tag associations with the provided tag IDs. Tags must exist within the organization and are validated before assignment. The response includes the updated tag associations for immediate feedback.
       parameters:
       - description: Conversation ID
         in: path
         name: conversationId
         required: true
         type: string
-      - description: Conversation update request
+      - description: Conversation update request with tag associations
         in: body
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/admin.UpdateConversationRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: Updated conversation
+          description: Updated conversation with new tag associations
           schema:
-            type: object
+            $ref: '#/definitions/admin.UpdateConversationResponse'
         "400":
-          description: Bad request
+          description: Bad request - invalid payload, tag IDs, or non-existent tags
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ConversationUpdate required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Conversation not found
+          description: Conversation not found - invalid conversation ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -433,13 +1278,21 @@ paths:
       - OrgIdAuth: []
       summary: Update conversation
       tags:
-      - Conversation
+      - Conversations
       x-permissions:
       - ConversationUpdate
   /admin/api/conversations/{conversationId}/summary:
     post:
-      description: Requires permission **ConversationSummaryCreate**. Creates an AI-generated
-        summary for a conversation.
+      description: |-
+        Generates an AI-powered summary for a conversation within the AI Findr platform. This endpoint analyzes the complete conversation history including user queries, AI responses, and interactions to create a concise summary for quick review, reporting, and conversation management purposes.
+
+        **Permission Required:** ConversationSummaryCreate
+
+        **Summary Generation:**
+        The summary is generated using the project's configured LLM settings and specialized prompts designed for conversation analysis. The resulting summary captures key discussion points, user intent, resolution status, and important details for efficient conversation review.
+
+        **Caching Behavior:**
+        Generated summaries are automatically cached in the conversation record for future reference, improving performance and providing consistent summary text across multiple requests.
       parameters:
       - description: Conversation ID
         in: path
@@ -450,23 +1303,28 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created conversation summary
+          description: Generated conversation summary with AI analysis
           schema:
-            type: object
+            $ref: '#/definitions/admin.ConversationSummaryResponse'
         "400":
-          description: Bad request
+          description: Bad request - missing conversation ID or invalid request
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ConversationSummaryCreate
+            required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Conversation not found
+          description: Conversation not found - invalid conversation ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error or LLM generation failure
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -474,111 +1332,46 @@ paths:
       - OrgIdAuth: []
       summary: Create conversation summary
       tags:
-      - Conversation
+      - Conversations
       x-permissions:
       - ConversationSummaryCreate
-  /admin/api/ingestions/{ingestionId}:
-    get:
-      description: Requires permission **IngestionGet**. Retrieves an ingestion record
-        by its ID.
-      parameters:
-      - description: Ingestion ID
-        in: path
-        name: ingestionId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Ingestion details
-          schema:
-            type: object
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "404":
-          description: Ingestion not found
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      security:
-      - BearerAuth: []
-      - OrgIdAuth: []
-      summary: Get ingestion
-      tags:
-      - Ingestion
-      x-permissions:
-      - IngestionGet
-  /admin/api/ingestions/{ingestionJobId}/notify:
-    post:
-      consumes:
-      - application/json
-      description: Requires permission **IngestionNotificationCreate**. Receives notification
-        of ingestion completion.
-      parameters:
-      - description: Ingestion job ID
-        in: path
-        name: ingestionJobId
-        required: true
-        type: string
-      - description: Ingestion notification data
-        in: body
-        name: body
-        required: true
-        schema:
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Notification processed
-          schema:
-            type: object
-        "400":
-          description: Bad request
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      security:
-      - BearerAuth: []
-      - OrgIdAuth: []
-      summary: Notify ingestion completion
-      tags:
-      - Ingestion
-      x-permissions:
-      - IngestionNotificationCreate
   /admin/api/organization:
     get:
-      description: Requires permission **OrganizationGet**. Gets organization details.
+      description: |-
+        Retrieves detailed information about a specific organization within the AI Findr platform. This endpoint provides comprehensive organization data including subscription details, metadata, and configuration settings for administrative and management purposes.
+
+        **Permission Required:** OrganizationGet
+
+        **Organization Details:**
+        Returns complete organization information including active subscription data, creation timestamps, and all organizational metadata. The response includes preloaded subscription details for immediate access to billing and plan information.
+
+        **Use Cases:**
+        - Administrative dashboards displaying organization details
+        - Organization profile management interfaces
+        - Subscription and billing information retrieval
+        - Tenant configuration and settings review
+        - Organization status monitoring and reporting
       produces:
       - application/json
       responses:
         "200":
-          description: Organization details
+          description: Organization details with subscription information
           schema:
-            type: object
+            $ref: '#/definitions/model.Organization'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (OrganizationGet required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Organization not found
+          description: Organization not found - invalid organization ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -586,16 +1379,25 @@ paths:
       - OrgIdAuth: []
       summary: Get organization
       tags:
-      - Organization
+      - Organizations
       x-permissions:
       - OrganizationGet
     patch:
       consumes:
       - application/json
-      description: Requires permission **OrganizationUpdate**. Updates organization
-        details.
+      description: |
+        Updates an existing organization's details within the AI Findr platform. This endpoint allows administrators to modify organization properties such as name and subscription settings for tenant management and configuration updates.
+
+        **Permission Required:** OrganizationUpdate
+
+        **Request Fields:**
+        - `name` (optional): Update the organization's display name
+        - `activeSubscriptionId` (optional): Update the organization's active subscription reference
+
+        **Organization Management:**
+        This endpoint enables real-time updates to organizational settings without disrupting existing projects or user access. Changes are immediately reflected across all associated resources within the organization's tenant boundary.
       parameters:
-      - description: Organization update request
+      - description: Organization update request with optional fields
         in: body
         name: body
         required: true
@@ -605,23 +1407,27 @@ paths:
       - application/json
       responses:
         "200":
-          description: Updated organization
+          description: Updated organization with modified details
           schema:
-            type: object
+            $ref: '#/definitions/model.Organization'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON or malformed request body
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (OrganizationUpdate required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Organization not found
+          description: Organization not found - invalid organization ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -629,92 +1435,135 @@ paths:
       - OrgIdAuth: []
       summary: Update organization
       tags:
-      - Organization
+      - Organizations
       x-permissions:
       - OrganizationUpdate
   /admin/api/organizations:
     get:
-      description: Requires permission **OrganizationList**. Lists all organizations.
+      description: |-
+        Retrieves a list of all organizations in the system. This endpoint is typically used by super administrators or system-level users to view and manage multiple organizations within the AI Findr platform.
+
+        **Permission Required:** OrganizationList
+
+        **Use Cases:**
+        - Super admin dashboards displaying all organizations
+        - System monitoring and organization management
+        - Multi-tenant administration interfaces
+        - Organization selection for administrative tasks
+
+        **Response:** Returns an array of organization objects containing basic organization information such as ID, name, creation date, and other organizational metadata.
       produces:
       - application/json
       responses:
         "200":
-          description: List of organizations
+          description: List of organizations with metadata
           schema:
             items:
-              type: object
+              $ref: '#/definitions/model.Organization'
             type: array
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (OrganizationList required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
       - BearerAuth: []
       summary: List organizations
       tags:
-      - Organization
+      - Organizations
       x-permissions:
       - OrganizationList
     post:
       consumes:
       - application/json
-      description: Requires permission **OrganizationCreate**. Creates a new organization.
+      description: |-
+        Creates a new organization in the AI Findr platform. Organizations serve as the top-level tenant boundary for multi-tenant deployments, containing projects, users, and all associated resources.
+
+        **Permission Required:** OrganizationCreate
+
+        **Request Fields:**
+        - `name` (required): The organization's display name
+
+        **Organization Setup:**
+        Creating an organization establishes a new tenant space with isolated data, projects, and user access. This is typically the first step in onboarding new clients or setting up separate environments for different business units.
+
+        **Use Cases:**
+        - Onboarding new enterprise clients
+        - Setting up separate environments for different departments
+        - Creating isolated spaces for development, staging, and production
+        - Multi-tenant SaaS deployment management
       parameters:
-      - description: Organization creation request
+      - description: Organization creation request with name
         in: body
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/admin.OrganizationCreateRequest'
       produces:
       - application/json
       responses:
         "201":
-          description: Created organization
+          description: Created organization with generated ID and metadata
           schema:
-            type: object
+            $ref: '#/definitions/model.Organization'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON or missing required fields
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (OrganizationCreate required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
       - BearerAuth: []
       summary: Create organization
       tags:
-      - Organization
+      - Organizations
       x-permissions:
       - OrganizationCreate
   /admin/api/projects:
     get:
-      description: Requires permission **ProjectList**. Returns the list of active
-        (non-deleted) projects for the organization.
+      description: |-
+        Retrieves a list of all active (non-deleted) projects within an organization in the AI Findr platform. This endpoint provides project overview data including ingestion sources and metadata for project management dashboards, organization-level administration, and project selection interfaces. Projects are ordered alphabetically by name for consistent presentation, with only active projects included (soft-deleted projects are excluded).
+
+        **Permission Required:** ProjectList
+
+        **Project Data:**
+        Returns an array of project objects with associated ingestion sources preloaded, providing comprehensive information for multi-project navigation, organization, and status monitoring.
       produces:
       - application/json
       responses:
         "200":
-          description: List of projects
+          description: List of active projects with ingestion sources
           schema:
             items:
-              type: object
+              $ref: '#/definitions/model.Project'
             type: array
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ProjectList required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -722,16 +1571,24 @@ paths:
       - OrgIdAuth: []
       summary: List projects
       tags:
-      - Project
+      - Projects
       x-permissions:
       - ProjectList
     post:
       consumes:
       - application/json
-      description: Requires permission **ProjectCreate**. Creates a new project in
-        the organization.
+      description: |-
+        Creates a new AI assistant project within an organization in the AI Findr platform. Projects serve as containers for AI-powered conversational experiences, including content ingestion, branding configuration, and conversation management. This endpoint establishes new AI assistant environments for specific domains, isolated product lines, customer support systems, or organized business functions with default branding configuration and unique identifiers.
+
+        **Permission Required:** ProjectCreate
+
+        **Request Fields:**
+        - `name` (required): The project's display name for identification and branding
+
+        **Project Setup:**
+        Creating a project generates unique identifiers (ID, slug, demo key) and prepares the foundation for content ingestion and conversational AI deployment with default branding configuration.
       parameters:
-      - description: Project creation request
+      - description: Project creation request with name
         in: body
         name: body
         required: true
@@ -741,19 +1598,23 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created project
+          description: Created project with generated identifiers
           schema:
             $ref: '#/definitions/admin.CreateProjectResponse'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON or missing required fields
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ProjectCreate required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -761,13 +1622,18 @@ paths:
       - OrgIdAuth: []
       summary: Create project
       tags:
-      - Project
+      - Projects
       x-permissions:
       - ProjectCreate
   /admin/api/projects/{projectId}:
     delete:
-      description: Requires permission **ProjectDelete**. Soft deletes a project and
-        its associated data.
+      description: |-
+        Performs a soft delete of a project and its associated data within the AI Findr platform. This endpoint marks the project as deleted while preserving data integrity and maintaining referential relationships for audit and recovery purposes. The deletion is suitable for decommissioning completed projects, removing test environments from active lists, organizational cleanup, and temporary project deactivation with recovery options.
+
+        **Permission Required:** ProjectDelete
+
+        **Soft Delete Process:**
+        The deletion process uses GORM's soft delete functionality, setting a DeletedAt timestamp rather than physically removing data. This approach preserves data relationships, enables recovery if needed, and maintains system integrity while hiding the project from normal operations.
       parameters:
       - description: Project ID
         in: path
@@ -778,15 +1644,19 @@ paths:
         "204":
           description: Project deleted successfully
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ProjectDelete required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Project not found
+          description: Project not found - invalid project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -794,12 +1664,17 @@ paths:
       - OrgIdAuth: []
       summary: Delete project
       tags:
-      - Project
+      - Projects
       x-permissions:
       - ProjectDelete
     get:
-      description: Requires permission **ProjectGet**. Retrieves an active (non-deleted)
-        project by its ID.
+      description: |-
+        Retrieves detailed information about a specific project within the AI Findr platform. This endpoint provides comprehensive project data including recent ingestions, branding configuration, and all associated metadata for project detail pages, configuration interfaces, dashboard displays with recent activity, and project status monitoring.
+
+        **Permission Required:** ProjectGet
+
+        **Project Details:**
+        Returns complete project information including the last ten ingestions, ingestion sources, and branding configuration. The response provides all necessary data for content ingestion history management, source administration, and branding customization interfaces.
       parameters:
       - description: Project ID
         in: path
@@ -810,19 +1685,23 @@ paths:
       - application/json
       responses:
         "200":
-          description: Project details
+          description: Project details with ingestions and branding
           schema:
-            type: object
+            $ref: '#/definitions/admin.ProjectWithLastTenIngestions'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ProjectGet required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Project not found
+          description: Project not found - invalid project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -830,47 +1709,61 @@ paths:
       - OrgIdAuth: []
       summary: Get project
       tags:
-      - Project
+      - Projects
       x-permissions:
       - ProjectGet
     patch:
       consumes:
       - application/json
-      description: Requires permission **ProjectUpdate**. Updates an existing project,
-        allowing partial updates.
+      description: |-
+        Updates an existing project's configuration within the AI Findr platform. This endpoint allows administrators to modify project properties including name, branding elements, widget styling, and search configurations for customizing the AI assistant experience, managing widget integration styles for web embedding, and conducting A/B testing of different branding and interface configurations.
+
+        **Permission Required:** ProjectUpdate
+
+        **Request Fields:**
+        - `name` (optional): Update the project's display name
+        - `branding` (optional): Update branding configuration including colors, logos, slogans, and widget settings
+
+        **Branding Configuration:**
+        The branding object supports comprehensive customization including logo images, brand colors, search placeholders, suggestions, source visibility, and detailed widget styling for overlay and floating display modes.
       parameters:
       - description: Project ID
         in: path
         name: projectId
         required: true
         type: string
-      - description: Project update request
+      - description: Project update request with optional fields
         in: body
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/admin.ProjectUpdateRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: Updated project
+          description: Updated project with modified configuration
           schema:
-            type: object
+            $ref: '#/definitions/model.Project'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON, malformed widget config, or validation
+            errors
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ProjectUpdate required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Project not found
+          description: Project not found - invalid project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -878,89 +1771,71 @@ paths:
       - OrgIdAuth: []
       summary: Update project
       tags:
-      - Project
+      - Projects
       x-permissions:
       - ProjectUpdate
-  /admin/api/projects/{projectId}/add-ingestion-source:
-    post:
-      consumes:
-      - application/json
-      description: Requires permission **ProjectAddSource**. Adds an ingestion source
-        to a project.
-      parameters:
-      - description: Project ID
-        in: path
-        name: projectId
-        required: true
-        type: string
-      - description: Ingestion source data
-        in: body
-        name: body
-        required: true
-        schema:
-          type: object
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created ingestion source
-          schema:
-            type: object
-        "400":
-          description: Bad request
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      security:
-      - BearerAuth: []
-      - OrgIdAuth: []
-      summary: Add ingestion source
-      tags:
-      - IngestionSource
-      x-permissions:
-      - ProjectAddSource
   /admin/api/projects/{projectId}/answerComponents:
     post:
       consumes:
       - application/json
-      description: Requires permission **AnswerComponentCreate**. Creates multiple
-        answer components at once.
+      description: |-
+        Creates multiple answer components at once within the AI Findr platform. This endpoint enables batch creation of interactive elements such as forms, tutorials, and action buttons that can be embedded in AI responses to enhance user engagement and data collection capabilities.
+
+        **Permission Required:** AnswerComponentCreate
+
+        **Request Format:**
+        Accepts an array of component creation requests, each containing a unique component ID, type, and content configuration. All components are validated before creation to ensure proper structure and functionality.
+
+        **Batch Processing:**
+        The operation processes all components in a single transaction. If any component fails validation or creation, the entire batch is rolled back to maintain data consistency. The response includes details about successfully created components and any errors encountered.
+
+        **Component Types:**
+        Supports various component types including forms for data collection, tutorials for user guidance, action buttons for interactive responses, and custom components for specialized functionality.
       parameters:
       - description: Project ID
         in: path
         name: projectId
         required: true
         type: string
-      - description: Answer components creation request
+      - description: Array of answer component creation requests
         in: body
         name: body
         required: true
         schema:
+          items:
+            $ref: '#/definitions/admin.CreateAnswerComponentRequest'
           type: array
       produces:
       - application/json
       responses:
         "201":
-          description: Created answer components
+          description: Created answer components with batch results
           schema:
-            type: object
+            $ref: '#/definitions/admin.CreateAnswerComponentsResponse'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON, validation errors, or empty request
+            array
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (AnswerComponentCreate
+            required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found - invalid project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "409":
+          description: Conflict - duplicate component IDs or creation errors
+          schema:
+            $ref: '#/definitions/admin.CreateAnswerComponentsResponse'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -968,13 +1843,27 @@ paths:
       - OrgIdAuth: []
       summary: Create answer components
       tags:
-      - AnswerComponent
+      - Answer Components
       x-permissions:
       - AnswerComponentCreate
   /admin/api/projects/{projectId}/conversations:
     get:
-      description: Requires permission **ConversationList**. Lists conversations for
-        a project.
+      description: |-
+        Retrieves a paginated list of conversations for a project within the AI Findr platform. This endpoint provides conversation overview data including first user messages, metadata, creation dates, and associated tags for conversation management, analysis, and administrative purposes. The response supports filtering by metadata, feedback type, search queries, and date ranges.
+
+        **Permission Required:** ConversationList
+
+        **Query Parameters:**
+        - `startDate` (optional): Start date for filtering conversations
+        - `endDate` (optional): End date for filtering conversations
+        - `page` (optional): Page number for pagination
+        - `perPage` (optional): Items per page
+        - `feedbackType` (optional): Filter by feedback type (up, down, neutral, leads)
+        - `search` (optional): Search within conversation content
+        - `metaValue` (optional): Filter by metadata value
+
+        **Response Data:**
+        Returns conversation summaries with context identifiers, first user messages, custom metadata, creation timestamps, and associated tags for comprehensive conversation management and analysis.
       parameters:
       - description: Project ID
         in: path
@@ -985,17 +1874,23 @@ paths:
       - application/json
       responses:
         "200":
-          description: List of conversations
+          description: Paginated list of conversation summaries with metadata
           schema:
-            items:
-              type: object
-            type: array
+            $ref: '#/definitions/admin.ListConversationsResponse'
+        "400":
+          description: Bad request - invalid parameters or date range
+          schema:
+            $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (ConversationList required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1003,66 +1898,77 @@ paths:
       - OrgIdAuth: []
       summary: List conversations
       tags:
-      - Conversation
+      - Conversations
       x-permissions:
       - ConversationList
-  /admin/api/projects/{projectId}/conversations/leads:
-    get:
-      description: Requires permission **ConversationGet**. Lists conversations that
-        are marked as leads.
-      parameters:
-      - description: Project ID
-        in: path
-        name: projectId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: List of lead conversations
-          schema:
-            items:
-              type: object
-            type: array
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      security:
-      - BearerAuth: []
-      - OrgIdAuth: []
-      summary: List lead conversations
-      tags:
-      - Conversation
-      x-permissions:
-      - ConversationGet
   /admin/api/projects/{projectId}/feedback:
     get:
-      description: Requires permission **FeedbackList**. Lists feedback for a project.
+      description: |-
+        Retrieves a paginated list of feedback entries for a project within the AI Findr platform. This endpoint provides comprehensive feedback data including user queries, AI responses, vote types, selected options, and feedback text for analysis, reporting, and quality improvement purposes. The response includes deduplication logic to prioritize complete feedback submissions over simple vote selections.
+
+        **Permission Required:** FeedbackList
+
+        **Query Parameters:**
+        - `startDate` (optional): Start date in YYYY-MM-DD format (defaults to 7 days ago)
+        - `endDate` (optional): End date in YYYY-MM-DD format (defaults to today)
+        - `page` (optional): Page number for pagination (defaults to 1)
+        - `perPage` (optional): Items per page (defaults to 20, max 100)
+        - `search` (optional): Filter feedback by user query text
+
+        **Deduplication Logic:**
+        When the same query within the same context has both feedback:submit and feedback:select actions, feedback:submit is prioritized to avoid duplicates. Same queries in different contexts maintain separate feedback entries for accurate analytics.
       parameters:
       - description: Project ID
         in: path
         name: projectId
         required: true
         type: string
+      - description: Start date (YYYY-MM-DD format)
+        in: query
+        name: startDate
+        type: string
+      - description: End date (YYYY-MM-DD format)
+        in: query
+        name: endDate
+        type: string
+      - description: Page number for pagination
+        in: query
+        name: page
+        type: integer
+      - description: Items per page (max 100)
+        in: query
+        name: perPage
+        type: integer
+      - description: Filter by user query text
+        in: query
+        name: search
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: List of feedback
+          description: Paginated list of feedback entries with deduplication
           schema:
-            type: object
+            $ref: '#/definitions/admin.ListFeedbackResponse'
+        "400":
+          description: Bad request - invalid date range, pagination parameters, or
+            search query
+          schema:
+            $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (FeedbackList required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found - invalid project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1075,8 +1981,13 @@ paths:
       - FeedbackList
   /admin/api/projects/{projectId}/feedback/{feedbackId}:
     get:
-      description: Requires permission **FeedbackGet**. Retrieves feedback details
-        by its ID.
+      description: |-
+        Retrieves detailed information about a specific feedback entry within the AI Findr platform. This endpoint provides comprehensive feedback details including the complete user query, AI response with reasoning and sources, vote information, selected feedback options, and custom feedback text for in-depth analysis and quality assessment.
+
+        **Permission Required:** FeedbackGet
+
+        **Response Details:**
+        Returns complete feedback information including request and context identifiers, original user query and AI response, reasoning behind the response, source materials used, vote type and selected options, custom feedback text, and creation timestamp for thorough feedback analysis.
       parameters:
       - description: Project ID
         in: path
@@ -1092,19 +2003,23 @@ paths:
       - application/json
       responses:
         "200":
-          description: Feedback details
+          description: Detailed feedback information with complete context
           schema:
-            type: object
+            $ref: '#/definitions/admin.FeedbackItem'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (FeedbackGet required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
-          description: Feedback not found
+          description: Feedback not found - invalid feedback or project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1115,51 +2030,23 @@ paths:
       - Feedback
       x-permissions:
       - FeedbackGet
-  /admin/api/projects/{projectId}/ingest:
-    post:
-      consumes:
-      - application/json
-      description: Requires permission **ProjectIngest**. Starts data ingestion for
-        a project.
-      parameters:
-      - description: Project ID
-        in: path
-        name: projectId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Ingestion started
-          schema:
-            type: object
-        "400":
-          description: Bad request
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      security:
-      - BearerAuth: []
-      - OrgIdAuth: []
-      summary: Ingest project data
-      tags:
-      - Ingestion
-      x-permissions:
-      - ProjectIngest
   /admin/api/projects/{projectId}/keys:
     post:
       consumes:
       - application/json
-      description: Requires permission **APIKeyCreate**. Creates a new API key for
-        a project.
+      description: |-
+        Creates a new API key for a project within the AI Findr platform. This endpoint generates secure API credentials that enable machine-to-machine integrations and programmatic access to project resources including conversation APIs, analytics tracking, and answer component retrieval for external applications and services.
+
+        **Permission Required:** `APIKeyCreate`
+
+        **API Key Generation:**
+        Generates a secure API key with environment-specific prefixes, cryptographic hashing for storage, and a truncated suffix for identification. The plain text key is returned only once during creation for security purposes.
+
+        **Default Permissions:**
+        Created API keys include permissions for project ask operations, analytics creation, and answer component retrieval, enabling comprehensive API access for conversational AI integrations and data collection workflows.
+
+        **Security Considerations:**
+        The plain text API key is displayed only once and should be securely stored by the client. The key is hashed before database storage, and only the last 6 characters are preserved for identification purposes.
       parameters:
       - description: Project ID
         in: path
@@ -1170,19 +2057,27 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created API key
+          description: Created API key with plain text and identifier
           schema:
-            type: object
+            $ref: '#/definitions/admin.createAPIKeyResp'
         "400":
-          description: Bad request
+          description: Bad request - invalid project ID or request format
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (APIKeyCreate required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found - invalid project ID or organization access
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1190,32 +2085,64 @@ paths:
       - OrgIdAuth: []
       summary: Create project API key
       tags:
-      - APIKey
+      - Projects
       x-permissions:
       - APIKeyCreate
   /admin/api/projects/{projectId}/metrics:
     get:
-      description: Requires permission **AnalyticRead**. Retrieves analytics and metrics
-        for a project.
+      description: |-
+        Retrieves comprehensive analytics and metrics for a project within the AI Findr platform. This endpoint provides detailed performance data including conversation counts, feedback distribution, link clicks, growth trends, and user engagement patterns for dashboard displays, reporting interfaces, and performance monitoring.
+
+        **Permission Required:** AnalyticRead
+
+        **Query Parameters:**
+        - `startDate` (optional): Start date in YYYY-MM-DD format (defaults to 7 days ago)
+        - `endDate` (optional): End date in YYYY-MM-DD format (defaults to today)
+
+        **Metrics Included:**
+        Returns conversation metrics with variance comparison to previous periods, feedback distribution and growth data, link click rates and user actions, time-series data for trend analysis, and top feedback options by category. The response includes both current period totals and comparison data for performance analysis.
+
+        **Aggregation Intervals:**
+        Data is automatically aggregated by day (≤14 days), week (≤60 days), or month (>60 days) based on the selected date range for optimal visualization and analysis.
       parameters:
       - description: Project ID
         in: path
         name: projectId
         required: true
         type: string
+      - description: Start date (YYYY-MM-DD format)
+        in: query
+        name: startDate
+        type: string
+      - description: End date (YYYY-MM-DD format)
+        in: query
+        name: endDate
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: Project metrics
+          description: Comprehensive project metrics with time-series data
           schema:
-            type: object
+            $ref: '#/definitions/admin.MetricsResponse'
+        "400":
+          description: Bad request - invalid date range or parameters
+          schema:
+            $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (AnalyticRead required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Project not found - invalid project ID
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1223,69 +2150,57 @@ paths:
       - OrgIdAuth: []
       summary: Get project metrics
       tags:
-      - Analytics
+      - Projects
       x-permissions:
       - AnalyticRead
-  /admin/api/projects/{projectId}/regenerate-demo-key:
-    post:
-      description: Requires permission **ProjectGenerateDemoURL**. Regenerates the
-        demo key for a project.
-      parameters:
-      - description: Project ID
-        in: path
-        name: projectId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: New demo key
-          schema:
-            type: object
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/apierror.Response'
-        "404":
-          description: Project not found
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      security:
-      - BearerAuth: []
-      - OrgIdAuth: []
-      summary: Regenerate demo key
-      tags:
-      - Project
-      x-permissions:
-      - ProjectGenerateDemoURL
   /admin/api/tags:
     get:
-      description: Requires permission **TagList**. Lists all tags for the organization.
+      description: |-
+        Retrieves a list of all tags for an organization within the AI Findr platform. This endpoint provides tag data including values, colors, and optional conversation counts for tag management, filtering interfaces, and analytics dashboards. The response supports expansion parameters to include additional metrics such as conversation counts within specified date ranges.
+
+        **Permission Required:** TagList
+
+        **Query Parameters:**
+        - `include` (optional): Comma-separated list of expansions (e.g., "counts" for conversation counts)
+        - `startDate` (optional): Start date for count calculations (when include=counts)
+        - `endDate` (optional): End date for count calculations (when include=counts)
+
+        **Tag Data:**
+        Returns tags ordered alphabetically by value with optional count expansions. When counts are requested, the endpoint performs efficient aggregation to avoid N+1 queries and provides conversation counts per tag within the specified date range.
       parameters:
       - description: Include additional data (e.g., counts)
         in: query
         name: include
         type: string
+      - description: Start date for count calculations (YYYY-MM-DD)
+        in: query
+        name: startDate
+        type: string
+      - description: End date for count calculations (YYYY-MM-DD)
+        in: query
+        name: endDate
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: List of tags
+          description: List of tags with optional expansions
           schema:
-            items:
-              type: object
-            type: array
+            $ref: '#/definitions/admin.ListTagsResponse'
+        "400":
+          description: Bad request - invalid date range
+          schema:
+            $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (TagList required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1293,37 +2208,53 @@ paths:
       - OrgIdAuth: []
       summary: List tags
       tags:
-      - Tag
+      - Tags
       x-permissions:
       - TagList
     post:
       consumes:
       - application/json
-      description: Requires permission **TagCreate**. Creates a new tag for the organization.
+      description: |-
+        Creates a new tag for an organization within the AI Findr platform. This endpoint enables administrators to define new categorization labels with custom colors for organizing conversations, enabling efficient filtering, reporting, and content management across projects and analytics interfaces.
+
+        **Permission Required:** TagCreate
+
+        **Request Fields:**
+        - `value` (required): The tag label text (trimmed of whitespace)
+        - `createdBy` (optional): User identifier for audit tracking
+        - `color` (optional): Hex color code for UI display (defaults to #000000)
+
+        **Tag Creation:**
+        Validates tag uniqueness within the organization to prevent duplicates. The value field is automatically trimmed and validated for emptiness, ensuring consistent tag formatting across the platform.
       parameters:
       - description: Tag creation request
         in: body
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/admin.CreateTagRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created tag
           schema:
-            type: object
+            $ref: '#/definitions/model.Tag'
         "400":
-          description: Bad request
+          description: Bad request - invalid payload, missing value, or duplicate
+            tag
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (TagCreate required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1331,12 +2262,18 @@ paths:
       - OrgIdAuth: []
       summary: Create tag
       tags:
-      - Tag
+      - Tags
       x-permissions:
       - TagCreate
   /admin/api/tags/{tagId}:
     delete:
-      description: Requires permission **TagDelete**. Deletes a tag from the organization.
+      description: |-
+        Deletes a tag from an organization within the AI Findr platform. This endpoint removes the tag entity while maintaining referential integrity with associated conversations. The deletion is scoped to the organization to ensure proper tenant isolation and prevent unauthorized access to tags from other organizations.
+
+        **Permission Required:** TagDelete
+
+        **Deletion Process:**
+        Performs a hard delete of the tag record with organization-scoped validation. Associated conversation-tag relationships may be handled by database constraints or separate cleanup processes depending on the foreign key configuration.
       parameters:
       - description: Tag ID
         in: path
@@ -1347,15 +2284,19 @@ paths:
         "204":
           description: Tag deleted successfully
         "400":
-          description: Bad request
+          description: Bad request - missing or invalid tag ID
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (TagDelete required)
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1363,13 +2304,23 @@ paths:
       - OrgIdAuth: []
       summary: Delete tag
       tags:
-      - Tag
+      - Tags
       x-permissions:
       - TagDelete
     patch:
       consumes:
       - application/json
-      description: Requires permission **TagUpdate**. Updates a tag's properties.
+      description: |-
+        Updates an existing tag's properties within the AI Findr platform. This endpoint allows administrators to modify tag values and colors for maintaining organized categorization systems, updating display preferences, and ensuring consistent labeling across conversation management and analytics interfaces.
+
+        **Permission Required:** TagUpdate
+
+        **Request Fields:**
+        - `value` (required): Updated tag label text (trimmed of whitespace)
+        - `color` (optional): Updated hex color code for UI display
+
+        **Update Process:**
+        Validates tag existence within the organization and checks for value uniqueness to prevent duplicates. The tag value is automatically trimmed and validated, while color updates are optional and preserve existing values when not provided.
       parameters:
       - description: Tag ID
         in: path
@@ -1381,28 +2332,33 @@ paths:
         name: body
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/admin.UpdateTagRequest'
       produces:
       - application/json
       responses:
         "200":
           description: Updated tag
           schema:
-            type: object
+            $ref: '#/definitions/model.Tag'
         "400":
-          description: Bad request
+          description: Bad request - invalid payload, missing value, or duplicate
+            tag
           schema:
             $ref: '#/definitions/apierror.Response'
         "401":
-          description: Unauthorized
+          description: Unauthorized - invalid or missing bearer token
           schema:
             $ref: '#/definitions/apierror.Response'
         "403":
-          description: Forbidden
+          description: Forbidden - insufficient permissions (TagUpdate required)
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
           description: Tag not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
           schema:
             $ref: '#/definitions/apierror.Response'
       security:
@@ -1410,83 +2366,115 @@ paths:
       - OrgIdAuth: []
       summary: Update tag
       tags:
-      - Tag
+      - Tags
       x-permissions:
       - TagUpdate
   /api/answerComponents/{answerComponentId}:
     get:
-      description: Retrieves an answer component by its ID.
+      description: |-
+        Retrieves an answer component by its unique identifier. Answer components are interactive elements that can be embedded within AI assistant responses to enhance user experience, such as action buttons, forms, carousels, or custom widgets.
+
+        **Answer Components:**
+        Answer components allow you to create rich, interactive experiences within AI responses. They are referenced in the `answerComponents` array of generated responses and can include various types of interactive elements that users can engage with directly in the conversation.
+
+        **Component Validation:**
+        The endpoint validates the component's content structure against its declared type to ensure proper rendering and functionality. If the content doesn't match the expected schema for the component type, an error will be returned.
+
+        **Common Use Cases:**
+        - Action buttons for quick user actions (e.g., "Book Now", "Learn More")
+        - Forms for data collection (e.g., contact forms, surveys, lead capture)
+        - Interactive widgets for enhanced engagement
+        - Custom components tailored to specific business needs
       parameters:
-      - description: Answer component ID
+      - description: Answer component unique identifier
         in: path
         name: answerComponentId
         required: true
         type: string
-      responses:
-        "200":
-          description: Answer component data
-          schema:
-            type: object
-        "404":
-          description: Answer component not found
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      summary: Get answer component
-      tags:
-      - AnswerComponent
-  /api/demo/{demoKey}:
-    get:
-      description: Returns public information of a project identified by a demo key.
-      parameters:
-      - description: Demo key
-        in: path
-        name: demoKey
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/api.BasicProject'
-        "404":
-          description: Project not found
-          schema:
-            $ref: '#/definitions/apierror.Response'
-      summary: Get project by demo key
-      tags:
-      - Project
-  /api/projects/{projectSlug}/analytics:
-    post:
-      consumes:
-      - application/json
-      description: Records analytics events for a project.
-      parameters:
-      - description: Project slug
-        in: path
-        name: projectSlug
-        required: true
-        type: string
-      - description: Analytics payload
-        in: body
-        name: body
-        required: true
-        schema:
-          type: object
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Answer component data with validated content
+          schema:
+            $ref: '#/definitions/model.AnswerComponent'
+        "404":
+          description: Answer component not found
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error or content validation failed
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get answer component
+      tags:
+      - Answer Components
+  /api/projects/{projectSlug}/analytics:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Records analytics events for a project to enable tracking user interactions, conversation flow, and system performance. These events are used to populate analytics dashboards in the AI Findr Hub, helping you understand user behavior and optimize your AI assistant experience.
+
+        **Required Fields:**
+        - `action` (string): The type of event being tracked. See available actions below.
+        - `conversationId` (string): The conversation ID where this event occurred
+        - `datetime` (string): Event timestamp in RFC3339 format (ISO 8601)
+
+        **Available Actions:**
+        - `query:initial`: User's first query in a conversation
+        - `query:suggestion`: User selected a suggested query from the suggestion list
+        - `query:followup`: User sent a follow-up message in an ongoing conversation
+        - `response:generated`: AI assistant generated a response with sources and reasoning
+        - `feedback:select`: User selected feedback option (upvote/downvote/neutral) before submitting
+        - `feedback:submit`: User submitted detailed feedback with optional text and selected options
+        - `click:responselink`: User clicked on a link within the AI assistant's response
+        - `click:sourcelink`: User clicked on a source link in the response
+        - `click:cta:[componentId]`: User clicked on a CTA component (replace [componentId] with actual ID)
+        - `form:submit`: User submitted data through a form presented by the AI assistant
+        - `widget:open`: User opened the AI assistant widget
+
+        **Payload Structure:**
+        Each action type has its own specific payload structure with relevant fields. The payload contains event-specific data such as queries, responses, feedback details, click targets, or form submissions. All additional fields beyond the required ones are stored in the analytics payload for dashboard consumption.
+
+        **Analytics Usage:**
+        Recorded events appear in your AI Findr Hub analytics dashboard, enabling insights into conversation patterns, user engagement, knowledge gaps, and system performance. Use this data to optimize content, improve user experience, and measure AI assistant effectiveness.
+      parameters:
+      - description: Project slug identifier
+        in: path
+        name: projectSlug
+        required: true
+        type: string
+      - description: Analytics event data with action, conversation ID, timestamp,
+          and action-specific payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api.AnalyticsEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event recorded successfully
           schema:
             type: string
         "400":
-          description: Bad request
+          description: Bad request - missing required fields or invalid datetime format
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
           description: Project not found
           schema:
             $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Track analytics event
       tags:
       - Analytics
@@ -1494,15 +2482,38 @@ paths:
     post:
       consumes:
       - application/json
-      description: Ask a question within a project conversation. Supports both streaming
-        and non-streaming responses.
+      description: |-
+        Submit a question to AI Findr within a project conversation. This endpoint supports both streaming and non-streaming responses, allowing for real-time chat experiences or simple request-response patterns.
+
+        **Request Fields:**
+        - `query` (required): The user's question or message
+        - `conversationId` (optional): Conversation ID from the create conversation endpoint. If omitted, a new conversation will be created automatically
+        - `stream` (optional): Enable streaming response with Server-Sent Events (default: true)
+        - `filters` (optional): JSON string for filtering knowledge sources during retrieval
+        - `context` (optional): Additional context data passed directly to the AI to provide more relevant responses. Use this to include information about the user's current page, scenario, form data, or any other contextual information that can help the AI provide more accurate and personalized answers.
+
+        **Streaming vs Non-Streaming:**
+        - **Streaming (default)**: Returns Server-Sent Events with real-time response chunks, knowledge retrieval events, and final answer
+        - **Non-streaming**: Returns complete response once processing is finished
+
+        **Server-Sent Events (Streaming Mode):**
+        When streaming is enabled, you'll receive these event types:
+        - `knowledge-retrieved`: Knowledge sources found and retrieved from your content
+        - `answer-delta`: Real-time chunks of the AI response as it's being generated
+        - `answer-full`: Complete final answer with response message ID
+        - `error`: Error information if something goes wrong during processing
+
+        **Response Flow:**
+        1. Knowledge sources are retrieved from your ingested content
+        2. AI generates response based on retrieved knowledge, conversation history, and provided context
+        3. Response is returned either as streaming events or complete answer
       parameters:
-      - description: Project slug
+      - description: Project slug identifier
         in: path
         name: projectSlug
         required: true
         type: string
-      - description: Ask request
+      - description: Question and conversation parameters
         in: body
         name: body
         required: true
@@ -1510,85 +2521,134 @@ paths:
           $ref: '#/definitions/api.AskRequest'
       produces:
       - application/json
+      - text/event-stream
       responses:
         "200":
-          description: Streaming response (SSE)
+          description: Server-Sent Events stream (streaming mode)
           schema:
             type: string
+        "202":
+          description: Complete response (non-streaming mode)
+          schema:
+            $ref: '#/definitions/apitypes.AskFullResponse'
         "400":
-          description: Bad request
+          description: Bad request - invalid parameters or missing query
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
           description: Project not found
           schema:
             $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Ask question
       tags:
-      - Conversation
+      - Chat
   /api/projects/{projectSlug}/conversation:
     post:
       consumes:
       - application/json
-      description: Creates a new conversation for a project.
+      description: |-
+        Creates a new conversation session on the given project. Conversations track individual chat sessions and store custom metadata for analytics and filtering purposes. Each conversation gets a unique ID that should be used for subsequent message exchanges via the ask endpoint.
+
+        **Metadata Purpose:**
+        The optional metadata field allows you to attach custom key-value pairs to conversations. This metadata is stored and can be used for filtering conversations in the AI Findr Hub dashboard, enabling better analytics and conversation management. Common use cases include tracking user IDs, session information, conversation sources, or custom categorization tags.
+
+        **Next Steps:**
+        Use the returned conversationId with the `/api/projects/{projectSlug}/ask` endpoint to send messages.
       parameters:
-      - description: Project slug
+      - description: Project slug identifier (URL-friendly project name)
         in: path
         name: projectSlug
         required: true
         type: string
-      - description: Conversation request with metadata
+      - description: Conversation creation request with optional metadata
         in: body
         name: body
-        required: true
         schema:
-          type: object
+          $ref: '#/definitions/api.CreateConversationRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Conversation created successfully
           schema:
             $ref: '#/definitions/api.CreateConversationResponse'
         "400":
-          description: Bad request
+          description: Bad request - invalid JSON or project slug
           schema:
             $ref: '#/definitions/apierror.Response'
         "404":
           description: Project not found
           schema:
             $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - ApiKeyAuth: []
       summary: Create conversation
       tags:
-      - Conversation
+      - Chat
   /api/widget/{projectSlug}:
     get:
-      description: Returns project information for widget integration by project slug.
+      description: |-
+        Retrieves project configuration and branding information required for embedding the AI Findr widget on external websites. This endpoint provides all necessary styling, behavior settings, and customization options to render a fully branded AI assistant widget.
+
+        **Widget Integration:**
+        This endpoint is the foundation for widget integration, providing the complete configuration needed to embed AI Findr on your website. The response includes project metadata, visual branding, and widget behavior settings.
+
+        **Branding Response Fields:**
+        - `logoImage`: URL to your organization's logo for display in the widget
+        - `brandColor`: Primary brand color in hex format for widget theming
+        - `sloganLineOne/sloganLineTwo`: Custom welcome messages displayed to users
+        - `searchPlaceholder`: Placeholder text shown in the input field
+        - `searchSuggestions`: Array of suggested queries displayed to users
+        - `showSources`: Whether to display source links in AI responses
+        - `widgetConfig`: Detailed styling configuration for widget appearance and behavior
+
+        **Usage:**
+        Use this endpoint during widget initialization to obtain branding and configuration. The response contains all visual and behavioral settings needed to create a consistent, branded experience that matches your organization's identity.
+
+        **Default Values:**
+        The endpoint returns default values for any branding options that haven't been customized, ensuring the widget always has a complete configuration.
       parameters:
-      - description: Project slug
+      - description: Project slug identifier for the widget integration
         in: path
         name: projectSlug
         required: true
         type: string
+      produces:
+      - application/json
       responses:
         "200":
-          description: OK
+          description: Project configuration with branding and widget settings
           schema:
             $ref: '#/definitions/api.ProjectResponse'
         "404":
           description: Project not found
           schema:
             $ref: '#/definitions/apierror.Response'
-      summary: Get project by slug
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get widget details
       tags:
-      - Project
+      - Widget
 schemes:
 - https
 securityDefinitions:
   ApiKeyAuth:
-    description: API Key for machine-to-machine authentication. Generate through Admin
-      API endpoint /admin/api/projects/{projectId}/keys or the AI Findr dashboard.
-      Recommended for server-side integrations and automated workflows.
+    description: API Key for machine-to-machine authentication. Generate through the
+      AI Findr Hub. Recommended for server-side integrations and automated workflows.
     in: header
     name: X-API-KEY
     type: apiKey
@@ -1602,31 +2662,41 @@ securityDefinitions:
   OrgIdAuth:
     description: Organization ID for multi-tenant data isolation. Required for most
       endpoints. Find your organization ID in the AI Findr dashboard or retrieve it
-      using the /admin/api/organization endpoint. Set this once to test all endpoints
+      using the `/admin/api/organization`` endpoint. Set this once to test all endpoints
       within your organization context.
     in: header
     name: X-Organization-Id
     type: apiKey
 swagger: "2.0"
+tags:
+- description: Widget integration endpoints for embedding AI Findr on external websites
+  name: Widget
+- description: Conversational AI endpoints for asking questions and managing conversations
+  name: Chat
+- description: Analytics and metrics tracking endpoints for monitoring usage and performance
+  name: Analytics
+- description: Organization management endpoints for multi-tenant administration
+  name: Organizations
+- description: Project management endpoints for creating and configuring AI assistant
+    projects
+  name: Projects
+- description: Answer components management endpoints
+  name: Answer Components
+- description: Conversation management endpoints for tracking and organizing chat
+    sessions
+  name: Conversations
+- description: Feedback management endpoints for managing feedback from users
+  name: Feedback
 x-tagGroups:
-- name: Public API
+- name: Client Integration
   tags:
-  - Project
-  - Conversation
-  - AnswerComponent
+  - Widget
+  - Chat
   - Analytics
-- name: Admin API
+- name: Platform Management
   tags:
-  - Organization
-  - Project
-  - Conversation
-  - AnswerComponent
-  - Ingestion
-  - IngestionSource
-  - Tag
+  - Organizations
+  - Projects
+  - Answer Components
+  - Conversations
   - Feedback
-  - APIKey
-  - Analytics
-- name: Webhooks
-  tags:
-  - Webhook

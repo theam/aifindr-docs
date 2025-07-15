@@ -234,6 +234,7 @@ const config: Config = {
             sidebarOptions: {
               groupPathsBy: "tagGroup",
               categoryLinkSource: "info",
+              sidebarCollapsed: true,
             },
           } satisfies OpenApiPlugin.Options,
         } satisfies Plugin.PluginOptions,
