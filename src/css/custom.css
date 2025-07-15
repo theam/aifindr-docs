@@ -4,28 +4,52 @@
  * work well for content-centric websites.
  */
 
+/* Custom Font Definitions */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Variable.ttf') format('truetype');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-VariableItalic.ttf') format('truetype');
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #635dff;
+  --ifm-color-primary-dark: #4f47e6;
+  --ifm-color-primary-darker: #4a42e0;
+  --ifm-color-primary-darkest: #3d36cc;
+  --ifm-color-primary-light: #7773ff;
+  --ifm-color-primary-lighter: #827eff;
+  --ifm-color-primary-lightest: #9c99ff;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Custom font variables */
+  --ifm-font-family-base: 'Satoshi', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+  --ifm-heading-font-family: 'Satoshi', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+  --ifm-font-weight-base: 450;
+  --ifm-font-weight-semibold: 550;
+  --ifm-font-weight-bold: 650;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #827eff;
+  --ifm-color-primary-dark: #6f6aff;
+  --ifm-color-primary-darker: #655fff;
+  --ifm-color-primary-darkest: #473fff;
+  --ifm-color-primary-light: #9590ff;
+  --ifm-color-primary-lighter: #a29eff;
+  --ifm-color-primary-lightest: #bcbaff;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
