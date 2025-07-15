@@ -14,22 +14,13 @@ const config: Config = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "aifindr", // Usually your GitHub org/user name.
-  projectName: "docs", // Usually your repo name.
-
   presets: [
     [
       "classic",
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.ts"),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          editUrl: "https://github.com/theam/aifindr-docs/tree/main/",
           docItemComponent: "@theme/ApiItem", // Derived from docusaurus-theme-openapi
         },
         theme: {
@@ -53,7 +44,7 @@ const config: Config = {
         },
         items: [
           {
-            href: "https://github.com/facebook/docusaurus",
+            href: "https://github.com/theam/aifindr-docs",
             label: "GitHub",
             position: "right",
           },
@@ -87,20 +78,7 @@ const config: Config = {
       //           href: "https://twitter.com/docusaurus",
       //         },
       //       ],
-      //     },
-      //     {
-      //       title: "More",
-      //       items: [
-      //         {
-      //           label: "Blog",
-      //           to: "/blog",
-      //         },
-      //         {
-      //           label: "GitHub",
-      //           href: "https://github.com/facebook/docusaurus",
-      //         },
-      //       ],
-      //     },
+      //     }
       //   ],
       //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       // },
