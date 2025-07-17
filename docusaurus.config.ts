@@ -204,7 +204,7 @@ const config: Config = {
             downloadUrl:
               "https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml",
             sidebarOptions: {
-              groupPathsBy: "tagGroup",
+              groupPathsBy: "tag",
               categoryLinkSource: "tag",
               sidebarCollapsed: true,
             },

@@ -1,7 +1,7 @@
 ---
 id: ai-findr-api
 title: "AI Findr API"
-description: "Programmatic access to the AI Findr platform."
+description: "Acceso programático a la plataforma AI Findr."
 sidebar_label: Introduction
 sidebar_position: 0
 hide_title: true
@@ -36,53 +36,50 @@ import Export from "@theme/ApiExplorer/Export";
 
 
 
-Programmatic access to the AI Findr platform.
+Acceso programático a la plataforma AI Findr.
 
-AI Findr enables organizations to create AI-powered conversational experiences using their own content knowledge base. Our platform provides accurate, context-aware responses while capturing valuable analytics about customer interactions and knowledge gaps.
+AI Findr permite a las organizaciones crear experiencias conversacionales impulsadas por IA utilizando su propia base de conocimientos de contenido. Nuestra plataforma proporciona respuestas precisas y conscientes del contexto, mientras recopila análisis valiosos sobre las interacciones con los clientes y las brechas de conocimiento.
 
-## Introduction
-This API is documented in **OpenAPI format** and provides comprehensive access to the AI Findr platform.
-It enables developers to integrate AI Findr directly into their applications, offering an alternative to our embeddable widget solution.
+## Introducción
+Esta API está documentada en **formato OpenAPI** y proporciona acceso completo a la plataforma AI Findr.
+Permite a los desarrolladores integrar AI Findr directamente en sus aplicaciones, ofreciendo una alternativa a nuestra solución de widget embebible.
 
-**Key Features:**
-- **Conversational AI**: Ask questions and receive intelligent responses based on your ingested content.
-- **Content Management**: Ingest and manage your organization's knowledge base through various sources.
-- **Real-time Analytics**: Track conversations, identify knowledge gaps, and understand customer needs.
-- **Custom Branding**: Customize the experience with your organization's branding and styling.
-- **Streaming Support**: Get real-time responses with Server-Sent Events (SSE) for better user experience.
+**Características Clave:**
+- **IA Conversacional**: Haz preguntas y recibe respuestas inteligentes basadas en tu contenido ingresado.
+- **Gestión de Contenido**: Ingresa y administra la base de conocimientos de tu organización a través de diversas fuentes.
+- **Analítica en Tiempo Real**: Realiza seguimiento de conversaciones, identifica brechas de conocimiento y comprende las necesidades de los clientes.
+- **Personalización de Marca**: Personaliza la experiencia con la marca y el estilo de tu organización.
+- **Soporte de Streaming**: Obtén respuestas en tiempo real con Server-Sent Events (SSE) para una mejor experiencia de usuario.
 
-## Authentication
-AI Findr supports two authentication methods:
+## Autenticación
+AI Findr admite dos métodos de autenticación:
 
-### API Key Authentication (Recommended for M2M)
-For machine-to-machine integrations, use API key authentication by including the `X-API-KEY` header in your requests.
-API keys can be generated through the AI Findr Hub.
+### Autenticación con Clave API (Recomendado para M2M)
+Para integraciones de máquina a máquina, utiliza la autenticación por clave API incluyendo el encabezado `X-API-KEY` en tus solicitudes.
+Las claves API se pueden generar a través del AI Findr Hub.
 
-### Bearer Token Authentication
-For user-context operations, use JWT bearer tokens in the `Authorization` header with the format: `Bearer {token}`
+### Autenticación con Token Bearer
+Para operaciones en contexto de usuario, utiliza tokens JWT bearer en el encabezado `Authorization` con el formato: `Bearer {token}`
 
-### Organization Context
-Most API endpoints require the `X-Organization-Id` header to specify which organization context to operate within.
-This ensures proper data isolation and access control.
+### Contexto de Organización
+La mayoría de los endpoints de la API requieren el encabezado `X-Organization-Id` para especificar dentro de qué contexto de organización operar.
+Esto asegura el aislamiento adecuado de los datos y el control de acceso.
 
-## API Structure
-The API is organized into two main categories:
-- **Public API**: Endpoints for conversational interactions, project information, and analytics tracking
-- **Admin API**: Management endpoints for organizations, projects, content ingestion, and analytics
+## Estructura de la API
+La API expone endpoints públicos para interacciones conversacionales, información de proyectos y seguimiento analítico.
 
-## Rate Limits
-API requests are subject to rate limiting to ensure fair usage and system stability. Rate limits vary by endpoint and authentication method.
+## Límites de Frecuencia
+Las solicitudes a la API están sujetas a límites de frecuencia para garantizar el uso justo y la estabilidad del sistema. Los límites varían según el endpoint y el método de autenticación.
 
-## Testing the API
-When testing endpoints in the Swagger UI:
-1. **Set Organization Context**: Click the "Authorize" button and enter your Organization ID in the "OrgIdAuth" field
-2. **Choose Authentication**: Enter either your API Key (ApiKeyAuth) or Bearer Token (BearerAuth)
-3. **Test Endpoints**: All requests will now include the required headers automatically
+## Pruebas de la API
+Al probar endpoints en Swagger UI:
+1. **Elegir Autenticación**: Ingresa tu Clave API (ApiKeyAuth) en el botón "Authorize"
+2. **Probar Endpoints**: Todas las solicitudes ahora incluirán automáticamente el encabezado requerido
 
-## Support
-For technical support and questions, contact our engineering team at [producteam@aifindr.ai](mailto:producteam@aifindr.ai).
+## Soporte
+Para soporte técnico y consultas, contacta a nuestro equipo de ingeniería en [producteam@aifindr.ai](mailto:producteam@aifindr.ai).
 
-Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
+Aprende más sobre AI Findr en [https://aifindr.ai](https://aifindr.ai).
 
 <div
   style={{"marginBottom":"2rem"}}
@@ -102,7 +99,7 @@ Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
     >
       
       
-      API Key for machine-to-machine authentication. Generate through the AI Findr Hub. Recommended for server-side integrations and automated workflows.
+      Clave API para autenticación máquina a máquina. Genera una a través del AI Findr Hub. Recomendado para integraciones del lado del servidor y flujos de trabajo automatizados.
       
       <div>
         <table>
@@ -124,39 +121,12 @@ Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
         </table>
       </div>
     </TabItem><TabItem
-      label={"API Key: BearerAuth"}
-      value={"BearerAuth"}
-    >
-      
-      
-      JWT Bearer token for user-authenticated requests. Format: "Bearer \{jwt_token\}". Obtain through your authentication system or user login flow. Required for admin operations and user-context endpoints.
-      
-      <div>
-        <table>
-          <tbody>
-            <tr>
-              <th>
-                Security Scheme Type:
-              </th><td>
-                apiKey
-              </td>
-            </tr><tr>
-              <th>
-                Header parameter name:
-              </th><td>
-                Authorization
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </TabItem><TabItem
       label={"API Key: OrgIdAuth"}
       value={"OrgIdAuth"}
     >
       
       
-      Organization ID for multi-tenant data isolation. Required for most endpoints. Find your organization ID in the AI Findr dashboard or retrieve it using the `/admin/api/organization`` endpoint. Set this once to test all endpoints within your organization context.
+      ID de organización para aislamiento de datos multi-tenant. Requerido para la mayoría de los endpoints. Encuentra tu ID de organización en el panel de AI Findr o recupéralo usando el endpoint `/admin/api/organization`. Establece esto una vez para probar todos los endpoints dentro del contexto de tu organización.
       
       <div>
         <table>
@@ -187,7 +157,7 @@ Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
   >
     Contact
   </h3><span>
-    AI Findr Product Team: [producteam@aifindr.ai](mailto:producteam@aifindr.ai)
+    Equipo de Producto de AI Findr: [producteam@aifindr.ai](mailto:producteam@aifindr.ai)
   </span>
 </div>
       
