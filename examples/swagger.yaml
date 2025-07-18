@@ -1070,7 +1070,7 @@ info:
   title: AI Findr API
   version: 0.1.0
 paths:
-  /api/answerComponents/{answerComponentId}:
+  /api/widget/answerComponents/{answerComponentId}:
     get:
       description: |-
         Recupera un componente de respuesta por su identificador único. Los componentes de respuesta son elementos interactivos que pueden ser incrustados dentro de las respuestas del asistente IA para mejorar la experiencia del usuario, como botones de acción, formularios, carruseles o widgets personalizados.
@@ -1112,7 +1112,7 @@ paths:
       summary: Obtener componente de respuesta
       tags:
       - Answer Components
-  /api/projects/{projectSlug}/analytics:
+  /api/widget/projects/{projectId}/analytics:
     post:
       consumes:
       - application/json
@@ -1143,9 +1143,9 @@ paths:
         **Uso de analítica:**
         Los eventos registrados aparecen en el panel de analítica de AI Findr Hub, permitiendo obtener información sobre patrones de conversación, participación de los usuarios, brechas de conocimiento y rendimiento del sistema. Utiliza estos datos para optimizar el contenido, mejorar la experiencia del usuario y medir la efectividad del asistente IA.
       parameters:
-      - description: Identificador slug del proyecto
+      - description: Identificador del proyecto
         in: path
-        name: projectSlug
+        name: projectId
         required: true
         type: string
       - description: Datos del evento analítico con acción, ID de conversación, marca
@@ -1180,7 +1180,7 @@ paths:
       summary: Registrar evento analítico
       tags:
       - Analytics
-  /api/projects/{projectSlug}/ask:
+  /api/widget/projects/{projectId}/ask:
     post:
       consumes:
       - application/json
@@ -1210,9 +1210,9 @@ paths:
         2. La IA genera la respuesta basada en el conocimiento recuperado, historial de conversación y contexto proporcionado
         3. La respuesta se devuelve ya sea como eventos de streaming o como respuesta completa
       parameters:
-      - description: Identificador slug del proyecto
+      - description: Identificador del proyecto
         in: path
-        name: projectSlug
+        name: projectId
         required: true
         type: string
       - description: Parámetros de pregunta y conversación
@@ -1250,7 +1250,7 @@ paths:
       summary: Hacer pregunta
       tags:
       - Chat
-  /api/projects/{projectSlug}/conversation:
+  /api/widget/projects/{projectId}/conversation:
     post:
       consumes:
       - application/json
@@ -1261,12 +1261,11 @@ paths:
         El campo opcional metadata permite adjuntar pares clave-valor personalizados a las conversaciones. Estos metadatos se almacenan y pueden utilizarse para filtrar conversaciones en el panel de AI Findr Hub, permitiendo mejores análisis y gestión de conversaciones. Casos de uso comunes incluyen el seguimiento de IDs de usuario, información de sesión, fuentes de conversación o etiquetas de categorización personalizada.
 
         **Próximos pasos:**
-        Utiliza el conversationId devuelto con el endpoint `/api/projects/{projectSlug}/ask` para enviar mensajes.
+        Utiliza el conversationId devuelto con el endpoint `/api/widget/projects/{projectId}/ask` para enviar mensajes.
       parameters:
-      - description: Identificador slug del proyecto (nombre del proyecto amigable
-          para URL)
+      - description: Identificador del proyecto
         in: path
-        name: projectSlug
+        name: projectId
         required: true
         type: string
       - description: Solicitud de creación de conversación con metadatos opcionales
@@ -1298,7 +1297,7 @@ paths:
       summary: Crear conversación
       tags:
       - Chat
-  /api/widget/{projectSlug}:
+  /api/widget/projects/slug/{projectSlug}:
     get:
       description: |-
         Recupera la configuración del proyecto y la información de marca necesarias para incrustar el widget de AI Findr en sitios web externos. Este endpoint proporciona todas las opciones de estilo, ajustes de comportamiento y opciones de personalización necesarias para mostrar un widget de asistente IA completamente personalizado.
