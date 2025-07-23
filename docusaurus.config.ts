@@ -20,7 +20,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.ts"),
-          editUrl: "https://github.com/theam/aifindr-docs/tree/main/",
           docItemComponent: "@theme/ApiItem", // Derived from docusaurus-theme-openapi
         },
         theme: {
