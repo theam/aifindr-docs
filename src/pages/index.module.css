@@ -8,16 +8,149 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 30%, transparent 60%),
+    linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+  color: white;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 6px white;
+}
+
+.star:nth-child(1) {
+  top: 20%;
+  left: 15%;
+  animation: twinkle 2s infinite;
+}
+
+.star:nth-child(2) {
+  top: 15%;
+  right: 20%;
+  animation: twinkle 2.5s infinite 0.5s;
+}
+
+.star:nth-child(3) {
+  bottom: 30%;
+  left: 10%;
+  animation: twinkle 1.8s infinite 1s;
+}
+
+.star:nth-child(4) {
+  bottom: 25%;
+  right: 15%;
+  animation: twinkle 2.2s infinite 1.5s;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.heroSubtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
   }
+  
+  .heroTitle {
+    font-size: 2.2rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
 }
 
-.buttons {
+.features {
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 2rem 0;
+}
+
+.feature {
+  padding: 1rem;
+}
+
+.featureCard {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-card-border-radius);
+  box-shadow: var(--ifm-global-shadow-lw);
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.featureCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.featureIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.featureList {
+  text-align: left;
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+}
+
+.featureList li {
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+@media screen and (max-width: 996px) {
+  .features {
+    padding: 1rem 0;
+  }
+  
+  .feature {
+    padding: 0.5rem;
+  }
+  
+  .featureCard {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .featureIcon {
+    font-size: 2.5rem;
+  }
 }
