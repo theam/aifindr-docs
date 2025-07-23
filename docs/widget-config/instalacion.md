@@ -1,99 +1,99 @@
 ---
 title: Guía de Instalación
+description: Cómo instalar el widget de AIFindr en tu sitio web paso a paso
+slug: /widget-config/instalacion
 sidebar_position: 2
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Instalación básica
+# Instalación del Widget
 
-Sigue dos pasos: colocar el botón *trigger* y cargar el script del widget.
+La integración del widget se realiza en dos simples pasos. ¡Vamos allá!
 
-## Paso 1 · Añade el botón *trigger*
+## Paso 1 · Añade el elemento trigger
 
-```html
-<button id="ai-findr-trigger">Buscar</button>
-````
+El trigger es el elemento que tus usuarios utilizarán para abrir el asistente. 
 
-<small>⚠️ El atributo **id="ai-findr-trigger"** es imprescindible para que el widget lo detecte.</small>
-
-## Paso 2 · Carga el script
+<Tabs>
+  <TabItem value="button" label="Botón" default>
 
 ```html
-<script
-  src="https://app.aifindr.ai/widget-loader.js"
-  data-client-id="CLIENT_ID"
-  defer
-></script>
+<button id="ai-findr-trigger" type="button">Buscar</button>
 ```
 
-> Sustituye **CLIENT\_ID** por tu identificador único. Sin él, el widget no funcionará.
-
----
-
-## Instalación según tu *stack*
-
-<Tabs groupId="framework">
-  <TabItem value="html" label="HTML genérico" default>
-
-Coloca el script al final de `<body>` o justo antes de `</head>`.
-El atributo `defer` evita que bloquee la carga de la página.
-
   </TabItem>
-  <TabItem value="angular" label="Angular">
+  <TabItem value="input" label="Campo de búsqueda">
 
-1. **Botón** → `src/app/layout/header/header.component.html`
-
-   ```html
-   <button id="ai-findr-trigger" type="button">Buscar</button>
-   ```
-2. **Script** → `src/index.html` (antes de `</body>` o `</head>`).
-
-   ```html
-   <script
-     src="https://app.aifindr.ai/widget-loader.js"
-     data-client-id="CLIENT_ID"
-     data-widget-url="https://app.aifindr.ai/widget"
-     defer
-   ></script>
-   ```
-
-  </TabItem>
-  <TabItem value="wordpress" label="WordPress">
-
-1. **Menú** → Apariencia > Menús → Enlace personal → URL `#aifindr`
-2. **Snippet** (WPCode u otro) para convertir el enlace en botón:
-
-   ```js
-   /* ==== AIFindr Trigger ===== */
-   (function () {
-     function placeTrigger () {
-       const link = document.querySelector('a[href="#aifindr"]');
-       if (!link || document.getElementById('ai-findr-trigger')) return;
-       const btn = document.createElement('button');
-       btn.id = 'ai-findr-trigger';
-       btn.type = 'button';
-       btn.textContent = 'Chatear';
-       btn.className = link.className;
-       link.replaceWith(btn);
-     }
-     placeTrigger();
-   })();
-   ```
-3. **Script** → Apariencia > Editor de temas → `footer.php` antes de `</body>` (igual que en HTML).
+```html
+<input 
+  id="ai-findr-trigger" 
+  type="text" 
+  placeholder="¿En qué te puedo ayudar?"
+/>
+```
 
   </TabItem>
 </Tabs>
 
+:::caution Importante
+El atributo `id="ai-findr-trigger"` es **obligatorio** para que el widget detecte el elemento.
+:::
+
+## Paso 2 · Carga el script del widget
+
+```html
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="TU_CLIENT_ID"
+  defer
+></script>
+```
+
+:::info
+Reemplaza `TU_CLIENT_ID` con el identificador único proporcionado por AIFindr. Sin él, el widget no funcionará.
+:::
+
+### ¿Dónde colocar el script?
+
+- **Opción recomendada**: Antes del cierre de `</body>`
+- **Alternativa**: En el `<head>` con el atributo `defer`
+
+El atributo `defer` asegura que el script no bloquee la carga de tu página.
+
+## ¡Listo! 🎉
+
+Con estos dos pasos, el widget ya está funcionando. Los usuarios pueden hacer clic en el trigger para abrir el asistente.
+
 ---
 
-## Resolución de problemas comunes
+## Siguiente paso: Guía específica para tu stack
 
-| Problema                        | Solución                                                                       |
-| ------------------------------- | ------------------------------------------------------------------------------ |
-| El botón no abre el panel       | Comprueba que el id sea **ai-findr-trigger** y que el script devuelve 200 OK.  |
-| El panel tapa tu encabezado     | Define la variable `--ai-nav-height` o envía la altura por JS (ver más abajo). |
-| Error: “Missing data‑client‑id” | Asegúrate de incluir tu **CLIENT\_ID** real.                                   |
-| El panel parpadea o desaparece  | Algún CSS global pisa `body { overflow }`. Revísalo o elimínalo.               |
-| El widget no carga              | Revisa si hay extensiones/ad‑blockers o políticas CSP restrictivas.            |
+<div className="stack-cards">
+  
+**HTML / JavaScript**  
+Integración simple para sitios estáticos  
+[Ver guía →](./integraciones/html)
+
+**React & Next.js**  
+Con hooks optimizados y SSR  
+[Ver guía →](./integraciones/react-nextjs)
+
+**Angular**  
+Integración con TypeScript y routing  
+[Ver guía →](./integraciones/angular)
+
+**WordPress**  
+Plugins y personalización de temas  
+[Ver guía →](./integraciones/wordpress)
+
+</div>
+
+---
+
+## Verificar la instalación
+
+1. **Abre la consola del navegador** (F12)
+2. **Escribe**: `AIFindrWidget`
+3. **Deberías ver**: Un objeto con métodos disponibles

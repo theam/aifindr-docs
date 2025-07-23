@@ -1,21 +1,22 @@
 ---
 title: Introducción
-description: Qué es el Widget de AIFindr, para qué sirve y por qué te interesa integrarlo.
+description: Descubre qué es el Widget de AIFindr y cómo puede impulsar la conversión de tu web.
 slug: /widget-config/intro
 sidebar_position: 1
 ---
 
 # Widget de **AIFindr**
 
-El widget de **AIFindr** añade a tu web un asistente conversacional que guía a los usuarios, responde preguntas y maximiza la conversión sin interrumpir la navegación principal.
+El widget de **AIFindr** incorpora en tu web un asistente conversacional que **responde preguntas, guía a los usuarios y aumenta la conversión** sin interrumpir la navegación.
 
 ## ✨ Beneficios clave
 
-| Beneficio                    | Detalle                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------ |
-| **Instalación ultrarrápida** | Copia‑pega una línea y está funcionando.                                 |
-| **Responsive**               | Se adapta a móvil, tablet y escritorio.                                  |
-| **No tapa la barra**         | Respeta la altura de tu *navbar* para no ocultar menús ni encabezados.   |
-| **Personalizable**           | Ajusta colores, textos y comportamiento con opciones sencillas.          |
+| Beneficio                      | Detalle                                                                  |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| **Instalación ultrarrápida**   | Copia‑pega una sola línea y listo.                                       |
+| **Totalmente responsive**      | Se adapta a móvil, tablet y escritorio.                                  |
+| **Respeta tu *navbar***        | Nunca tapa menús ni encabezados.                                         |
+| **Altamente personalizable**   | Colores, textos y comportamiento se configuran con opciones sencillas.   |
+| **Contexto en tiempo real**    | Personaliza las respuestas según el estado de tu funnel o el usuario.    |
 
-> Continúa con la guía de **Instalación** para ponerlo en marcha en menos de 2 minutos.
+> ¿Listo para probarlo? Continúa con la **Guía de instalación** —lo tendrás funcionando en menos de **2 min**.
