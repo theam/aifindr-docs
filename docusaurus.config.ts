@@ -44,6 +44,18 @@ const config: Config = {
         },
         items: [
           {
+            type: "doc",
+            docId: "api/ai-findr-api",
+            label: "API",
+            position: "left",
+          },
+          {
+            type: "doc",
+            docId: "widget-config/intro",
+            label: "Widget",
+            position: "left",
+          },
+          {
             href: "https://github.com/theam/aifindr-docs",
             label: "GitHub",
             position: "right",
