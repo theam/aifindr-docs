@@ -13,7 +13,7 @@ El widget de AIFindr permite personalizar las respuestas del asistente mediante 
 
 | Aspecto | Metadatos | Contexto |
 |---------|-----------|----------|
-| **¿Cuándo se define?** | En el `<script>` con `data-meta-*` | Con la API JavaScript |
+| **¿Cuándo se define?** | En el `<script>` con `data-meta-*` o por autocaptura | Con la API JavaScript |
 | **¿Se puede cambiar?** | ❌ No (inmutable) | ✅ Sí (dinámico) |
 | **¿La IA lo ve?** | ❌ No (solo analíticas) | ✅ Sí (en conversaciones) |
 | **Propósito** | Segmentación y métricas | Personalización de respuestas |
@@ -21,57 +21,138 @@ El widget de AIFindr permite personalizar las respuestas del asistente mediante 
 
 ## Metadatos
 
-Los metadatos son **inmutables** y se usan para segmentación, métricas y análisis en el dashboard.
+Los metadatos son **información fija** que defines al cargar el widget. Son como etiquetas permanentes que ayudan a segmentar y analizar el uso del asistente, pero **no afectan las respuestas** que da la IA.
 
-### Configuración básica
+### 📊 Casos de uso comunes
 
+#### 1. Marketing y campañas (UTMs)
+
+Los parámetros UTM son códigos que identifican de dónde vienen tus visitantes. El widget los captura de dos formas:
+
+**Opción A: Autocaptura desde la URL** (más fácil)
 ```html
+<!-- El widget detecta automáticamente los UTMs de la URL -->
 <script
   src="https://hub.aifindr.ai/widget.js"
   data-client-id="TU_CLIENT_ID"
-  data-meta-market="es"
-  data-meta-campaign="summer-2025"
-  data-meta-version="2.1.0"
   defer
 ></script>
 ```
 
-### Casos de uso comunes
+Si alguien visita: `tusitio.com?utm_source=google&utm_medium=cpc`
+El widget captura automáticamente esos valores.
+
+**Opción B: Definir UTMs fijos** (más control)
+```html
+<!-- Útil cuando quieres valores específicos independientes de la URL -->
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="TU_CLIENT_ID"
+  data-meta-utm-source="google"
+  data-meta-utm-medium="cpc"
+  data-meta-utm-campaign="verano2025"
+  defer
+></script>
+```
+
+**¿Cómo funciona la autocaptura?**
+- Detecta automáticamente: `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`
+- Los agrupa en un objeto `utm` para fácil acceso
+- Si defines valores fijos con `data-meta-utm-*`, estos tienen prioridad sobre la autocaptura
+
+**Verificar qué se capturó:**
+```js
+AIFindrWidget.ready(() => {
+  console.log('Metadatos capturados:', AIFindrWidget.getMetadata());
+  // { utm: { source: "google", medium: "cpc" }, ... }
+});
+```
+
+#### 2. Segmentación de usuarios
+
+Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
 
 **E-commerce:**
 ```html
 <script
   src="https://hub.aifindr.ai/widget.js"
   data-client-id="TU_CLIENT_ID"
-  data-meta-store="madrid-center"
+  data-meta-store="madrid-centro"
   data-meta-segment="premium"
   data-meta-ab-test="checkout-v2"
-  data-meta-region="eu-west"
   defer
 ></script>
 ```
 
-**SaaS:**
+**SaaS/Aplicaciones:**
 ```html
 <script
   src="https://hub.aifindr.ai/widget.js"
   data-client-id="TU_CLIENT_ID"
-  data-meta-tenant="acme-corp"
-  data-meta-environment="production"  
-  data-meta-feature-flags="ai-suggestions,dark-mode"
-  data-meta-pricing-tier="enterprise"
+  data-meta-tenant="empresa-abc"
+  data-meta-plan="enterprise"
+  data-meta-environment="production"
   defer
 ></script>
 ```
 
-### Convenciones de naming
+**Identificadores de usuario (solo tracking):**
+```html
+<!-- Para analítica, NO para personalización -->
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="TU_CLIENT_ID"
+  data-meta-user-id="12345"
+  data-meta-account-type="premium"
+  defer
+></script>
+```
 
-| Patrón | Ejemplo | Uso |
-|--------|---------|-----|
-| `data-meta-{environment}` | `data-meta-env="prod"` | Entorno de deployment |
-| `data-meta-{experiment}` | `data-meta-ab-test="header-v2"` | Tests A/B |
-| `data-meta-{geography}` | `data-meta-region="latam"` | Segmentación geográfica |
-| `data-meta-{business}` | `data-meta-tier="premium"` | Modelo de negocio |
+> **💡 Tip:** Si necesitas que la IA personalice respuestas según el usuario, usa **contexto** en lugar de metadatos (ver sección siguiente).
+
+#### 3. Configuración y entorno
+
+Útil para diferenciar ambientes y versiones:
+
+```html
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="TU_CLIENT_ID"
+  data-meta-environment="production"
+  data-meta-version="2.1.0"
+  data-meta-region="eu-west"
+  data-meta-feature-flags="dark-mode,new-ui"
+  defer
+></script>
+```
+
+### 📐 Convenciones recomendadas
+
+| Tipo de dato | Convención | Ejemplo |
+|--------------|------------|---------|
+| **Entorno** | `data-meta-environment` | `"production"`, `"staging"` |
+| **Experimentos** | `data-meta-ab-test` | `"header-v2"`, `"checkout-flow-b"` |
+| **Geografía** | `data-meta-region` | `"latam"`, `"eu-west"` |
+| **Negocio** | `data-meta-segment` | `"premium"`, `"freemium"` |
+| **Usuario** | `data-meta-user-id` | `"12345"`, `"abc-def-123"` |
+| **UTMs (auto)** | Se capturan de la URL | `utm.source`, `utm.medium` |
+| **UTMs (manual)** | `data-meta-utm-source` | `utmSource`, `utmMedium` |
+
+### ⚠️ Importante: Metadatos vs Contexto
+
+**Regla clave:** Si defines una clave como metadato, NO puedes usarla en contexto:
+
+```js
+// Si tienes: data-meta-user-id="123"
+AIFindrWidget.setContext({
+  userId: '456' // ⚠️ Se ignorará con warning
+});
+// Console: "userId was declared as metadata. Metadata is immutable"
+```
+
+**¿Cuándo usar cada uno?**
+- **Metadatos**: Tracking, analítica, segmentación (la IA no los ve)
+- **Contexto**: Personalización de respuestas (la IA sí los ve)
 
 ## Contexto
 
@@ -469,7 +550,7 @@ AIFindrWidget.setContext({
   environment: 'development' // ⚠️ Ignorado con warning
 });
 
-// Console: "AIFindr Widget: environment was declared as metadata. 
+// Console: "AIFindr Widget: "environment" was declared as metadata in data-meta-environment.
 // Metadata is immutable; updateContext ignored this key."
 ```
 
@@ -518,11 +599,33 @@ AIFindrWidget.setContext({
 });
 ```
 
-## Mejores prácticas
+### Problemas comunes con UTMs
 
-1. **Metadatos**: Para datos fijos de segmentación y analytics
-2. **Contexto**: Para personalización dinámica de respuestas  
-3. **Inicializar temprano**: Usar `AIFindrWidget.ready()` siempre
-4. **Actualizar frecuentemente**: `mergeContext()` en navegación y eventos
-5. **Datos mínimos**: Solo enviar información relevante para la IA
-6. **Nombres descriptivos**: Usar claves claras y consistentes
+**No veo UTMs en getMetadata():**
+- Verifica que la URL realmente tenga parámetros `utm_*`
+- Si defines `data-meta-utm-*`, no se creará `metadata.utm` (verás las claves namespaced como `utmSource`)
+- Si defines `data-meta-utm` como string, bloquea la creación de `metadata.utm`
+
+**Necesito "forzar" valores que vengan en la URL:**
+- Declara valores fijos con `data-meta-utm-*` en el script
+- Estos tendrán prioridad sobre la autocaptura de la URL
+
+```js
+// Ejemplo: Forzar valores específicos
+// <script data-meta-utm-source="email" data-meta-utm-campaign="newsletter">
+// Aunque la URL tenga ?utm_source=google, prevalecerá "email"
+```
+
+## Buenas prácticas
+
+1. **UTMs**: Usa autocaptura por URL o `data-meta-utm-*` para fijarlos
+2. **IDs de usuario**:
+   - Metadatos (`data-meta-user-id`) para analítica y trazabilidad
+   - Contexto (`userId` en setContext) para personalización de la IA
+3. **Metadatos**: Para datos fijos de segmentación y analytics
+4. **Contexto**: Para personalización dinámica de respuestas
+5. **Inicializar temprano**: Usar `AIFindrWidget.ready()` siempre
+6. **Actualizar frecuentemente**: `mergeContext()` en navegación y eventos
+7. **Datos mínimos**: Solo enviar información relevante para la IA
+8. **Nombres descriptivos**: Usar claves claras y consistentes
+9. **No duplicar claves**: Evita usar la misma clave en metadatos y contexto

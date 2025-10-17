@@ -158,6 +158,26 @@ const metadata = AIFindrWidget.getMetadata();
 console.log(metadata); // { environment: "production" }
 ```
 
+**Notas:**
+- Los metadatos combinan atributos `data-meta-*` del script con parámetros UTM de la URL
+- Los parámetros UTM de la URL se agrupan automáticamente bajo la clave `utm`
+- Esta información es de solo lectura y se define al cargar el widget
+
+```js
+// Ejemplo 1: Solo metadatos del script
+// Script: <script data-meta-environment="production" data-meta-market="es">
+const metadata = AIFindrWidget.getMetadata();
+console.log(metadata);
+// { environment: "production", market: "es" }
+
+// Ejemplo 2: Metadatos del script + parámetros UTM
+// Script: <script data-meta-market="es">
+// URL: https://example.com?utm_source=google&utm_medium=cpc
+const metadata = AIFindrWidget.getMetadata();
+console.log(metadata);
+// { market: "es", utm: { source: "google", medium: "cpc" } }
+```
+
 ## Sistema de Eventos
 
 ### `AIFindrWidget.on(event, callback)`
