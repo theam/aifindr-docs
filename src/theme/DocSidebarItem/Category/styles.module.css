@@ -1,0 +1,22 @@
+.menuExternalLink {
+  align-items: center;
+}
+
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  color: var(--ifm-color-content-secondary);
+  transition: color var(--ifm-transition-fast);
+}
+
+.menuLabel {
+  flex: 1;
+}
+
+/* Optional: Change icon color on hover/active */
+:global(.menu__link:hover) .menuIcon,
+:global(.menu__link--active) .menuIcon {
+  color: var(--ifm-color-primary);
+}

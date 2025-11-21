@@ -20,7 +20,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.ts"),
-          // docItemComponent: "@theme/ApiItem", // Moved to developer instance
+          docItemComponent: "@theme/ApiItem",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -52,25 +52,6 @@ const config: Config = {
             docId: "intro",
             label: "Docs",
             position: "left",
-          },
-          {
-            type: "dropdown",
-            label: "Developer Guide",
-            position: "left",
-            items: [
-              {
-                type: "doc",
-                docId: "api/ai-findr-api",
-                docsPluginId: "developer",
-                label: "API Reference",
-              },
-              {
-                type: "doc",
-                docId: "widget-config/intro",
-                docsPluginId: "developer",
-                label: "Widget Config",
-              },
-            ],
           },
         ],
       },
@@ -217,24 +198,14 @@ const config: Config = {
 
   plugins: [
     [
-      "@docusaurus/plugin-content-docs",
-      {
-        id: "developer",
-        path: "developer_docs",
-        routeBasePath: "developer",
-        sidebarPath: require.resolve("./sidebarsDeveloper.ts"),
-        docItemComponent: "@theme/ApiItem",
-      },
-    ],
-    [
       "docusaurus-plugin-openapi-docs",
       {
         id: "openapi",
-        docsPluginId: "developer", // Point to the new instance
+        docsPluginId: "classic",
         config: {
           api: {
             specPath: "examples/swagger.yaml",
-            outputDir: "developer_docs/api", // Update output dir
+            outputDir: "docs/api",
             downloadUrl:
               "https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml",
             sidebarOptions: {
