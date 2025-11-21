@@ -20,7 +20,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.ts"),
-          docItemComponent: "@theme/ApiItem", // Derived from docusaurus-theme-openapi
+          // docItemComponent: "@theme/ApiItem", // Moved to developer instance
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -44,15 +44,28 @@ const config: Config = {
         items: [
           {
             type: "doc",
-            docId: "api/ai-findr-api",
-            label: "API",
+            docId: "intro",
+            label: "Docs",
             position: "left",
           },
           {
-            type: "doc",
-            docId: "widget-config/intro",
-            label: "Widget",
+            type: "dropdown",
+            label: "Developer Guide",
             position: "left",
+            items: [
+              {
+                type: "doc",
+                docId: "api/ai-findr-api",
+                docsPluginId: "developer",
+                label: "API Reference",
+              },
+              {
+                type: "doc",
+                docId: "widget-config/intro",
+                docsPluginId: "developer",
+                label: "Widget Config",
+              },
+            ],
           },
           {
             href: "https://github.com/theam/aifindr-docs",
@@ -204,14 +217,24 @@ const config: Config = {
 
   plugins: [
     [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "developer",
+        path: "developer_docs",
+        routeBasePath: "developer",
+        sidebarPath: require.resolve("./sidebarsDeveloper.ts"),
+        docItemComponent: "@theme/ApiItem",
+      },
+    ],
+    [
       "docusaurus-plugin-openapi-docs",
       {
         id: "openapi",
-        docsPluginId: "classic",
+        docsPluginId: "developer", // Point to the new instance
         config: {
           api: {
             specPath: "examples/swagger.yaml",
-            outputDir: "docs/api",
+            outputDir: "developer_docs/api", // Update output dir
             downloadUrl:
               "https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml",
             sidebarOptions: {

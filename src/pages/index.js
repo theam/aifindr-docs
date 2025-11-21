@@ -52,7 +52,7 @@ function DocumentationOptions() {
               <div className="text--center">
                 <Link
                   className="button button--primary button--lg"
-                  to="/docs/api/ai-findr-api">
+                  to="/developer/api/ai-findr-api">
                   Ver Documentación API
                 </Link>
               </div>
@@ -81,7 +81,7 @@ function DocumentationOptions() {
               <div className="text--center">
                 <Link
                   className="button button--secondary button--lg"
-                  to="/docs/widget-config/intro">
+                  to="/developer/widget-config/intro">
                   Ver Configuración Widget
                 </Link>
               </div>
