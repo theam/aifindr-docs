@@ -4,8 +4,13 @@ const sidebar: SidebarsConfig = {
   apisidebar: [
     {
       type: "doc",
+      id: "api/product-overview",
+      label: "Visión General",
+    },
+    {
+      type: "doc",
       id: "api/ai-findr-api",
-      label: "Introducción a la API",
+      label: "Referencia Técnica",
     },
     {
       type: "category",

@@ -1,0 +1,62 @@
+.tableContainer {
+  border: 1px solid rgba(61, 31, 27, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px -4px rgba(61, 31, 27, 0.05);
+  margin-top: 2rem;
+  background: #fff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
+  color: var(--ifm-color-primary);
+}
+
+.table th {
+  background-color: rgba(61, 31, 27, 0.03);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.featureCell {
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  opacity: 0.9;
+  width: 25%;
+}
+
+.valueCell {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Highlights for "Widget" and "API" columns */
+.highlightWidget {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.highlightApi {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+  .table th, .table td {
+    padding: 1rem;
+  }
+}
