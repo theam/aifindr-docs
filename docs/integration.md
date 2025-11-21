@@ -2,7 +2,7 @@
 sidebar_position: 4
 title: Cómo se integra
 sidebar_custom_props:
-  icon: ApiIcon
+  icon: Plug01Icon
 ---
 
 # **Cómo se integra?**

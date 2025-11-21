@@ -18,7 +18,7 @@ export function HomepageHeader() {
           Bienvenido a <span className={styles.highlight}>AI Findr</span> 
         </h1>
         <p className={styles.heroSubtitle}>
-          Crea experiencias increíbles de búsqueda. Todo lo que necesitas para integrar AI Findr en tu plataforma.
+          Crea experiencias de búsqueda increíbles. Construye agentes inteligentes entrenados con tus datos de negocio e intégralos en tu plataforma.
         </p>
         <div className={styles.buttons}>
           <Link

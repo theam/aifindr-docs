@@ -72,11 +72,6 @@ const config: Config = {
               },
             ],
           },
-          {
-            href: "https://github.com/theam/aifindr-docs",
-            label: "GitHub",
-            position: "right",
-          },
         ],
       },
       // footer: {
