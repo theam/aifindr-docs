@@ -12,6 +12,9 @@ import {
   WorkflowSquare01Icon,
   ApiIcon,
   Shield02Icon,
+  SparklesIcon,
+  Plug01Icon,
+  InformationCircleIcon,
 } from 'hugeicons-react';
 
 import styles from './styles.module.css';
@@ -22,6 +25,9 @@ const IconMap: Record<string, React.ComponentType<any>> = {
   WorkflowSquare01Icon,
   ApiIcon,
   Shield02Icon,
+  SparklesIcon,
+  Plug01Icon,
+  InformationCircleIcon,
 };
 
 export default function DocSidebarItemLink({
