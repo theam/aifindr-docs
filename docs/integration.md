@@ -1,6 +1,8 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 title: Cómo se integra
+sidebar_custom_props:
+  icon: ApiIcon
 ---
 
 # **Cómo se integra?**

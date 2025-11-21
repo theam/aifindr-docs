@@ -1,0 +1,145 @@
+.container {
+  margin-top: 1rem;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.stepsContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+@media (max-width: 996px) {
+  .stepsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .connector {
+    transform: rotate(90deg);
+    margin: 1rem 0;
+  }
+}
+
+.stepCard {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(61, 31, 27, 0.08);
+  border-radius: 24px;
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 100%;
+  min-height: 420px;
+  box-shadow: 0 4px 20px -4px rgba(61, 31, 27, 0.05);
+  overflow: hidden;
+}
+
+.stepCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px -5px rgba(61, 31, 27, 0.12);
+  border-color: rgba(61, 31, 27, 0.2);
+}
+
+.stepNumber {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3rem;
+  font-weight: 800;
+  opacity: 0.05;
+  color: var(--ifm-color-primary);
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  background: rgba(61, 31, 27, 0.03);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ifm-color-primary);
+  margin-bottom: 1.5rem;
+  transition: background 0.3s ease;
+}
+
+.stepCard:hover .iconWrapper {
+  background: rgba(61, 31, 27, 0.08);
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ifm-color-primary);
+}
+
+.stepDescription {
+  color: var(--ifm-color-content-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  min-height: 3rem;
+}
+
+.stepList {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.stepList li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--ifm-color-content);
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--ifm-color-emphasis-200);
+}
+
+.stepList li:last-child {
+  border-bottom: none;
+}
+
+.listIcon {
+  color: var(--ifm-color-primary);
+  opacity: 0.8;
+}
+
+.connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ifm-color-emphasis-300);
+  padding-top: 100px;
+}
+
+@media (max-width: 996px) {
+  .connector {
+    padding-top: 0;
+  }
+  .stepCard {
+    width: 100%;
+    min-height: auto;
+  }
+}

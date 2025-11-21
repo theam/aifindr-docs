@@ -31,6 +31,11 @@ const config: Config = {
 
   themeConfig:
     {
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: true,
+        respectPrefersColorScheme: false,
+      },
       docs: {
         sidebar: {
           hideable: true,

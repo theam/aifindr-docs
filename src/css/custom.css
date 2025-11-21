@@ -23,15 +23,29 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #635dff;
-  --ifm-color-primary-dark: #4f47e6;
-  --ifm-color-primary-darker: #4a42e0;
-  --ifm-color-primary-darkest: #3d36cc;
-  --ifm-color-primary-light: #7773ff;
-  --ifm-color-primary-lighter: #827eff;
-  --ifm-color-primary-lightest: #9c99ff;
+  --ifm-color-primary: #3d1f1b;
+  --ifm-color-primary-dark: #361b18;
+  --ifm-color-primary-darker: #331a16;
+  --ifm-color-primary-darkest: #2a1512;
+  --ifm-color-primary-light: #492520;
+  --ifm-color-primary-lighter: #552b25;
+  --ifm-color-primary-lightest: #61312b;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Brand Colors */
+  --ifm-background-color: #f5f3ee;
+  --ifm-font-color-base: #3d1f1b;
+  --ifm-navbar-background-color: #f5f3ee;
+  
+  /* Secondary colors (replacing default cool grays like #f5f6f7 with warm tones) */
+  --ifm-color-secondary: #dcdad5;
+  --ifm-color-secondary-dark: #c6c4bf;
+  --ifm-color-secondary-darker: #bbb9b4;
+  --ifm-color-secondary-darkest: #9a9894;
+  --ifm-color-secondary-light: #eae8e3;
+  --ifm-color-secondary-lighter: #f2f0eb;
+  --ifm-color-secondary-lightest: #ffffff;
   
   /* Custom font variables */
   --ifm-font-family-base: 'Satoshi', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
@@ -41,15 +55,26 @@
   --ifm-font-weight-bold: 650;
 }
 
+/* Custom Button Styles */
+.button--primary {
+  color: #fff; /* Ensure readable text on dark primary */
+}
+
+.button--primary:hover {
+  background-color: #f4bbd9 !important;
+  border-color: #f4bbd9 !important;
+  color: #3d1f1b !important;
+}
+
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #827eff;
-  --ifm-color-primary-dark: #6f6aff;
-  --ifm-color-primary-darker: #655fff;
-  --ifm-color-primary-darkest: #473fff;
-  --ifm-color-primary-light: #9590ff;
-  --ifm-color-primary-lighter: #a29eff;
-  --ifm-color-primary-lightest: #bcbaff;
+  --ifm-color-primary: #ffa970;
+  --ifm-color-primary-dark: #ff924b;
+  --ifm-color-primary-darker: #ff8738;
+  --ifm-color-primary-darkest: #ff6601;
+  --ifm-color-primary-light: #febf94;
+  --ifm-color-primary-lighter: #ffd5b9;
+  --ifm-color-primary-lightest: #ffebde;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
