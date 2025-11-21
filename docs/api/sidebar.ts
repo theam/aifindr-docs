@@ -5,6 +5,7 @@ const sidebar: SidebarsConfig = {
     {
       type: "doc",
       id: "api/ai-findr-api",
+      label: "Introducción a la API",
     },
     {
       type: "category",
@@ -65,7 +66,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Answer Components",
+      label: "Componentes de Respuesta",
       link: {
         type: "doc",
         id: "api/answer-components",

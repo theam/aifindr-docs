@@ -46,14 +46,7 @@ const config: Config = {
           alt: "AI Findr Logo",
           src: "https://framerusercontent.com/images/P9zJkZIvPqGLxQmLj4rgrJBt8uY.svg?scale-down-to=512",
         },
-        items: [
-          {
-            type: "doc",
-            docId: "intro",
-            label: "Docs",
-            position: "left",
-          },
-        ],
+        items: [],
       },
       // footer: {
       //   style: "dark",
