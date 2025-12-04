@@ -1,7 +1,7 @@
 ---
 title: Installation Guide
 description: How to install the AIFindr widget on your website step by step
-slug: /widget-config/instalacion
+slug: /widget-config/installation
 sidebar_position: 2
 ---
 

@@ -6,7 +6,7 @@ sidebar_position: 3
 ---
 
 :::info First time?
-Read the [installation guide](../instalacion) first to understand the basics.
+Read the [installation guide](../installation) first to understand the basics.
 :::
 
 # WordPress
