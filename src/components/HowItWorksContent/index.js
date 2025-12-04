@@ -16,9 +16,9 @@ export function HowItWorksContent() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <p className={styles.subtitle}>Del contenido al insight en tres pasos.</p>
+        <p className={styles.subtitle}>From content to insight in three steps.</p>
         <p className={styles.description}>
-          Transformamos tu información dispersa en una experiencia conversacional inteligente que genera valor real.
+          We transform your scattered information into an intelligent conversational experience that generates real value.
         </p>
       </div>
 
@@ -29,22 +29,22 @@ export function HowItWorksContent() {
           <div className={styles.iconWrapper}>
             <Database02Icon size={32} />
           </div>
-          <h3 className={styles.stepTitle}>Conexión e Ingesta</h3>
+          <h3 className={styles.stepTitle}>Connection and Ingestion</h3>
           <p className={styles.stepDescription}>
-            AI Findr centraliza y procesa tu conocimiento desde múltiples fuentes.
+            AI Findr centralizes and processes your knowledge from multiple sources.
           </p>
           <ul className={styles.stepList}>
             <li>
               <Globe02Icon size={16} className={styles.listIcon} />
-              Extracción automática web
+              Automatic web extraction
             </li>
             <li>
               <Settings01Icon size={16} className={styles.listIcon} />
-              Integración vía API
+              API integration
             </li>
             <li>
               <File02Icon size={16} className={styles.listIcon} />
-              Subida de documentos (PDF, FAQ)
+              Document upload (PDF, FAQ)
             </li>
           </ul>
         </div>
@@ -59,15 +59,15 @@ export function HowItWorksContent() {
           <div className={styles.iconWrapper}>
             <MagicWand02Icon size={32} />
           </div>
-          <h3 className={styles.stepTitle}>Experiencia y Control</h3>
+          <h3 className={styles.stepTitle}>Experience and Control</h3>
           <p className={styles.stepDescription}>
-            Define el comportamiento y adapta la IA a tus reglas de negocio.
+            Define behavior and adapt the AI to your business rules.
           </p>
           <ul className={styles.stepList}>
-            <li>Limpieza y enriquecimiento de datos</li>
-            <li>Personalización de tono y estilo</li>
-            <li>Reglas de prioridad en respuestas</li>
-            <li>Definición de acciones sugeridas</li>
+            <li>Data cleaning and enrichment</li>
+            <li>Tone and style customization</li>
+            <li>Response priority rules</li>
+            <li>Suggested actions definition</li>
           </ul>
         </div>
 
@@ -81,21 +81,21 @@ export function HowItWorksContent() {
           <div className={styles.iconWrapper}>
             <Analytics02Icon size={32} />
           </div>
-          <h3 className={styles.stepTitle}>Insights en Tiempo Real</h3>
+          <h3 className={styles.stepTitle}>Real-Time Insights</h3>
           <p className={styles.stepDescription}>
-            Descubre qué buscan tus usuarios y optimiza tu estrategia.
+            Discover what your users are searching for and optimize your strategy.
           </p>
           <ul className={styles.stepList}>
             <li>
               <Search01Icon size={16} className={styles.listIcon} />
-              Análisis de intención de búsqueda
+              Search intent analysis
             </li>
             <li>
               <ChartHistogramIcon size={16} className={styles.listIcon} />
-              Métricas de conversión
+              Conversion metrics
             </li>
             <li>
-              Detección de vacíos de contenido
+              Content gap detection
             </li>
           </ul>
         </div>

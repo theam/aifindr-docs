@@ -9,21 +9,21 @@ export function WhatIsAiFindrContent() {
     <div className={styles.container}>
       <div className={styles.header}>
         <p className={styles.subtitle}>
-          Un buscador conversacional de nueva generación para tu negocio.
+          A next-generation conversational search engine for your business.
         </p>
         <p className={styles.description}>
-          AI Findr es un buscador conversacional capaz de entender a tus clientes en lenguaje natural y de ofrecer
-          resultados relevantes, impactantes y con valor de negocio.
+          AI Findr is a conversational search engine capable of understanding your customers in natural language and delivering
+          relevant, impactful results with business value.
         </p>
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Componentes principales</h2>
+        <h2 className={styles.sectionTitle}>Main Components</h2>
         <div className={styles.cardsGrid}>
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>AI Findr Experience</h3>
             <p className={styles.cardText}>
-              La experiencia que se integra en tu web o producto y responde directamente a tus usuarios.
+              The experience that integrates into your website or product and responds directly to your users.
             </p>
           </div>
           <a href="https://hub.aifindr.ai/" target="_blank" rel="noopener noreferrer" className={styles.cardLink}>
@@ -33,8 +33,8 @@ export function WhatIsAiFindrContent() {
                 <LinkSquare02Icon size={18} className={styles.externalIcon} />
               </h3>
               <p className={styles.cardText}>
-                El panel de administración donde gestionas tu base de conocimiento, tus reglas de negocio, tu
-                experiencia y un dashboard completo de analíticas.
+                The administration panel where you manage your knowledge base, business rules,
+                experience, and a complete analytics dashboard.
               </p>
             </div>
           </a>
@@ -43,13 +43,13 @@ export function WhatIsAiFindrContent() {
 
       <div className={styles.section}>
         <div className={styles.card}>
-          <h2 className={styles.sectionTitle}>Características principales</h2>
+          <h2 className={styles.sectionTitle}>Key Features</h2>
           <ul style={{ paddingLeft: '1.5rem', lineHeight: '1.8', fontSize: '1.1rem', marginBottom: 0 }}>
-            <li>Comprensión avanzada del lenguaje natural de tus clientes</li>
-            <li>Resultados relevantes y contextualizados según tus objetivos de negocio</li>
-            <li>Integración sencilla mediante widget web o API</li>
-            <li>Analytics en tiempo real para entender las necesidades de tus usuarios</li>
-            <li>Personalización completa de la experiencia según tu marca</li>
+            <li>Advanced understanding of your customers' natural language</li>
+            <li>Relevant and contextualized results according to your business objectives</li>
+            <li>Simple integration via web widget or API</li>
+            <li>Real-time analytics to understand your users' needs</li>
+            <li>Complete experience customization according to your brand</li>
           </ul>
         </div>
       </div>

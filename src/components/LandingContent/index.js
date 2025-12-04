@@ -15,21 +15,21 @@ export function HomepageHeader() {
     <header className={styles.heroBanner}>
       <div className="container">
         <h1 className={styles.heroTitle}>
-          Bienvenido a <span className={styles.highlight}>AI Findr</span> 
+          Welcome to <span className={styles.highlight}>AI Findr</span>
         </h1>
         <p className={styles.heroSubtitle}>
-          Crea experiencias de búsqueda increíbles. Construye agentes inteligentes entrenados con tus datos de negocio e intégralos en tu plataforma.
+          Create amazing search experiences. Build intelligent agents trained with your business data and integrate them into your platform.
         </p>
         <div className={styles.buttons}>
           <Link
             className={clsx('button button--primary button--lg', styles.heroButton)}
             to="/docs/what-is-aifindr">
-            Comenzar
+            Get Started
           </Link>
           <Link
             className={clsx('button button--secondary button--lg', styles.heroButton)}
             to="mailto:contact@aifindr.com">
-            Contactar
+            Contact
           </Link>
         </div>
       </div>
@@ -41,7 +41,7 @@ export function DocumentationOptions() {
   return (
     <section className={styles.features}>
       <div className="container">
-        <h2 className="text--center margin-bottom--lg">Explora la documentación</h2>
+        <h2 className="text--center margin-bottom--lg">Explore the documentation</h2>
         <div className="row">
           <div className={clsx('col col--6 margin-bottom--lg', styles.feature)}>
             <Link to="/docs/what-is-aifindr" className={styles.featureCardLink}>
@@ -50,13 +50,13 @@ export function DocumentationOptions() {
                   <div className={styles.featureIcon}>
                     <BookOpen01Icon size={24} />
                   </div>
-                  <h3>Qué es AI Findr</h3>
+                  <h3>What is AI Findr</h3>
                   <div className={styles.arrowIcon}>
                     <ArrowRight01Icon size={20} />
                   </div>
                 </div>
                 <p>
-                  Descubre cómo AI Findr transforma la experiencia de búsqueda con IA conversacional.
+                  Discover how AI Findr transforms the search experience with conversational AI.
                 </p>
               </div>
             </Link>
@@ -68,13 +68,13 @@ export function DocumentationOptions() {
                   <div className={styles.featureIcon}>
                     <PuzzleIcon size={24} />
                   </div>
-                  <h3>Cómo funciona</h3>
+                  <h3>How it works</h3>
                   <div className={styles.arrowIcon}>
                     <ArrowRight01Icon size={20} />
                   </div>
                 </div>
                 <p>
-                  Conoce el proceso desde la conexión hasta los insights en tiempo real.
+                  Learn about the process from connection to real-time insights.
                 </p>
               </div>
             </Link>
@@ -86,13 +86,13 @@ export function DocumentationOptions() {
                   <div className={styles.featureIcon}>
                     <FloppyDiskIcon size={24} />
                   </div>
-                  <h3>Integración</h3>
+                  <h3>Integration</h3>
                   <div className={styles.arrowIcon}>
                     <ArrowRight01Icon size={20} />
                   </div>
                 </div>
                 <p>
-                  Aprende a integrar AI Findr en tu web o producto mediante widget o API.
+                  Learn how to integrate AI Findr into your website or product via widget or API.
                 </p>
               </div>
             </Link>
@@ -104,13 +104,13 @@ export function DocumentationOptions() {
                   <div className={styles.featureIcon}>
                     <SecurityLockIcon size={24} />
                   </div>
-                  <h3>Seguridad</h3>
+                  <h3>Security</h3>
                   <div className={styles.arrowIcon}>
                     <ArrowRight01Icon size={20} />
                   </div>
                 </div>
                 <p>
-                  Explora las múltiples capas de seguridad corporativa de AI Findr.
+                  Explore AI Findr's multiple layers of enterprise security.
                 </p>
               </div>
             </Link>
@@ -125,9 +125,9 @@ export function ContactSection() {
   return (
     <section className={styles.contactSection}>
       <div className="container text--center">
-        <h2>¿Necesitas más información?</h2>
+        <h2>Need more information?</h2>
         <p className={styles.contactSubtitle}>
-          Nuestro equipo está aquí para ayudarte con cualquier duda.
+          Our team is here to help you with any questions.
         </p>
         <div className={styles.contactEmailBox}>
           <a href="mailto:producteam@aifindr.ai">producteam@aifindr.ai</a>
