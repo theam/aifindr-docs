@@ -14,6 +14,22 @@ const config: Config = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
+
+  // Internationalization config
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    localeConfigs: {
+      es: {
+        label: 'Español',
+        direction: 'ltr',
+      },
+      en: {
+        label: 'English',
+        direction: 'ltr',
+      },
+    },
+  },
   presets: [
     [
       "classic",
@@ -46,7 +62,12 @@ const config: Config = {
           alt: "AI Findr Logo",
           src: "https://framerusercontent.com/images/P9zJkZIvPqGLxQmLj4rgrJBt8uY.svg?scale-down-to=512",
         },
-        items: [],
+        items: [
+          {
+            type: 'localeDropdown',
+            position: 'right',
+          },
+        ],
       },
       // footer: {
       //   style: "dark",

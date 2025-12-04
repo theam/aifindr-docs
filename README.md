@@ -1,6 +1,19 @@
-# AI Findr - Documentación
+# AI Findr - Documentation / Documentación
+
+This repository contains the AI Findr API documentation, built with [Docusaurus 3](https://docusaurus.io/) and the OpenAPI docs plugin.
 
 Este repositorio contiene la documentación de la API de AI Findr, construida con [Docusaurus 3](https://docusaurus.io/) y el plugin de OpenAPI docs.
+
+## 🌍 Multi-language Support / Soporte Multi-idioma
+
+The documentation is available in multiple languages:
+La documentación está disponible en múltiples idiomas:
+
+- **Español** (default / por defecto)
+- **English**
+
+The language selector is available in the top navigation bar.
+El selector de idioma está disponible en la barra de navegación superior.
 
 ## 🚀 Instalación y configuración inicial
 
