@@ -1,0 +1,163 @@
+---
+id: ai-findr-api
+title: "AI Findr API"
+description: "Acceso programático a la plataforma AI Findr."
+sidebar_label: Introduction
+sidebar_position: 0
+hide_title: true
+custom_edit_url: null
+---
+
+import ApiLogo from "@theme/ApiLogo";
+import Heading from "@theme/Heading";
+import SchemaTabs from "@theme/SchemaTabs";
+import TabItem from "@theme/TabItem";
+import Export from "@theme/ApiExplorer/Export";
+
+<span
+  className={"theme-doc-version-badge badge badge--secondary"}
+  children={"Version: 0.1.0"}
+>
+</span>
+
+<Export
+  url={"https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml"}
+  proxy={undefined}
+>
+  
+</Export>
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"AI Findr API"}
+>
+</Heading>
+
+
+
+Acceso programático a la plataforma AI Findr.
+
+AI Findr permite a las organizaciones crear experiencias conversacionales impulsadas por IA utilizando su propia base de conocimientos de contenido. Nuestra plataforma proporciona respuestas precisas y conscientes del contexto, mientras recopila análisis valiosos sobre las interacciones con los clientes y las brechas de conocimiento.
+
+## Introducción
+Esta API está documentada en **formato OpenAPI** y proporciona acceso completo a la plataforma AI Findr.
+Permite a los desarrolladores integrar AI Findr directamente en sus aplicaciones, ofreciendo una alternativa a nuestra solución de widget embebible.
+
+**Características Clave:**
+- **IA Conversacional**: Haz preguntas y recibe respuestas inteligentes basadas en tu contenido ingresado.
+- **Gestión de Contenido**: Ingresa y administra la base de conocimientos de tu organización a través de diversas fuentes.
+- **Analítica en Tiempo Real**: Realiza seguimiento de conversaciones, identifica brechas de conocimiento y comprende las necesidades de los clientes.
+- **Personalización de Marca**: Personaliza la experiencia con la marca y el estilo de tu organización.
+- **Soporte de Streaming**: Obtén respuestas en tiempo real con Server-Sent Events (SSE) para una mejor experiencia de usuario.
+
+## Autenticación
+AI Findr admite dos métodos de autenticación:
+
+### Autenticación con Clave API (Recomendado para M2M)
+Para integraciones de máquina a máquina, utiliza la autenticación por clave API incluyendo el encabezado `X-API-KEY` en tus solicitudes.
+Las claves API se pueden generar a través del AI Findr Hub.
+
+### Autenticación con Token Bearer
+Para operaciones en contexto de usuario, utiliza tokens JWT bearer en el encabezado `Authorization` con el formato: `Bearer {token}`
+
+### Contexto de Organización
+La mayoría de los endpoints de la API requieren el encabezado `X-Organization-Id` para especificar dentro de qué contexto de organización operar.
+Esto asegura el aislamiento adecuado de los datos y el control de acceso.
+
+## Estructura de la API
+La API expone endpoints públicos para interacciones conversacionales, información de proyectos y seguimiento analítico.
+
+## Límites de Frecuencia
+Las solicitudes a la API están sujetas a límites de frecuencia para garantizar el uso justo y la estabilidad del sistema. Los límites varían según el endpoint y el método de autenticación.
+
+## Pruebas de la API
+Al probar endpoints en Swagger UI:
+1. **Elegir Autenticación**: Ingresa tu Clave API (ApiKeyAuth) en el botón "Authorize"
+2. **Probar Endpoints**: Todas las solicitudes ahora incluirán automáticamente el encabezado requerido
+
+## Soporte
+Para soporte técnico y consultas, contacta a nuestro equipo de ingeniería en [producteam@aifindr.ai](mailto:producteam@aifindr.ai).
+
+Aprende más sobre AI Findr en [https://aifindr.ai](https://aifindr.ai).
+
+<div
+  style={{"marginBottom":"2rem"}}
+>
+  <Heading
+    id={"authentication"}
+    as={"h2"}
+    className={"openapi-tabs__heading"}
+    children={"Authentication"}
+  >
+  </Heading><SchemaTabs
+    className={"openapi-tabs__security-schemes"}
+  >
+    <TabItem
+      label={"API Key: ApiKeyAuth"}
+      value={"ApiKeyAuth"}
+    >
+      
+      
+      Clave API para autenticación máquina a máquina. Genera una a través del AI Findr Hub. Recomendado para integraciones del lado del servidor y flujos de trabajo automatizados.
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-API-KEY
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem><TabItem
+      label={"API Key: OrgIdAuth"}
+      value={"OrgIdAuth"}
+    >
+      
+      
+      ID de organización para aislamiento de datos multi-tenant. Requerido para la mayoría de los endpoints. Encuentra tu ID de organización en el panel de AI Findr o recupéralo usando el endpoint `/admin/api/organization`. Establece esto una vez para probar todos los endpoints dentro del contexto de tu organización.
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-Organization-Id
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem>
+  </SchemaTabs>
+</div><div
+  style={{"display":"flex","flexDirection":"column","marginBottom":"var(--ifm-paragraph-margin-bottom)"}}
+>
+  <h3
+    style={{"marginBottom":"0.25rem"}}
+  >
+    Contact
+  </h3><span>
+    Equipo de Producto de AI Findr: [producteam@aifindr.ai](mailto:producteam@aifindr.ai)
+  </span>
+</div>
+      
