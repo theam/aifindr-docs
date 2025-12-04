@@ -1,49 +1,49 @@
 ---
 title: React & Next.js
-description: Integración del widget en proyectos React o Next.js con hooks optimizados
+description: Widget integration in React or Next.js projects with optimized hooks
 slug: /widget-config/integraciones/react-nextjs
 sidebar_position: 1
 ---
 
-:::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+:::info First time?
+Read the [installation guide](../instalacion) first to understand the basics.
 :::
 
 # React & Next.js
 
-Integración completa del widget de AIFindr en aplicaciones React y Next.js con hooks personalizados, manejo de estado y SSR.
+Complete integration of the AIFindr widget in React and Next.js applications with custom hooks, state management, and SSR.
 
 ## React (CRA, Vite, etc.)
 
-### 1. Script en index.html
+### 1. Script in index.html
 
-Añade el script en `public/index.html` antes de `</body>`:
+Add the script in `public/index.html` before `</body>`:
 
 ```html
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mi App React</title>
+    <title>My React App</title>
   </head>
   <body>
-    <noscript>Necesitas JavaScript para ejecutar esta app.</noscript>
+    <noscript>You need JavaScript to run this app.</noscript>
     <div id="root"></div>
-    
-    <!-- Widget de AIFindr -->
+
+    <!-- AIFindr Widget -->
     <script
       src="https://hub.aifindr.ai/widget.js"
-      data-client-id="TU_CLIENT_ID"
+      data-client-id="YOUR_CLIENT_ID"
       defer
     ></script>
   </body>
 </html>
 ```
 
-### 2. Hook personalizado
+### 2. Custom Hook
 
-Crea `hooks/useAIFindr.ts`:
+Create `hooks/useAIFindr.ts`:
 
 ```typescript
 import { useEffect, useCallback, useRef } from 'react';
@@ -79,16 +79,16 @@ export function useAIFindr(options: UseAIFindrOptions = {}) {
     const initWidget = () => {
       if (window.AIFindrWidget) {
         widget.current = window.AIFindrWidget;
-        
+
         window.AIFindrWidget.ready(() => {
           isReady.current = true;
-          
+
           if (autoSetContext && context) {
             window.AIFindrWidget?.mergeContext(context);
           }
         });
       } else {
-        // Reintentar si el widget no está disponible
+        // Retry if widget is not available
         setTimeout(initWidget, 100);
       }
     };
@@ -96,7 +96,7 @@ export function useAIFindr(options: UseAIFindrOptions = {}) {
     initWidget();
   }, []);
 
-  // Actualizar contexto cuando cambie
+  // Update context when it changes
   useEffect(() => {
     if (isReady.current && autoSetContext && context) {
       window.AIFindrWidget?.mergeContext(context);
@@ -141,9 +141,9 @@ export function useAIFindr(options: UseAIFindrOptions = {}) {
 
 ## Next.js
 
-### 1. Script con Next.js Script
+### 1. Script with Next.js Script
 
-En `pages/_app.tsx` o `app/layout.tsx`:
+In `pages/_app.tsx` or `app/layout.tsx`:
 
 ```tsx
 import Script from 'next/script';
@@ -152,10 +152,10 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />
-      
+
       <Script
         src="https://hub.aifindr.ai/widget.js"
-        data-client-id="TU_CLIENT_ID"
+        data-client-id="YOUR_CLIENT_ID"
         strategy="afterInteractive"
       />
     </>
@@ -165,7 +165,7 @@ export default function App({ Component, pageProps }) {
 
 ### 2. Provider Context
 
-Crea `context/AIFindrProvider.tsx`:
+Create `context/AIFindrProvider.tsx`:
 
 ```tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -191,8 +191,8 @@ export function AIFindrProvider({ children }: { children: React.ReactNode }) {
       if (window.AIFindrWidget) {
         window.AIFindrWidget.ready(() => {
           setIsReady(true);
-          
-          // Contexto inicial
+
+          // Initial context
           window.AIFindrWidget.setContext({
             framework: 'nextjs',
             route: router.pathname,
@@ -207,7 +207,7 @@ export function AIFindrProvider({ children }: { children: React.ReactNode }) {
     initWidget();
   }, []);
 
-  // Actualizar contexto en cambios de ruta
+  // Update context on route changes
   useEffect(() => {
     if (isReady) {
       window.AIFindrWidget?.mergeContext({
@@ -237,13 +237,13 @@ export function AIFindrProvider({ children }: { children: React.ReactNode }) {
 export function useAIFindrContext() {
   const context = useContext(AIFindrContext);
   if (!context) {
-    throw new Error('useAIFindrContext debe usarse dentro de AIFindrProvider');
+    throw new Error('useAIFindrContext must be used within AIFindrProvider');
   }
   return context;
 }
 ```
 
-## Componentes
+## Components
 
 ### Trigger Component
 
@@ -257,10 +257,10 @@ interface AIFindrTriggerProps {
   onClick?: () => void;
 }
 
-export function AIFindrTrigger({ 
-  children, 
-  className = '', 
-  onClick 
+export function AIFindrTrigger({
+  children,
+  className = '',
+  onClick
 }: AIFindrTriggerProps) {
   return (
     <button
@@ -275,7 +275,7 @@ export function AIFindrTrigger({
 }
 ```
 
-### Header con contexto
+### Header with context
 
 ```tsx
 // components/Header.tsx
@@ -300,12 +300,12 @@ export function Header() {
   return (
     <header className="header">
       <nav>
-        <h1>Mi App</h1>
-        <AIFindrTrigger 
+        <h1>My App</h1>
+        <AIFindrTrigger
           className="help-button"
           onClick={handleHelpClick}
         >
-          ¿Necesitas ayuda?
+          Need help?
         </AIFindrTrigger>
       </nav>
     </header>
@@ -313,9 +313,9 @@ export function Header() {
 }
 ```
 
-## Uso avanzado
+## Advanced Usage
 
-### Hook con estado local
+### Hook with local state
 
 ```tsx
 // hooks/useAIFindrWithState.ts
@@ -330,7 +330,7 @@ interface UserState {
 
 export function useAIFindrWithState(userState: UserState) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const { open, close, toggle, mergeContext } = useAIFindr({
     context: {
       user_logged_in: userState.isLoggedIn,
@@ -363,10 +363,10 @@ export function useAIFindrWithState(userState: UserState) {
 }
 ```
 
-### Componente de página con contexto específico
+### Page component with specific context
 
 ```tsx
-// pages/dashboard.tsx (Next.js) o components/Dashboard.tsx (React)
+// pages/dashboard.tsx (Next.js) or components/Dashboard.tsx (React)
 import { useEffect } from 'react';
 import { useAIFindr } from '../hooks/useAIFindr';
 
@@ -374,7 +374,7 @@ export default function Dashboard() {
   const { mergeContext, setContext } = useAIFindr();
 
   useEffect(() => {
-    // Contexto específico del dashboard
+    // Dashboard-specific context
     setContext({
       page: 'dashboard',
       available_actions: ['view_analytics', 'manage_settings', 'export_data'],
@@ -394,15 +394,15 @@ export default function Dashboard() {
     <div className="dashboard">
       <h1>Dashboard</h1>
       <button onClick={handleAnalyticsView}>
-        Ver Analytics
+        View Analytics
       </button>
-      {/* Resto del contenido */}
+      {/* Rest of content */}
     </div>
   );
 }
 ```
 
-### Hook para SSR/SSG (Next.js)
+### Hook for SSR/SSG (Next.js)
 
 ```tsx
 // hooks/useAIFindrSSR.ts
@@ -440,35 +440,35 @@ export function useAIFindrSSR() {
 }
 ```
 
-## Troubleshooting React/Next.js
+## React/Next.js Troubleshooting
 
-### Problemas comunes
+### Common problems
 
-| Problema | Solución |
+| Problem | Solution |
 |----------|----------|
-| Widget no se carga en SSR | Usar `useEffect` y verificar `typeof window !== 'undefined'` |
-| Hook se ejecuta antes del script | Añadir lógica de retry en `useAIFindr` |
-| Contexto no se actualiza | Usar dependencias correctas en `useEffect` |
-| Hydration mismatch | Usar `useAIFindrSSR` para manejo SSR/CSR |
+| Widget doesn't load on SSR | Use `useEffect` and check `typeof window !== 'undefined'` |
+| Hook runs before script | Add retry logic in `useAIFindr` |
+| Context not updating | Use correct dependencies in `useEffect` |
+| Hydration mismatch | Use `useAIFindrSSR` for SSR/CSR handling |
 
-### Debug en desarrollo
+### Debug in development
 
 ```tsx
-// En desarrollo
+// In development
 if (process.env.NODE_ENV === 'development') {
   useEffect(() => {
     if (window.AIFindrWidget) {
       window.AIFindrWidget.ready(() => {
-        console.log('AIFindr listo');
-        console.log('Contexto:', window.AIFindrWidget.getContext());
+        console.log('AIFindr ready');
+        console.log('Context:', window.AIFindrWidget.getContext());
       });
     }
   }, []);
 }
 ```
 
-## Próximos pasos
+## Next Steps
 
-- [Personalización visual](../personalizacion) para estilos con CSS-in-JS
-- [API Reference](../api-reference) para métodos avanzados  
-- [Contexto y metadatos](../contexto-metadatos) para personalización dinámica
+- [Visual customization](../personalizacion) for styles with CSS-in-JS
+- [API Reference](../api-reference) for advanced methods
+- [Context and metadata](../contexto-metadatos) for dynamic personalization

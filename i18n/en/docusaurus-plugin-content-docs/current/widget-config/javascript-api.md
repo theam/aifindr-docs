@@ -1,289 +1,289 @@
 ---
 title: API Reference
-description: Referencia completa de la API JavaScript del widget de AIFindr
+description: Complete reference of the AIFindr widget JavaScript API
 slug: /widget-config/api-reference
 sidebar_position: 6
 ---
 
 # API Reference
 
-Documentación completa de la API JavaScript del widget de AIFindr. El objeto global `AIFindrWidget` proporciona una interfaz completa para controlar el widget.
+Complete documentation of the AIFindr widget JavaScript API. The global `AIFindrWidget` object provides a complete interface for controlling the widget.
 
-## Inicialización
+## Initialization
 
 ### `AIFindrWidget.ready(callback?)`
 
-Ejecuta código cuando el widget está completamente cargado.
+Executes code when the widget is fully loaded.
 
-**Parámetros:**
-- `callback` (function, opcional): Función a ejecutar cuando esté listo
+**Parameters:**
+- `callback` (function, optional): Function to execute when ready
 
-**Retorna:**
-- Si no se pasa callback: `Promise<void>`
-- Si se pasa callback: `undefined`
+**Returns:**
+- If no callback passed: `Promise<void>`
+- If callback passed: `undefined`
 
 ```js
-// Usando callback
+// Using callback
 AIFindrWidget.ready(() => {
-  console.log('Widget listo!');
+  console.log('Widget ready!');
   AIFindrWidget.setContext({ userId: '123' });
 });
 
-// Usando Promise
+// Using Promise
 await AIFindrWidget.ready();
-console.log('Widget listo!');
+console.log('Widget ready!');
 ```
 
 ### `AIFindrWidget.isReady()`
 
-Verifica si el widget está listo para usar.
+Checks if the widget is ready to use.
 
-**Retorna:** `boolean`
+**Returns:** `boolean`
 
 ```js
 if (AIFindrWidget.isReady()) {
   AIFindrWidget.open();
 } else {
-  console.log('Widget aún no está listo');
+  console.log('Widget is not ready yet');
 }
 ```
 
-## Control del Widget
+## Widget Control
 
 ### `AIFindrWidget.open()`
 
-Abre el widget y muestra la interfaz de chat.
+Opens the widget and displays the chat interface.
 
-**Retorna:** `Promise<void>`
+**Returns:** `Promise<void>`
 
 ```js
-// Abrir el widget
+// Open the widget
 try {
   await AIFindrWidget.open();
-  console.log('Widget abierto exitosamente');
+  console.log('Widget opened successfully');
 } catch (error) {
-  console.error('Error al abrir widget:', error);
+  console.error('Error opening widget:', error);
 }
 ```
 
 ### `AIFindrWidget.close()`
 
-Cierra el widget y oculta la interfaz.
+Closes the widget and hides the interface.
 
-**Retorna:** `Promise<void>`
+**Returns:** `Promise<void>`
 
 ```js
-// Cerrar el widget
+// Close the widget
 try {
   await AIFindrWidget.close();
-  console.log('Widget cerrado');
+  console.log('Widget closed');
 } catch (error) {
-  console.error('Error al cerrar widget:', error);
+  console.error('Error closing widget:', error);
 }
 ```
 
 ### `AIFindrWidget.toggle()`
 
-Alterna entre abrir y cerrar el widget.
+Toggles between opening and closing the widget.
 
-**Retorna:** `Promise<void>`
+**Returns:** `Promise<void>`
 
 ```js
-// Alternar estado del widget
+// Toggle widget state
 await AIFindrWidget.toggle();
 ```
 
-## Gestión de Contexto
+## Context Management
 
 ### `AIFindrWidget.setContext(context)`
 
-Reemplaza completamente el contexto actual.
+Completely replaces the current context.
 
-**Parámetros:**
-- `context` (object): Nuevo contexto a establecer
+**Parameters:**
+- `context` (object): New context to set
 
-**Notas:**
-- Las claves que coincidan con metadatos serán ignoradas con un warning
-- El contexto se envía automáticamente al iframe cuando está abierto
+**Notes:**
+- Keys that match metadata will be ignored with a warning
+- Context is automatically sent to iframe when open
 
 ```js
 AIFindrWidget.setContext({
   userId: '12345',
   userType: 'premium',
   currentPage: 'dashboard',
-  language: 'es'
+  language: 'en'
 });
 ```
 
 ### `AIFindrWidget.mergeContext(contextUpdate)`
 
-Añade o actualiza claves específicas del contexto sin afectar el resto.
+Adds or updates specific context keys without affecting the rest.
 
-**Parámetros:**
-- `contextUpdate` (object): Objeto con las claves a añadir/actualizar
+**Parameters:**
+- `contextUpdate` (object): Object with keys to add/update
 
 ```js
-// Contexto inicial
+// Initial context
 AIFindrWidget.setContext({ userId: '123', page: 'home' });
 
-// Actualizar solo la página
+// Update only the page
 AIFindrWidget.mergeContext({ page: 'products', timestamp: Date.now() });
 
-// Resultado: { userId: '123', page: 'products', timestamp: 1703123456789 }
+// Result: { userId: '123', page: 'products', timestamp: 1703123456789 }
 ```
 
 ### `AIFindrWidget.getContext()`
 
-Obtiene una copia del contexto actual.
+Gets a copy of the current context.
 
-**Retorna:** `object` - Copia del contexto actual
+**Returns:** `object` - Copy of current context
 
 ```js
 const currentContext = AIFindrWidget.getContext();
-console.log('Contexto:', currentContext);
+console.log('Context:', currentContext);
 
-// Modificar la copia no afecta el contexto real
-currentContext.newKey = 'value'; // No afecta el widget
+// Modifying the copy doesn't affect the real context
+currentContext.newKey = 'value'; // Doesn't affect the widget
 ```
 
 ### `AIFindrWidget.getMetadata()`
 
-Obtiene los metadatos definidos en el script.
+Gets the metadata defined in the script.
 
-**Retorna:** `object` - Copia de los metadatos
+**Returns:** `object` - Copy of metadata
 
 ```js
-// Si el script tiene: data-meta-environment="production"
+// If the script has: data-meta-environment="production"
 const metadata = AIFindrWidget.getMetadata();
 console.log(metadata); // { environment: "production" }
 ```
 
-**Notas:**
-- Los metadatos combinan atributos `data-meta-*` del script con parámetros UTM de la URL
-- Los parámetros UTM de la URL se agrupan automáticamente bajo la clave `utm`
-- Esta información es de solo lectura y se define al cargar el widget
+**Notes:**
+- Metadata combines `data-meta-*` attributes from the script with UTM parameters from the URL
+- UTM parameters from the URL are automatically grouped under the `utm` key
+- This information is read-only and defined when loading the widget
 
 ```js
-// Ejemplo 1: Solo metadatos del script
-// Script: <script data-meta-environment="production" data-meta-market="es">
+// Example 1: Script metadata only
+// Script: <script data-meta-environment="production" data-meta-market="en">
 const metadata = AIFindrWidget.getMetadata();
 console.log(metadata);
-// { environment: "production", market: "es" }
+// { environment: "production", market: "en" }
 
-// Ejemplo 2: Metadatos del script + parámetros UTM
-// Script: <script data-meta-market="es">
+// Example 2: Script metadata + UTM parameters
+// Script: <script data-meta-market="en">
 // URL: https://example.com?utm_source=google&utm_medium=cpc
 const metadata = AIFindrWidget.getMetadata();
 console.log(metadata);
-// { market: "es", utm: { source: "google", medium: "cpc" } }
+// { market: "en", utm: { source: "google", medium: "cpc" } }
 ```
 
-## Sistema de Eventos
+## Event System
 
 ### `AIFindrWidget.on(event, callback)`
 
-Registra un listener para un evento específico.
+Registers a listener for a specific event.
 
-**Parámetros:**
-- `event` (string): Nombre del evento
-- `callback` (function): Función a ejecutar cuando ocurra el evento
+**Parameters:**
+- `event` (string): Event name
+- `callback` (function): Function to execute when the event occurs
 
 ```js
 AIFindrWidget.on('widget.opened', () => {
-  console.log('Widget se abrió');
+  console.log('Widget was opened');
 });
 
 AIFindrWidget.on('widget.closed', () => {
-  console.log('Widget se cerró');
+  console.log('Widget was closed');
 });
 ```
 
 ### `AIFindrWidget.off(event, callback)`
 
-Desregistra un listener de evento específico.
+Unregisters a specific event listener.
 
-**Parámetros:**
-- `event` (string): Nombre del evento
-- `callback` (function): Función listener a remover
+**Parameters:**
+- `event` (string): Event name
+- `callback` (function): Listener function to remove
 
 ```js
-const handler = () => console.log('Widget abierto');
+const handler = () => console.log('Widget opened');
 
-// Registrar
+// Register
 AIFindrWidget.on('widget.opened', handler);
 
-// Desregistrar
+// Unregister
 AIFindrWidget.off('widget.opened', handler);
 ```
 
-## Eventos Disponibles
+## Available Events
 
 ### `AIFindrWidget.EVENTS`
 
-Constantes con los nombres de todos los eventos disponibles.
+Constants with the names of all available events.
 
 ```js
 const { EVENTS } = AIFindrWidget;
 
-// Eventos del ciclo de vida del widget
+// Widget lifecycle events
 AIFindrWidget.on(EVENTS.WIDGET_READY, () => {
-  console.log('Widget inicializado y listo');
+  console.log('Widget initialized and ready');
 });
 
 AIFindrWidget.on(EVENTS.WIDGET_OPENED, () => {
-  console.log('Widget abierto');
+  console.log('Widget opened');
 });
 
 AIFindrWidget.on(EVENTS.WIDGET_CLOSED, () => {
-  console.log('Widget cerrado');
+  console.log('Widget closed');
 });
 
 AIFindrWidget.on(EVENTS.WIDGET_ERROR, (error) => {
-  console.error('Error en widget:', error);
+  console.error('Widget error:', error);
 });
 
-// Eventos de conversación
+// Conversation events
 AIFindrWidget.on(EVENTS.CONV_STARTED, (data) => {
-  console.log('Conversación iniciada:', data);
+  console.log('Conversation started:', data);
 });
 
 AIFindrWidget.on(EVENTS.MESSAGE_SENT, (message) => {
-  console.log('Mensaje enviado:', message);
+  console.log('Message sent:', message);
 });
 
 AIFindrWidget.on(EVENTS.MESSAGE_RECV, (message) => {
-  console.log('Mensaje recibido:', message);
+  console.log('Message received:', message);
 });
 ```
 
-### Lista de Eventos
+### Event List
 
-| Evento | Descripción | Datos |
+| Event | Description | Data |
 |--------|-------------|-------|
-| `widget.ready` | Widget inicializado y listo | `undefined` |
-| `widget.opened` | Widget abierto exitosamente | `undefined` |
-| `widget.closed` | Widget cerrado | `undefined` |
-| `widget.error` | Error en el widget | `Error object` |
-| `conversation.started` | Nueva conversación iniciada | `{ conversationId, timestamp }` |
-| `message.sent` | Usuario envió un mensaje | `{ message, timestamp }` |
-| `message.received` | IA respondió con un mensaje | `{ message, timestamp }` |
+| `widget.ready` | Widget initialized and ready | `undefined` |
+| `widget.opened` | Widget opened successfully | `undefined` |
+| `widget.closed` | Widget closed | `undefined` |
+| `widget.error` | Error in widget | `Error object` |
+| `conversation.started` | New conversation started | `{ conversationId, timestamp }` |
+| `message.sent` | User sent a message | `{ message, timestamp }` |
+| `message.received` | AI responded with a message | `{ message, timestamp }` |
 
-## Métodos Avanzados
+## Advanced Methods
 
 ### `AIFindrWidget.dispatch(event, payload)`
 
-Envía un evento personalizado al iframe del widget.
+Sends a custom event to the widget iframe.
 
-**Parámetros:**
-- `event` (string): Nombre del evento
-- `payload` (object, opcional): Datos a enviar
+**Parameters:**
+- `event` (string): Event name
+- `payload` (object, optional): Data to send
 
-**Notas:**
-- Solo funciona con eventos definidos en `BRIDGE_EVENTS`
-- Se encola automáticamente si el widget no está listo
+**Notes:**
+- Only works with events defined in `BRIDGE_EVENTS`
+- Automatically queues if widget is not ready
 
 ```js
-// Enviar evento personalizado
+// Send custom event
 AIFindrWidget.dispatch('custom.event', {
   action: 'highlight_feature',
   featureId: 'new-dashboard'
@@ -292,88 +292,88 @@ AIFindrWidget.dispatch('custom.event', {
 
 ### `AIFindrWidget.getState()`
 
-Obtiene el estado actual del widget.
+Gets the current widget state.
 
-**Retorna:** `string` - Estado actual ('init', 'loading', 'ready', 'open', 'closing', 'error')
+**Returns:** `string` - Current state ('init', 'loading', 'ready', 'open', 'closing', 'error')
 
 ```js
 const state = AIFindrWidget.getState();
-console.log('Estado actual:', state);
+console.log('Current state:', state);
 
 if (state === 'ready') {
   AIFindrWidget.open();
 }
 ```
 
-## Gestión del Ciclo de Vida
+## Lifecycle Management
 
 ### `AIFindrWidget.initialize()`
 
-Inicializa el widget manualmente. Normalmente se ejecuta automáticamente.
+Initializes the widget manually. Normally runs automatically.
 
-**Retorna:** `Promise<void>`
+**Returns:** `Promise<void>`
 
 ```js
-// Raramente necesario, el widget se inicializa automáticamente
+// Rarely needed, widget initializes automatically
 await AIFindrWidget.initialize();
 ```
 
 ### `AIFindrWidget.destroy()`
 
-Destruye completamente el widget y limpia todos los recursos.
+Completely destroys the widget and cleans up all resources.
 
 ```js
-// Limpiar el widget al salir de la página
+// Clean up widget when exiting page
 window.addEventListener('beforeunload', () => {
   AIFindrWidget.destroy();
 });
 ```
 
-## API de Debug
+## Debug API
 
 ### `AIFindrWidget._debug`
 
-Métodos internos para debugging (solo en desarrollo).
+Internal methods for debugging (development only).
 
 ```js
-// Obtener estado interno completo
+// Get complete internal state
 const debugInfo = AIFindrWidget._debug.getState();
 console.log('Debug info:', debugInfo);
 
-// Obtener contexto actual (referencia directa)
+// Get current context (direct reference)
 const contextRef = AIFindrWidget._debug.getContext();
 
-// Obtener listeners de eventos
+// Get event listeners
 const listeners = AIFindrWidget._debug.getEventListeners();
 
-// Obtener configuración de inicialización
+// Get initialization configuration
 const options = AIFindrWidget._debug.getOptions();
 ```
 
-### Modo Debug
+### Debug Mode
 
-Activa logging detallado para troubleshooting:
+Activates detailed logging for troubleshooting:
 
 ```js
-// Activar modo debug
+// Activate debug mode
 localStorage.setItem('aifindr_debug', 'true');
 
-// Recargar página para aplicar
+// Reload page to apply
 location.reload();
 
-// Ver estado debug
+// View debug state
 console.log(AIFindrWidget._debug.getState());
 ```
 
 ## TypeScript
 
-Definiciones de tipos para usar con TypeScript:
+Type definitions for use with TypeScript:
 
 ```typescript
 declare global {
   interface Window {
     AIFindrWidget: {
-      // Constantes
+      // Constants
       EVENTS: {
         WIDGET_READY: 'widget.ready';
         WIDGET_OPENED: 'widget.opened';
@@ -383,33 +383,33 @@ declare global {
         MESSAGE_SENT: 'message.sent';
         MESSAGE_RECV: 'message.received';
       };
-      
-      // Control del widget
+
+      // Widget control
       ready: (callback?: () => void) => Promise<void> | undefined;
       isReady: () => boolean;
       open: () => Promise<void>;
       close: () => Promise<void>;
       toggle: () => Promise<void>;
-      
-      // Gestión de contexto
+
+      // Context management
       setContext: (context: Record<string, any>) => void;
       mergeContext: (contextUpdate: Record<string, any>) => void;
       getContext: () => Record<string, any>;
       getMetadata: () => Record<string, any>;
-      
-      // Eventos
+
+      // Events
       on: (event: string, callback: (data?: any) => void) => void;
       off: (event: string, callback: (data?: any) => void) => void;
-      
-      // Métodos avanzados
+
+      // Advanced methods
       dispatch: (event: string, payload?: any) => void;
       getState: () => 'init' | 'loading' | 'ready' | 'open' | 'closing' | 'error';
-      
-      // Ciclo de vida
+
+      // Lifecycle
       initialize: () => Promise<void>;
       destroy: () => void;
-      
-      // Debug (desarrollo)
+
+      // Debug (development)
       _debug: {
         getState: () => any;
         getContext: () => Record<string, any>;
@@ -420,7 +420,7 @@ declare global {
   }
 }
 
-// Tipos para eventos
+// Types for events
 interface WidgetEventData {
   'widget.ready': undefined;
   'widget.opened': undefined;
@@ -431,7 +431,7 @@ interface WidgetEventData {
   'message.received': { message: string; timestamp: string };
 }
 
-// Helper para listeners tipados
+// Helper for typed listeners
 function onWidgetEvent<T extends keyof WidgetEventData>(
   event: T,
   callback: (data: WidgetEventData[T]) => void
@@ -440,35 +440,35 @@ function onWidgetEvent<T extends keyof WidgetEventData>(
 }
 ```
 
-## Ejemplos de Uso
+## Usage Examples
 
-### Integración básica
+### Basic Integration
 
 ```js
-// Esperar a que esté listo e inicializar contexto
+// Wait until ready and initialize context
 AIFindrWidget.ready(() => {
-  // Configurar contexto inicial
+  // Set initial context
   AIFindrWidget.setContext({
     userId: getCurrentUserId(),
     language: getUserLanguage(),
     plan: getUserPlan()
   });
-  
-  // Configurar listeners
+
+  // Set up listeners
   AIFindrWidget.on('widget.opened', () => {
     trackEvent('widget_opened');
   });
-  
+
   AIFindrWidget.on('conversation.started', () => {
     trackEvent('conversation_started');
   });
 });
 ```
 
-### Actualización dinámica de contexto
+### Dynamic Context Update
 
 ```js
-// En una SPA, actualizar contexto en navegación
+// In a SPA, update context on navigation
 router.on('route:changed', (route) => {
   AIFindrWidget.mergeContext({
     currentRoute: route.path,
@@ -477,7 +477,7 @@ router.on('route:changed', (route) => {
   });
 });
 
-// Actualizar contexto basado en estado de la aplicación
+// Update context based on application state
 store.subscribe((state) => {
   AIFindrWidget.mergeContext({
     userPreferences: state.user.preferences,
@@ -487,40 +487,40 @@ store.subscribe((state) => {
 });
 ```
 
-### Control programático avanzado
+### Advanced Programmatic Control
 
 ```js
-// Abrir widget con query específica
+// Open widget with specific query
 async function openWithQuery(query) {
-  // Establecer contexto específico
+  // Set specific context
   AIFindrWidget.mergeContext({
     pendingQuery: query,
     querySource: 'programmatic'
   });
-  
+
   try {
     await AIFindrWidget.open();
-    console.log('Widget abierto con query:', query);
+    console.log('Widget opened with query:', query);
   } catch (error) {
-    console.error('Error abriendo widget:', error);
+    console.error('Error opening widget:', error);
   }
 }
 
-// Usar en botones específicos
+// Use in specific buttons
 document.querySelector('#help-billing').addEventListener('click', () => {
-  openWithQuery('Tengo una pregunta sobre mi facturación');
+  openWithQuery('I have a question about my billing');
 });
 
 document.querySelector('#help-features').addEventListener('click', () => {
-  openWithQuery('¿Cómo funciona esta funcionalidad?');
+  openWithQuery('How does this feature work?');
 });
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-1. **Usar siempre `ready()`**: Nunca llamar métodos antes de que el widget esté listo
-2. **Gestión de errores**: Manejar errores en operaciones async como `open()` y `close()`
-3. **Contexto mínimo**: Solo enviar datos relevantes para mejorar respuestas
-4. **Cleanup de listeners**: Remover listeners cuando no se necesiten
-5. **TypeScript**: Usar las definiciones de tipos para mejor DX
-6. **Debug en desarrollo**: Activar modo debug para troubleshooting
+1. **Always use `ready()`**: Never call methods before the widget is ready
+2. **Error handling**: Handle errors in async operations like `open()` and `close()`
+3. **Minimal context**: Only send data relevant for improving responses
+4. **Listener cleanup**: Remove listeners when not needed
+5. **TypeScript**: Use type definitions for better DX
+6. **Debug in development**: Activate debug mode for troubleshooting

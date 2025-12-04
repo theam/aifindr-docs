@@ -4,13 +4,7 @@ const sidebar: SidebarsConfig = {
   apisidebar: [
     {
       type: "doc",
-      id: "api/product-overview",
-      label: "Visión General",
-    },
-    {
-      type: "doc",
       id: "api/ai-findr-api",
-      label: "Referencia Técnica",
     },
     {
       type: "category",
@@ -71,7 +65,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Componentes de Respuesta",
+      label: "Answer Components",
       link: {
         type: "doc",
         id: "api/answer-components",

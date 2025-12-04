@@ -1,6 +1,6 @@
 ---
-title: Guía de Instalación
-description: Cómo instalar el widget de AIFindr en tu sitio web paso a paso
+title: Installation Guide
+description: How to install the AIFindr widget on your website step by step
 slug: /widget-config/instalacion
 sidebar_position: 2
 ---
@@ -8,92 +8,92 @@ sidebar_position: 2
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Instalación del Widget
+# Widget Installation
 
-La integración del widget se realiza en dos simples pasos. ¡Vamos allá!
+Widget integration is done in two simple steps. Let's get started!
 
-## Paso 1 · Añade el elemento trigger
+## Step 1 · Add the trigger element
 
-El trigger es el elemento que tus usuarios utilizarán para abrir el asistente. 
+The trigger is the element your users will use to open the assistant.
 
 <Tabs>
-  <TabItem value="button" label="Botón" default>
+  <TabItem value="button" label="Button" default>
 
 ```html
-<button id="ai-findr-trigger" type="button">Buscar</button>
+<button id="ai-findr-trigger" type="button">Search</button>
 ```
 
   </TabItem>
-  <TabItem value="input" label="Campo de búsqueda">
+  <TabItem value="input" label="Search Field">
 
 ```html
-<input 
-  id="ai-findr-trigger" 
-  type="text" 
-  placeholder="¿En qué te puedo ayudar?"
+<input
+  id="ai-findr-trigger"
+  type="text"
+  placeholder="How can I help you?"
 />
 ```
 
   </TabItem>
 </Tabs>
 
-:::caution Importante
-El atributo `id="ai-findr-trigger"` es **obligatorio** para que el widget detecte el elemento.
+:::caution Important
+The `id="ai-findr-trigger"` attribute is **required** for the widget to detect the element.
 :::
 
-## Paso 2 · Carga el script del widget
+## Step 2 · Load the widget script
 
 ```html
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   defer
 ></script>
 ```
 
 :::info
-Reemplaza `TU_CLIENT_ID` con el identificador único proporcionado por AIFindr. Sin él, el widget no funcionará.
+Replace `YOUR_CLIENT_ID` with the unique identifier provided by AIFindr. Without it, the widget won't work.
 :::
 
-### ¿Dónde colocar el script?
+### Where to place the script?
 
-- **Opción recomendada**: Antes del cierre de `</body>`
-- **Alternativa**: En el `<head>` con el atributo `defer`
+- **Recommended option**: Before the closing `</body>` tag
+- **Alternative**: In the `<head>` with the `defer` attribute
 
-El atributo `defer` asegura que el script no bloquee la carga de tu página.
+The `defer` attribute ensures the script doesn't block your page load.
 
-## ¡Listo! 🎉
+## Done! 🎉
 
-Con estos dos pasos, el widget ya está funcionando. Los usuarios pueden hacer clic en el trigger para abrir el asistente.
+With these two steps, the widget is now working. Users can click on the trigger to open the assistant.
 
 ---
 
-## Siguiente paso: Guía específica para tu stack
+## Next step: Specific guide for your stack
 
 <div className="stack-cards">
-  
-**HTML / JavaScript**  
-Integración simple para sitios estáticos  
-[Ver guía →](./integraciones/html)
 
-**React & Next.js**  
-Con hooks optimizados y SSR  
-[Ver guía →](./integraciones/react-nextjs)
+**HTML / JavaScript**
+Simple integration for static sites
+[View guide →](./integraciones/html)
 
-**Angular**  
-Integración con TypeScript y routing  
-[Ver guía →](./integraciones/angular)
+**React & Next.js**
+With optimized hooks and SSR
+[View guide →](./integraciones/react-nextjs)
 
-**WordPress**  
-Plugins y personalización de temas  
-[Ver guía →](./integraciones/wordpress)
+**Angular**
+Integration with TypeScript and routing
+[View guide →](./integraciones/angular)
+
+**WordPress**
+Plugins and theme customization
+[View guide →](./integraciones/wordpress)
 
 </div>
 
 ---
 
-## Verificar la instalación
+## Verify installation
 
-1. **Abre la consola del navegador** (F12)
-2. **Escribe**: `AIFindrWidget`
-3. **Deberías ver**: Un objeto con métodos disponibles
+1. **Open the browser console** (F12)
+2. **Type**: `AIFindrWidget`
+3. **You should see**: An object with available methods

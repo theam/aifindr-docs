@@ -1,49 +1,49 @@
 ---
 title: Angular
-description: Integración del widget de AIFindr en aplicaciones Angular con TypeScript
+description: AIFindr widget integration in Angular applications with TypeScript
 slug: /widget-config/integraciones/angular
 sidebar_position: 2
 ---
 
-:::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+:::info First time?
+Read the [installation guide](../instalacion) first to understand the basics.
 :::
 
 # Angular
 
-Integración completa del widget de AIFindr en aplicaciones Angular con TypeScript, routing y manejo de estado.
+Complete integration of the AIFindr widget in Angular applications with TypeScript, routing, and state management.
 
-## Instalación
+## Installation
 
-### 1. Script en index.html
+### 1. Script in index.html
 
-Añade el script en `src/index.html` antes de `</body>`:
+Add the script in `src/index.html` before `</body>`:
 
 ```html
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Mi App Angular</title>
+  <title>My Angular App</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <app-root></app-root>
-  
-  <!-- Widget de AIFindr -->
+
+  <!-- AIFindr Widget -->
   <script
     src="https://hub.aifindr.ai/widget.js"
-    data-client-id="TU_CLIENT_ID"
+    data-client-id="YOUR_CLIENT_ID"
     defer
   ></script>
 </body>
 </html>
 ```
 
-### 2. Tipado TypeScript
+### 2. TypeScript Typing
 
-Crea `src/types/aifindr.d.ts`:
+Create `src/types/aifindr.d.ts`:
 
 ```typescript
 declare global {
@@ -64,7 +64,7 @@ declare global {
 export {};
 ```
 
-## Servicio Angular
+## Angular Service
 
 ### aifindr.service.ts
 
@@ -89,7 +89,7 @@ export class AIFindrService {
         this.isReady.next(true);
       });
     } else {
-      // Reintentar si el widget no está disponible aún
+      // Retry if widget is not available yet
       setTimeout(() => this.initWidget(), 100);
     }
   }
@@ -130,7 +130,7 @@ export class AIFindrService {
 }
 ```
 
-## Componentes
+## Components
 
 ### Trigger Component
 
@@ -141,9 +141,9 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-aifindr-trigger',
   template: `
-    <button 
-      id="ai-findr-trigger" 
-      type="button" 
+    <button
+      id="ai-findr-trigger"
+      type="button"
       [class]="buttonClass"
     >
       <ng-content>{{ label }}</ng-content>
@@ -151,12 +151,12 @@ import { Component, Input } from '@angular/core';
   `
 })
 export class AIFindrTriggerComponent {
-  @Input() label: string = '¿Necesitas ayuda?';
+  @Input() label: string = 'Need help?';
   @Input() buttonClass: string = 'aifindr-btn';
 }
 ```
 
-### Header Component con contexto
+### Header Component with context
 
 ```typescript
 // header.component.ts
@@ -169,9 +169,9 @@ import { AIFindrService } from '../services/aifindr.service';
   template: `
     <header>
       <nav>
-        <h1>Mi App</h1>
-        <app-aifindr-trigger 
-          label="Ayuda"
+        <h1>My App</h1>
+        <app-aifindr-trigger
+          label="Help"
           buttonClass="help-button">
         </app-aifindr-trigger>
       </nav>
@@ -179,14 +179,14 @@ import { AIFindrService } from '../services/aifindr.service';
   `
 })
 export class HeaderComponent implements OnInit {
-  
+
   constructor(
     private router: Router,
     private aifindr: AIFindrService
   ) {}
 
   ngOnInit(): void {
-    // Actualizar contexto en cada cambio de ruta
+    // Update context on every route change
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateContext(event.url);
@@ -211,9 +211,9 @@ export class HeaderComponent implements OnInit {
 }
 ```
 
-## Integración con Router
+## Router Integration
 
-### Route Guard con contexto
+### Route Guard with context
 
 ```typescript
 // aifindr-context.guard.ts
@@ -225,11 +225,11 @@ import { AIFindrService } from '../services/aifindr.service';
   providedIn: 'root'
 })
 export class AIFindrContextGuard implements CanActivate {
-  
+
   constructor(private aifindr: AIFindrService) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    // Añadir contexto específico de la ruta
+    // Add route-specific context
     const routeContext = {
       page: route.data?.['page'] || 'unknown',
       permissions: route.data?.['permissions'] || [],
@@ -242,7 +242,7 @@ export class AIFindrContextGuard implements CanActivate {
 }
 ```
 
-### Uso en routing
+### Usage in routing
 
 ```typescript
 // app-routing.module.ts
@@ -262,9 +262,9 @@ const routes: Routes = [
 ];
 ```
 
-## Uso avanzado
+## Advanced Usage
 
-### Componente con control programático
+### Component with programmatic control
 
 ```typescript
 // help-center.component.ts
@@ -276,14 +276,14 @@ import { Subscription } from 'rxjs';
   selector: 'app-help-center',
   template: `
     <div class="help-center">
-      <h2>Centro de Ayuda</h2>
-      
+      <h2>Help Center</h2>
+
       <div class="help-options">
         <button (click)="openWithContext('faq')">
-          Ver FAQ
+          View FAQ
         </button>
         <button (click)="openWithContext('contact')">
-          Contactar Soporte
+          Contact Support
         </button>
         <button (click)="openWithContext('tutorial')">
           Tutorial
@@ -322,7 +322,7 @@ export class HelpCenterComponent implements OnInit, OnDestroy {
 }
 ```
 
-### Interceptor para contexto automático
+### Interceptor for automatic context
 
 ```typescript
 // aifindr-context.interceptor.ts
@@ -332,11 +332,11 @@ import { AIFindrService } from '../services/aifindr.service';
 
 @Injectable()
 export class AIFindrContextInterceptor implements HttpInterceptor {
-  
+
   constructor(private aifindr: AIFindrService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    // Añadir contexto de API calls
+    // Add API call context
     if (req.url.includes('/api/')) {
       this.aifindr.mergeContext({
         last_api_call: req.url,
@@ -350,31 +350,31 @@ export class AIFindrContextInterceptor implements HttpInterceptor {
 }
 ```
 
-## Troubleshooting Angular
+## Angular Troubleshooting
 
-### Problemas comunes
+### Common problems
 
-| Problema | Solución |
+| Problem | Solution |
 |----------|----------|
-| `AIFindrWidget is not defined` | Verificar que el script esté en `index.html` y usar el servicio |
-| Contexto no se actualiza | Usar `AIFindrService.isReady$` antes de llamar métodos |
-| Conflictos con SSR | Verificar `typeof window !== 'undefined'` |
-| Tipos TypeScript | Añadir el archivo de declaraciones `aifindr.d.ts` |
+| `AIFindrWidget is not defined` | Verify the script is in `index.html` and use the service |
+| Context not updating | Use `AIFindrService.isReady$` before calling methods |
+| Conflicts with SSR | Check `typeof window !== 'undefined'` |
+| TypeScript types | Add the `aifindr.d.ts` declaration file |
 
-### Debug en desarrollo
+### Debug in development
 
 ```typescript
-// En desarrollo, añadir logs
+// In development, add logs
 if (!environment.production) {
   window.AIFindrWidget.ready(() => {
-    console.log('AIFindr listo');
-    console.log('Contexto inicial:', window.AIFindrWidget.getContext());
+    console.log('AIFindr ready');
+    console.log('Initial context:', window.AIFindrWidget.getContext());
   });
 }
 ```
 
-## Próximos pasos
+## Next Steps
 
-- [Personalización visual](../personalizacion) para estilos Angular Material
-- [API Reference](../api-reference) para métodos avanzados
-- [Contexto y metadatos](../contexto-metadatos) para personalización dinámica
+- [Visual customization](../personalizacion) for Angular Material styles
+- [API Reference](../api-reference) for advanced methods
+- [Context and metadata](../contexto-metadatos) for dynamic personalization

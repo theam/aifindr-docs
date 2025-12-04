@@ -1,71 +1,71 @@
 ---
 id: product-overview
-title: Visión General
-sidebar_label: Visión General
-description: Entiende qué puedes construir con la API de AI Findr antes de ver el código.
+title: Overview
+sidebar_label: Overview
+description: Understand what you can build with the AI Findr API before seeing the code.
 ---
 
 import Card from '@site/src/components/Card';
 import { SmartPhone01Icon, PuzzleIcon, CameraMicrophone01Icon, AiSearchIcon } from 'hugeicons-react';
 
-# API de AI Findr: Construye experiencias a tu medida
+# AI Findr API: Build Custom Experiences
 
-La API de AI Findr está diseñada para equipos que quieren ir más allá del widget estándar. Permite conectar la inteligencia de nuestra plataforma directamente con tu software, bases de datos o interfaces de usuario personalizadas.
+The AI Findr API is designed for teams that want to go beyond the standard widget. It allows you to connect the intelligence of our platform directly with your software, databases, or custom user interfaces.
 
-## ¿Por qué usar la API?
+## Why use the API?
 
-A diferencia del Widget, que es una "caja negra" visual, la API te entrega los datos en bruto (JSON). Esto significa que **tú tienes el control total de la experiencia de usuario (UX)**.
+Unlike the Widget, which is a visual "black box," the API delivers raw data (JSON). This means **you have total control of the user experience (UX)**.
 
-### Lo que puedes construir
+### What you can build
 
 <div className="row margin-bottom--lg">
   <div className="col col--6 margin-bottom--lg">
-    <Card 
-      title="Apps Móviles Nativas" 
-      description="Integra un asistente de ayuda dentro de tu app iOS o Android con tu propia UI, sin usar webviews."
+    <Card
+      title="Native Mobile Apps"
+      description="Integrate a help assistant within your iOS or Android app with your own UI, without using webviews."
       icon={<SmartPhone01Icon size={24} />}
     />
   </div>
   <div className="col col--6 margin-bottom--lg">
-    <Card 
-      title="Integraciones Invisibles" 
-      description="Genera borradores de respuesta en tu CRM o autocompleta formularios complejos automáticamente."
+    <Card
+      title="Invisible Integrations"
+      description="Generate response drafts in your CRM or automatically complete complex forms."
       icon={<PuzzleIcon size={24} />}
     />
   </div>
   <div className="col col--6 margin-bottom--lg">
-    <Card 
-      title="Interfaces de Voz" 
-      description="Conecta la API con sistemas Text-to-Speech para crear asistentes telefónicos inteligentes."
+    <Card
+      title="Voice Interfaces"
+      description="Connect the API with Text-to-Speech systems to create intelligent phone assistants."
       icon={<CameraMicrophone01Icon size={24} />}
     />
   </div>
   <div className="col col--6 margin-bottom--lg">
-    <Card 
-      title="Buscadores Semánticos" 
-      description="Reemplaza tu barra de búsqueda tradicional con una que entiende preguntas y da respuestas directas."
+    <Card
+      title="Semantic Search Engines"
+      description="Replace your traditional search bar with one that understands questions and gives direct answers."
       icon={<AiSearchIcon size={24} />}
     />
   </div>
 </div>
 
-## Capacidades principales
+## Core Capabilities
 
-Nuestra API se divide en módulos lógicos que te permiten gestionar todo el ciclo de vida de la IA:
+Our API is divided into logical modules that allow you to manage the entire AI lifecycle:
 
-*   **💬 Chat y Conversaciones:** Envía mensajes y recibe respuestas con contexto, referencias y sugerencias.
-*   **📊 Analítica:** Extrae datos sobre qué preguntan tus usuarios para alimentar tus propios dashboards de BI (Business Intelligence).
-*   **🧩 Gestión del Widget:** Si usas el widget pero quieres controlarlo programáticamente (abrirlo/cerrarlo según acciones del usuario), también puedes hacerlo.
+*   **💬 Chat and Conversations:** Send messages and receive responses with context, references, and suggestions.
+*   **📊 Analytics:** Extract data about what your users are asking to feed your own BI (Business Intelligence) dashboards.
+*   **🧩 Widget Management:** If you use the widget but want to control it programmatically (open/close based on user actions), you can do that too.
 
-## ¿Es para mi equipo?
+## Is it for my team?
 
-| Deberías usar la API si... | Mejor usa el Widget si... |
+| You should use the API if... | Better use the Widget if... |
 | :--- | :--- |
-| Tienes un equipo de desarrollo disponible. | Quieres lanzar hoy mismo. |
-| Necesitas una UI/UX completamente personalizada. | Te sirve una interfaz de chat estándar y moderna. |
-| Vas a integrar la IA en un entorno no-web (Móvil, Desktop, IoT). | Tu entorno es una página web o aplicación web. |
+| You have a development team available. | You want to launch today. |
+| You need a completely customized UI/UX. | A standard, modern chat interface works for you. |
+| You're integrating AI in a non-web environment (Mobile, Desktop, IoT). | Your environment is a web page or web application. |
 
 ---
 
-**¿Listo para los detalles técnicos?**
-Explora la [Referencia Técnica de la API](/docs/api/ai-findr-api) para ver endpoints, autenticación y ejemplos de código.
+**Ready for the technical details?**
+Explore the [API Technical Reference](/docs/api/ai-findr-api) to see endpoints, authentication, and code examples.

@@ -1,82 +1,82 @@
 ---
-title: Contexto y Metadatos
-description: Personaliza las respuestas del asistente enviando datos relevantes del usuario y la aplicación
+title: Context and Metadata
+description: Customize assistant responses by sending relevant user and application data
 slug: /widget-config/contexto-metadatos
 sidebar_position: 5
 ---
 
-# Contexto y Metadatos
+# Context and Metadata
 
-El widget de AIFindr permite personalizar las respuestas del asistente mediante dos tipos de datos: **metadatos** (fijos) y **contexto** (dinámico).
+The AIFindr widget allows you to customize assistant responses through two types of data: **metadata** (fixed) and **context** (dynamic).
 
-## 🏷️ Diferencias clave
+## Key Differences
 
-| Aspecto | Metadatos | Contexto |
+| Aspect | Metadata | Context |
 |---------|-----------|----------|
-| **¿Cuándo se define?** | En el `<script>` con `data-meta-*` o por autocaptura | Con la API JavaScript |
-| **¿Se puede cambiar?** | ❌ No (inmutable) | ✅ Sí (dinámico) |
-| **¿La IA lo ve?** | ❌ No (solo analíticas) | ✅ Sí (en conversaciones) |
-| **Propósito** | Segmentación y métricas | Personalización de respuestas |
-| **Persistencia** | Toda la sesión | Se puede actualizar en tiempo real |
+| **When is it defined?** | In the `<script>` with `data-meta-*` or by auto-capture | With the JavaScript API |
+| **Can it change?** | ❌ No (immutable) | ✅ Yes (dynamic) |
+| **Does the AI see it?** | ❌ No (analytics only) | ✅ Yes (in conversations) |
+| **Purpose** | Segmentation and metrics | Response personalization |
+| **Persistence** | Entire session | Can be updated in real-time |
 
-## Metadatos
+## Metadata
 
-Los metadatos son **información fija** que defines al cargar el widget. Son como etiquetas permanentes que ayudan a segmentar y analizar el uso del asistente, pero **no afectan las respuestas** que da la IA.
+Metadata is **fixed information** that you define when loading the widget. They are like permanent tags that help segment and analyze assistant usage, but **do not affect the responses** given by the AI.
 
-### 📊 Casos de uso comunes
+### Common Use Cases
 
-#### 1. Marketing y campañas (UTMs)
+#### 1. Marketing and campaigns (UTMs)
 
-Los parámetros UTM son códigos que identifican de dónde vienen tus visitantes. El widget los captura de dos formas:
+UTM parameters are codes that identify where your visitors come from. The widget captures them in two ways:
 
-**Opción A: Autocaptura desde la URL** (más fácil)
+**Option A: Auto-capture from URL** (easier)
 ```html
-<!-- El widget detecta automáticamente los UTMs de la URL -->
+<!-- The widget automatically detects UTMs from the URL -->
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   defer
 ></script>
 ```
 
-Si alguien visita: `tusitio.com?utm_source=google&utm_medium=cpc`
-El widget captura automáticamente esos valores.
+If someone visits: `yoursite.com?utm_source=google&utm_medium=cpc`
+The widget automatically captures those values.
 
-**Opción B: Definir UTMs fijos** (más control)
+**Option B: Define fixed UTMs** (more control)
 ```html
-<!-- Útil cuando quieres valores específicos independientes de la URL -->
+<!-- Useful when you want specific values independent of the URL -->
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   data-meta-utm-source="google"
   data-meta-utm-medium="cpc"
-  data-meta-utm-campaign="verano2025"
+  data-meta-utm-campaign="summer2025"
   defer
 ></script>
 ```
 
-**¿Cómo funciona la autocaptura?**
-- Detecta automáticamente: `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`
-- Los agrupa en un objeto `utm` para fácil acceso
-- Si defines valores fijos con `data-meta-utm-*`, estos tienen prioridad sobre la autocaptura
+**How does auto-capture work?**
+- Automatically detects: `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`
+- Groups them in a `utm` object for easy access
+- If you define fixed values with `data-meta-utm-*`, these take priority over auto-capture
 
-**Verificar qué se capturó:**
+**Verify what was captured:**
 ```js
 AIFindrWidget.ready(() => {
-  console.log('Metadatos capturados:', AIFindrWidget.getMetadata());
+  console.log('Captured metadata:', AIFindrWidget.getMetadata());
   // { utm: { source: "google", medium: "cpc" }, ... }
 });
 ```
 
-#### 2. Segmentación de usuarios
+#### 2. User segmentation
 
-Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
+Use metadata to **classify users** without affecting chat responses:
 
 **E-commerce:**
 ```html
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   data-meta-store="madrid-centro"
   data-meta-segment="premium"
   data-meta-ab-test="checkout-v2"
@@ -84,40 +84,40 @@ Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
 ></script>
 ```
 
-**SaaS/Aplicaciones:**
+**SaaS/Applications:**
 ```html
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
-  data-meta-tenant="empresa-abc"
+  data-client-id="YOUR_CLIENT_ID"
+  data-meta-tenant="company-abc"
   data-meta-plan="enterprise"
   data-meta-environment="production"
   defer
 ></script>
 ```
 
-**Identificadores de usuario (solo tracking):**
+**User identifiers (tracking only):**
 ```html
-<!-- Para analítica, NO para personalización -->
+<!-- For analytics, NOT for personalization -->
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   data-meta-user-id="12345"
   data-meta-account-type="premium"
   defer
 ></script>
 ```
 
-> **💡 Tip:** Si necesitas que la IA personalice respuestas según el usuario, usa **contexto** en lugar de metadatos (ver sección siguiente).
+> **Tip:** If you need the AI to personalize responses based on the user, use **context** instead of metadata (see next section).
 
-#### 3. Configuración y entorno
+#### 3. Configuration and environment
 
-Útil para diferenciar ambientes y versiones:
+Useful for differentiating environments and versions:
 
 ```html
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   data-meta-environment="production"
   data-meta-version="2.1.0"
   data-meta-region="eu-west"
@@ -126,41 +126,41 @@ Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
 ></script>
 ```
 
-### 📐 Convenciones recomendadas
+### Recommended Conventions
 
-| Tipo de dato | Convención | Ejemplo |
+| Data Type | Convention | Example |
 |--------------|------------|---------|
-| **Entorno** | `data-meta-environment` | `"production"`, `"staging"` |
-| **Experimentos** | `data-meta-ab-test` | `"header-v2"`, `"checkout-flow-b"` |
-| **Geografía** | `data-meta-region` | `"latam"`, `"eu-west"` |
-| **Negocio** | `data-meta-segment` | `"premium"`, `"freemium"` |
-| **Usuario** | `data-meta-user-id` | `"12345"`, `"abc-def-123"` |
-| **UTMs (auto)** | Se capturan de la URL | `utm.source`, `utm.medium` |
+| **Environment** | `data-meta-environment` | `"production"`, `"staging"` |
+| **Experiments** | `data-meta-ab-test` | `"header-v2"`, `"checkout-flow-b"` |
+| **Geography** | `data-meta-region` | `"latam"`, `"eu-west"` |
+| **Business** | `data-meta-segment` | `"premium"`, `"freemium"` |
+| **User** | `data-meta-user-id` | `"12345"`, `"abc-def-123"` |
+| **UTMs (auto)** | Captured from URL | `utm.source`, `utm.medium` |
 | **UTMs (manual)** | `data-meta-utm-source` | `utmSource`, `utmMedium` |
 
-### ⚠️ Importante: Metadatos vs Contexto
+### Important: Metadata vs Context
 
-**Regla clave:** Si defines una clave como metadato, NO puedes usarla en contexto:
+**Key rule:** If you define a key as metadata, you CANNOT use it in context:
 
 ```js
-// Si tienes: data-meta-user-id="123"
+// If you have: data-meta-user-id="123"
 AIFindrWidget.setContext({
-  userId: '456' // ⚠️ Se ignorará con warning
+  userId: '456' // ⚠️ Will be ignored with warning
 });
 // Console: "userId was declared as metadata. Metadata is immutable"
 ```
 
-**¿Cuándo usar cada uno?**
-- **Metadatos**: Tracking, analítica, segmentación (la IA no los ve)
-- **Contexto**: Personalización de respuestas (la IA sí los ve)
+**When to use each?**
+- **Metadata**: Tracking, analytics, segmentation (AI doesn't see it)
+- **Context**: Response personalization (AI sees it)
 
-## Contexto
+## Context
 
-El contexto es **dinámico** y personaliza las respuestas del asistente en tiempo real.
+Context is **dynamic** and personalizes assistant responses in real-time.
 
-### Métodos de gestión
+### Management Methods
 
-#### `setContext(object)` - Reemplaza todo el contexto
+#### `setContext(object)` - Replaces entire context
 
 ```js
 AIFindrWidget.ready(() => {
@@ -173,40 +173,40 @@ AIFindrWidget.ready(() => {
 });
 ```
 
-#### `mergeContext(object)` - Añade o actualiza claves
+#### `mergeContext(object)` - Adds or updates keys
 
 ```js
-// Contexto inicial
+// Initial context
 AIFindrWidget.setContext({ userId: '12345', page: 'home' });
 
-// Actualizar solo la página
+// Update only the page
 AIFindrWidget.mergeContext({ page: 'products' });
 
-// Resultado: { userId: '12345', page: 'products' }
+// Result: { userId: '12345', page: 'products' }
 ```
 
-#### `getContext()` - Obtiene el contexto actual
+#### `getContext()` - Gets current context
 
 ```js
 const currentContext = AIFindrWidget.getContext();
-console.log('Contexto actual:', currentContext);
+console.log('Current context:', currentContext);
 ```
 
-## Casos de uso por industria
+## Use Cases by Industry
 
 ### E-commerce
 
 ```js
-// Contexto base del usuario
+// User base context
 AIFindrWidget.setContext({
   userId: user.id,
   userType: user.subscription,
   currency: 'EUR',
-  language: 'es',
+  language: 'en',
   hasOrders: user.orderCount > 0
 });
 
-// En página de producto
+// On product page
 AIFindrWidget.mergeContext({
   page: 'product',
   productId: product.id,
@@ -215,7 +215,7 @@ AIFindrWidget.mergeContext({
   inStock: product.stock > 0
 });
 
-// En carrito
+// In cart
 AIFindrWidget.mergeContext({
   page: 'cart',
   cartItems: cart.items.length,
@@ -223,7 +223,7 @@ AIFindrWidget.mergeContext({
   hasDiscount: cart.discount > 0
 });
 
-// En checkout
+// In checkout
 AIFindrWidget.mergeContext({
   page: 'checkout',
   checkoutStep: 'payment',
@@ -234,7 +234,7 @@ AIFindrWidget.mergeContext({
 ### SaaS Dashboard
 
 ```js
-// Contexto del usuario y organización
+// User and organization context
 AIFindrWidget.setContext({
   userId: user.id,
   organizationId: org.id,
@@ -244,7 +244,7 @@ AIFindrWidget.setContext({
   onboardingCompleted: user.onboarding.completed
 });
 
-// Por sección de la app
+// By app section
 switch (currentSection) {
   case 'dashboard':
     AIFindrWidget.mergeContext({
@@ -253,7 +253,7 @@ switch (currentSection) {
       dateRange: selectedDateRange
     });
     break;
-    
+
   case 'settings':
     AIFindrWidget.mergeContext({
       section: 'settings',
@@ -261,7 +261,7 @@ switch (currentSection) {
       hasChanges: form.isDirty
     });
     break;
-    
+
   case 'billing':
     AIFindrWidget.mergeContext({
       section: 'billing',
@@ -272,10 +272,10 @@ switch (currentSection) {
 }
 ```
 
-### Plataforma de aprendizaje
+### Learning Platform
 
 ```js
-// Contexto del estudiante
+// Student context
 AIFindrWidget.setContext({
   studentId: student.id,
   courseId: currentCourse.id,
@@ -286,7 +286,7 @@ AIFindrWidget.setContext({
   strugglingTopics: student.strugglingAreas
 });
 
-// Actualizar durante la lección
+// Update during lesson
 AIFindrWidget.mergeContext({
   lesson: currentLesson.id,
   lessonType: currentLesson.type, // video, quiz, reading
@@ -295,37 +295,37 @@ AIFindrWidget.mergeContext({
 });
 ```
 
-## Patrones avanzados
+## Advanced Patterns
 
-### Contexto jerárquico
+### Hierarchical Context
 
 ```js
-// Estructura de contexto organizativo
+// Organizational context structure
 AIFindrWidget.setContext({
-  // Nivel global
+  // Global level
   app: {
     version: '2.1.0',
     environment: 'production',
     region: 'eu-west-1'
   },
-  
-  // Nivel de usuario
+
+  // User level
   user: {
     id: user.id,
     type: user.accountType,
     preferences: user.settings,
     permissions: user.permissions
   },
-  
-  // Nivel de sesión
+
+  // Session level
   session: {
     duration: sessionLength,
     pagesVisited: visitedPages.length,
     referrer: document.referrer,
     userAgent: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
   },
-  
-  // Nivel de página actual  
+
+  // Current page level
   page: {
     path: window.location.pathname,
     title: document.title,
@@ -334,23 +334,23 @@ AIFindrWidget.setContext({
 });
 ```
 
-### Contexto temporal
+### Temporal Context
 
 ```js
-// Actualizar contexto basado en tiempo
+// Update context based on time
 setInterval(() => {
   AIFindrWidget.mergeContext({
     sessionDuration: Math.floor((Date.now() - sessionStart) / 1000),
     currentTime: new Date().toISOString(),
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   });
-}, 30000); // Cada 30 segundos
+}, 30000); // Every 30 seconds
 ```
 
-### Contexto por interacciones
+### Context by Interactions
 
 ```js
-// Rastrear comportamiento del usuario
+// Track user behavior
 document.addEventListener('click', (e) => {
   if (e.target.matches('[data-track]')) {
     AIFindrWidget.mergeContext({
@@ -364,7 +364,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Rastrear errores
+// Track errors
 window.addEventListener('error', () => {
   AIFindrWidget.mergeContext({
     hasErrors: true,
@@ -373,9 +373,9 @@ window.addEventListener('error', () => {
 });
 ```
 
-## Integración por tecnología
+## Integration by Technology
 
-### React Hook personalizado
+### Custom React Hook
 
 ```tsx
 // hooks/useAIFindrContext.ts
@@ -390,7 +390,7 @@ export function useAIFindrContext() {
   useEffect(() => {
     if (!window.AIFindrWidget || !user) return;
 
-    // Contexto base del usuario
+    // User base context
     AIFindrWidget.setContext({
       userId: user.id,
       userType: user.type,
@@ -402,7 +402,7 @@ export function useAIFindrContext() {
   useEffect(() => {
     if (!window.AIFindrWidget) return;
 
-    // Actualizar en cambios de ruta
+    // Update on route changes
     AIFindrWidget.mergeContext({
       route: router.pathname,
       query: router.query,
@@ -465,7 +465,7 @@ export class AIFindrContextService {
   updateContext(partialContext: Record<string, any>): void {
     if (window.AIFindrWidget) {
       AIFindrWidget.mergeContext(partialContext);
-      
+
       const currentContext = this.contextSubject.value;
       this.contextSubject.next({ ...currentContext, ...partialContext });
     }
@@ -473,16 +473,16 @@ export class AIFindrContextService {
 }
 ```
 
-### WordPress con contexto dinámico
+### WordPress with Dynamic Context
 
 ```php
 <?php
-// Contexto dinámico en WordPress
+// Dynamic context in WordPress
 function aifindr_dynamic_context() {
     if (is_admin()) return;
-    
+
     global $post, $current_user;
-    
+
     $context = [
         'platform' => 'wordpress',
         'wp_version' => get_bloginfo('version'),
@@ -490,8 +490,8 @@ function aifindr_dynamic_context() {
         'post_type' => get_post_type(),
         'is_logged_in' => is_user_logged_in()
     ];
-    
-    // Contexto de página
+
+    // Page context
     if (is_home()) {
         $context['page_type'] = 'home';
     } elseif (is_single()) {
@@ -502,15 +502,15 @@ function aifindr_dynamic_context() {
         $context['page_type'] = 'page';
         $context['page_template'] = get_page_template_slug();
     }
-    
-    // Contexto de usuario
+
+    // User context
     if (is_user_logged_in()) {
         $context['user_id'] = $current_user->ID;
         $context['user_roles'] = $current_user->roles;
         $context['user_registered'] = $current_user->user_registered;
     }
-    
-    // Contexto de WooCommerce
+
+    // WooCommerce context
     if (class_exists('WooCommerce')) {
         if (is_shop()) {
             $context['wc_page'] = 'shop';
@@ -539,15 +539,15 @@ function aifindr_dynamic_context() {
 add_action('wp_footer', 'aifindr_dynamic_context');
 ```
 
-## Protección de metadatos
+## Metadata Protection
 
-El widget **protege automáticamente** los metadatos de ser sobrescritos por el contexto:
+The widget **automatically protects** metadata from being overwritten by context:
 
 ```js
-// Si tienes metadatos: data-meta-environment="production"
+// If you have metadata: data-meta-environment="production"
 AIFindrWidget.setContext({
   userId: '123',
-  environment: 'development' // ⚠️ Ignorado con warning
+  environment: 'development' // ⚠️ Ignored with warning
 });
 
 // Console: "AIFindr Widget: "environment" was declared as metadata in data-meta-environment.
@@ -556,39 +556,39 @@ AIFindrWidget.setContext({
 
 ## Troubleshooting
 
-### Contexto no se actualiza
+### Context not updating
 
 ```js
-// ❌ Mal: llamar antes de que esté listo
+// ❌ Wrong: calling before it's ready
 AIFindrWidget.setContext({ userId: '123' });
 
-// ✅ Bien: esperar a que esté listo
+// ✅ Right: wait until it's ready
 AIFindrWidget.ready(() => {
   AIFindrWidget.setContext({ userId: '123' });
 });
 ```
 
-### Verificar contexto actual
+### Verify current context
 
 ```js
-// Debug del contexto
-console.log('Contexto actual:', AIFindrWidget.getContext());
-console.log('Metadatos:', AIFindrWidget.getMetadata());
+// Context debug
+console.log('Current context:', AIFindrWidget.getContext());
+console.log('Metadata:', AIFindrWidget.getMetadata());
 
-// Debug completo
-console.log('Estado widget:', AIFindrWidget._debug.getState());
+// Full debug
+console.log('Widget state:', AIFindrWidget._debug.getState());
 ```
 
-### Contexto demasiado grande
+### Context too large
 
 ```js
-// ❌ Evitar objetos muy grandes
+// ❌ Avoid very large objects
 AIFindrWidget.setContext({
   userId: '123',
-  fullUserData: { /* 1000+ properties */ } // Muy pesado
+  fullUserData: { /* 1000+ properties */ } // Too heavy
 });
 
-// ✅ Mejor: solo datos relevantes
+// ✅ Better: only relevant data
 AIFindrWidget.setContext({
   userId: '123',
   userType: user.type,
@@ -599,33 +599,33 @@ AIFindrWidget.setContext({
 });
 ```
 
-### Problemas comunes con UTMs
+### Common UTM Issues
 
-**No veo UTMs en getMetadata():**
-- Verifica que la URL realmente tenga parámetros `utm_*`
-- Si defines `data-meta-utm-*`, no se creará `metadata.utm` (verás las claves namespaced como `utmSource`)
-- Si defines `data-meta-utm` como string, bloquea la creación de `metadata.utm`
+**Don't see UTMs in getMetadata():**
+- Verify that the URL actually has `utm_*` parameters
+- If you define `data-meta-utm-*`, `metadata.utm` won't be created (you'll see namespaced keys like `utmSource`)
+- If you define `data-meta-utm` as a string, it blocks creation of `metadata.utm`
 
-**Necesito "forzar" valores que vengan en la URL:**
-- Declara valores fijos con `data-meta-utm-*` en el script
-- Estos tendrán prioridad sobre la autocaptura de la URL
+**Need to "force" values that come in the URL:**
+- Declare fixed values with `data-meta-utm-*` in the script
+- These will have priority over URL auto-capture
 
 ```js
-// Ejemplo: Forzar valores específicos
+// Example: Force specific values
 // <script data-meta-utm-source="email" data-meta-utm-campaign="newsletter">
-// Aunque la URL tenga ?utm_source=google, prevalecerá "email"
+// Even if the URL has ?utm_source=google, "email" will prevail
 ```
 
-## Buenas prácticas
+## Best Practices
 
-1. **UTMs**: Usa autocaptura por URL o `data-meta-utm-*` para fijarlos
-2. **IDs de usuario**:
-   - Metadatos (`data-meta-user-id`) para analítica y trazabilidad
-   - Contexto (`userId` en setContext) para personalización de la IA
-3. **Metadatos**: Para datos fijos de segmentación y analytics
-4. **Contexto**: Para personalización dinámica de respuestas
-5. **Inicializar temprano**: Usar `AIFindrWidget.ready()` siempre
-6. **Actualizar frecuentemente**: `mergeContext()` en navegación y eventos
-7. **Datos mínimos**: Solo enviar información relevante para la IA
-8. **Nombres descriptivos**: Usar claves claras y consistentes
-9. **No duplicar claves**: Evita usar la misma clave en metadatos y contexto
+1. **UTMs**: Use auto-capture by URL or `data-meta-utm-*` to fix them
+2. **User IDs**:
+   - Metadata (`data-meta-user-id`) for analytics and traceability
+   - Context (`userId` in setContext) for AI personalization
+3. **Metadata**: For fixed segmentation and analytics data
+4. **Context**: For dynamic response personalization
+5. **Initialize early**: Always use `AIFindrWidget.ready()`
+6. **Update frequently**: `mergeContext()` on navigation and events
+7. **Minimal data**: Only send information relevant to the AI
+8. **Descriptive names**: Use clear and consistent keys
+9. **Don't duplicate keys**: Avoid using the same key in metadata and context

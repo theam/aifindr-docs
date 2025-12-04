@@ -1,108 +1,108 @@
 ---
 title: HTML / JavaScript
-description: Integración del widget de AIFindr en sitios web estáticos con HTML y JavaScript
+description: AIFindr widget integration in static websites with HTML and JavaScript
 slug: /widget-config/integraciones/html
 sidebar_position: 4
 ---
 
-:::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+:::info First time?
+Read the [installation guide](../instalacion) first to understand the basics.
 :::
 
 # HTML / JavaScript
 
-La integración más simple y directa del widget de AIFindr. Ideal para sitios estáticos, landing pages o proyectos que no usan frameworks.
+The simplest and most straightforward integration of the AIFindr widget. Ideal for static sites, landing pages, or projects that don't use frameworks.
 
-## Instalación completa
+## Complete Installation
 
-### 1. Estructura HTML básica
+### 1. Basic HTML structure
 
 ```html
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi sitio web</title>
+  <title>My website</title>
 </head>
 <body>
-  <!-- Tu contenido principal -->
+  <!-- Your main content -->
   <header>
     <nav>
-      <button id="ai-findr-trigger">¿Necesitas ayuda?</button>
+      <button id="ai-findr-trigger">Need help?</button>
     </nav>
   </header>
 
   <main>
-    <!-- Contenido de tu página -->
+    <!-- Your page content -->
   </main>
 
-  <!-- Script del widget - antes de </body> -->
+  <!-- Widget script - before </body> -->
   <script
     src="https://hub.aifindr.ai/widget.js"
-    data-client-id="TU_CLIENT_ID"
+    data-client-id="YOUR_CLIENT_ID"
     defer
   ></script>
 </body>
 </html>
 ```
 
-### 2. Personalización del trigger
+### 2. Trigger customization
 
-El elemento trigger puede ser cualquier cosa que tenga `id="ai-findr-trigger"`:
+The trigger element can be anything that has `id="ai-findr-trigger"`:
 
 ```html
-<!-- Botón tradicional -->
+<!-- Traditional button -->
 <button id="ai-findr-trigger" class="help-btn">
-  Ayuda
+  Help
 </button>
 
-<!-- Input de búsqueda -->
-<input 
-  id="ai-findr-trigger" 
-  type="text" 
-  placeholder="¿En qué te puedo ayudar?"
+<!-- Search input -->
+<input
+  id="ai-findr-trigger"
+  type="text"
+  placeholder="How can I help you?"
   class="search-input"
 />
 
-<!-- Enlace convertido -->
+<!-- Converted link -->
 <a id="ai-findr-trigger" role="button" class="help-link">
-  Asistente virtual
+  Virtual assistant
 </a>
 
-<!-- Div personalizado -->
+<!-- Custom div -->
 <div id="ai-findr-trigger" class="custom-trigger">
   <span>💬</span> Chat
 </div>
 ```
 
-## Control programático
+## Programmatic Control
 
-### Métodos básicos
+### Basic methods
 
 ```html
 <script>
-// Esperar a que el widget esté listo
+// Wait for widget to be ready
 window.addEventListener('load', function() {
   if (window.AIFindrWidget) {
-    // Abrir el widget
+    // Open widget
     AIFindrWidget.open();
-    
-    // Cerrar el widget
+
+    // Close widget
     AIFindrWidget.close();
-    
-    // Alternar (abrir/cerrar)
+
+    // Toggle (open/close)
     AIFindrWidget.toggle();
   }
 });
 </script>
 ```
 
-### Con contexto dinámico
+### With dynamic context
 
 ```html
 <script>
-// Añadir contexto específico de la página
+// Add page-specific context
 AIFindrWidget.ready(() => {
   AIFindrWidget.setContext({
     page: 'homepage',
@@ -111,7 +111,7 @@ AIFindrWidget.ready(() => {
   });
 });
 
-// Actualizar contexto dinámicamente
+// Update context dynamically
 function updateContext(newData) {
   if (window.AIFindrWidget) {
     AIFindrWidget.mergeContext(newData);
@@ -120,13 +120,13 @@ function updateContext(newData) {
 </script>
 ```
 
-## Ejemplos de uso
+## Usage Examples
 
-### Landing page con formulario
+### Landing page with form
 
 ```html
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Landing Page</title>
@@ -147,29 +147,29 @@ function updateContext(newData) {
 </head>
 <body>
   <header>
-    <h1>Mi Producto</h1>
+    <h1>My Product</h1>
   </header>
 
   <main>
     <form id="contact-form">
-      <input type="email" placeholder="Tu email" required>
-      <button type="submit">Empezar</button>
+      <input type="email" placeholder="Your email" required>
+      <button type="submit">Get Started</button>
     </form>
   </main>
 
-  <!-- Botón flotante de ayuda -->
+  <!-- Floating help button -->
   <button id="ai-findr-trigger" class="help-btn">
-    ¿Necesitas ayuda?
+    Need help?
   </button>
 
   <script
     src="https://hub.aifindr.ai/widget.js"
-    data-client-id="TU_CLIENT_ID"
+    data-client-id="YOUR_CLIENT_ID"
     defer
   ></script>
 
   <script>
-    // Contexto basado en interacciones
+    // Context based on interactions
     document.getElementById('contact-form').addEventListener('focus', function() {
       if (window.AIFindrWidget) {
         AIFindrWidget.mergeContext({
@@ -183,19 +183,19 @@ function updateContext(newData) {
 </html>
 ```
 
-### Multi-página con contexto compartido
+### Multi-page with shared context
 
 ```html
-<!-- En todas las páginas -->
+<!-- On all pages -->
 <script>
-  // Contexto global del sitio
+  // Site-wide global context
   window.siteContext = {
-    site_name: 'Mi Empresa',
+    site_name: 'My Company',
     version: '1.0',
-    language: 'es'
+    language: 'en'
   };
 
-  // Aplicar contexto cuando el widget esté listo
+  // Apply context when widget is ready
   AIFindrWidget.ready(() => {
     AIFindrWidget.setContext({
       ...window.siteContext,
@@ -206,43 +206,43 @@ function updateContext(newData) {
 </script>
 ```
 
-## Troubleshooting específico
+## Specific Troubleshooting
 
-### Verificar carga correcta
+### Verify correct loading
 
 ```html
 <script>
 window.addEventListener('load', function() {
-  // Verificar que el widget se cargó
+  // Check if widget loaded
   if (typeof AIFindrWidget === 'object') {
-    console.log('✅ Widget cargado correctamente');
-    console.log('Métodos disponibles:', Object.keys(AIFindrWidget));
+    console.log('✅ Widget loaded correctly');
+    console.log('Available methods:', Object.keys(AIFindrWidget));
   } else {
-    console.error('❌ Widget no encontrado');
+    console.error('❌ Widget not found');
   }
-  
-  // Verificar que el trigger existe
+
+  // Check if trigger exists
   const trigger = document.getElementById('ai-findr-trigger');
   if (trigger) {
-    console.log('✅ Trigger encontrado:', trigger);
+    console.log('✅ Trigger found:', trigger);
   } else {
-    console.error('❌ Trigger no encontrado');
+    console.error('❌ Trigger not found');
   }
 });
 </script>
 ```
 
-### Problemas comunes
+### Common problems
 
-| Problema | Solución |
+| Problem | Solution |
 |----------|----------|
-| Widget no aparece | Verificar `data-client-id` y que el script devuelva 200 OK |
-| Trigger no funciona | Asegurar que existe `id="ai-findr-trigger"` |
-| Contexto no se aplica | Usar `AIFindrWidget.ready()` antes de llamar métodos |
-| Conflictos con otros scripts | Cargar el script con `defer` o al final del `<body>` |
+| Widget doesn't appear | Verify `data-client-id` and that the script returns 200 OK |
+| Trigger doesn't work | Ensure `id="ai-findr-trigger"` exists |
+| Context not applying | Use `AIFindrWidget.ready()` before calling methods |
+| Conflicts with other scripts | Load script with `defer` or at end of `<body>` |
 
-## Próximos pasos
+## Next Steps
 
-- [Personalización visual](../personalizacion) para adaptar el estilo
-- [Contexto y metadatos](../contexto-metadatos) para respuestas más precisas
-- [Tipos de triggers](../triggers) para diferentes elementos de activación
+- [Visual customization](../personalizacion) to adapt the style
+- [Context and metadata](../contexto-metadatos) for more accurate responses
+- [Trigger types](../triggers) for different activation elements

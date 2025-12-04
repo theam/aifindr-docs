@@ -1,43 +1,43 @@
 ---
 title: WordPress
-description: Integración del widget de AIFindr en sitios WordPress con plugins y temas
+description: AIFindr widget integration in WordPress sites with plugins and themes
 slug: /widget-config/integraciones/wordpress
 sidebar_position: 3
 ---
 
-:::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+:::info First time?
+Read the [installation guide](../instalacion) first to understand the basics.
 :::
 
 # WordPress
 
-Integración completa del widget de AIFindr en WordPress usando múltiples métodos: plugins, functions.php, page builders y personalización de temas.
+Complete integration of the AIFindr widget in WordPress using multiple methods: plugins, functions.php, page builders, and theme customization.
 
-## Método 1: Plugin de Code Snippets (Recomendado)
+## Method 1: Code Snippets Plugin (Recommended)
 
-La forma más segura y mantenible de añadir el widget.
+The safest and most maintainable way to add the widget.
 
-### 1. Instalar Plugin
+### 1. Install Plugin
 
-Instala uno de estos plugins desde el repositorio de WordPress:
-- **Code Snippets** (recomendado)
+Install one of these plugins from the WordPress repository:
+- **Code Snippets** (recommended)
 - **Insert Headers and Footers**
 - **Header Footer Code Manager**
 
-### 2. Añadir el script
+### 2. Add the script
 
-En **Code Snippets → Add New**, crea un snippet:
+In **Code Snippets → Add New**, create a snippet:
 
 ```php
 <?php
 // Snippet Name: AIFindr Widget
-// Description: Carga el widget de AIFindr en todas las páginas
+// Description: Loads the AIFindr widget on all pages
 
 function add_aifindr_widget() {
     ?>
     <script
         src="https://hub.aifindr.ai/widget.js"
-        data-client-id="TU_CLIENT_ID"
+        data-client-id="YOUR_CLIENT_ID"
         defer
     ></script>
     <?php
@@ -45,14 +45,14 @@ function add_aifindr_widget() {
 add_action('wp_footer', 'add_aifindr_widget');
 ```
 
-### 3. Añadir el trigger
+### 3. Add the trigger
 
-Crea otro snippet para el botón trigger:
+Create another snippet for the trigger button:
 
 ```php
 <?php
 // Snippet Name: AIFindr Trigger
-// Description: Añade botón de ayuda flotante
+// Description: Adds floating help button
 
 function add_aifindr_trigger_button() {
     ?>
@@ -78,29 +78,29 @@ function add_aifindr_trigger_button() {
     }
     </style>
     <button id="ai-findr-trigger" class="aifindr-help-button">
-        ¿Necesitas ayuda?
+        Need help?
     </button>
     <?php
 }
 add_action('wp_footer', 'add_aifindr_trigger_button');
 ```
 
-## Método 2: functions.php del tema
+## Method 2: Theme functions.php
 
-Si tienes acceso al tema activo y no quieres usar plugins.
+If you have access to the active theme and don't want to use plugins.
 
-### En functions.php
+### In functions.php
 
 ```php
 <?php
-// Cargar widget de AIFindr
+// Load AIFindr widget
 function enqueue_aifindr_widget() {
-    // Solo en frontend
+    // Only on frontend
     if (!is_admin()) {
         ?>
         <script
             src="https://hub.aifindr.ai/widget.js"
-            data-client-id="TU_CLIENT_ID"
+            data-client-id="YOUR_CLIENT_ID"
             defer
         ></script>
         <?php
@@ -108,7 +108,7 @@ function enqueue_aifindr_widget() {
 }
 add_action('wp_footer', 'enqueue_aifindr_widget');
 
-// Añadir contexto WordPress
+// Add WordPress context
 function aifindr_wp_context() {
     if (!is_admin()) {
         global $post;
@@ -121,7 +121,7 @@ function aifindr_wp_context() {
             'is_single' => is_single(),
             'is_page' => is_page(),
         );
-        
+
         if ($post) {
             $context['post_id'] = $post->ID;
             $context['post_title'] = get_the_title();
@@ -142,17 +142,17 @@ function aifindr_wp_context() {
 add_action('wp_footer', 'aifindr_wp_context');
 ```
 
-## Método 3: Convertir enlace de menú
+## Method 3: Convert menu link
 
-Convierte un enlace existente del menú en trigger del widget.
+Convert an existing menu link into a widget trigger.
 
-### 1. Crear enlace personalizado
+### 1. Create custom link
 
-En **Apariencia → Menús**, añade un enlace personalizado con:
+In **Appearance → Menus**, add a custom link with:
 - **URL**: `#aifindr`
-- **Texto**: `Ayuda` o `Soporte`
+- **Text**: `Help` or `Support`
 
-### 2. Script de conversión
+### 2. Conversion script
 
 ```php
 <?php
@@ -160,19 +160,19 @@ function convert_menu_link_to_aifindr_trigger() {
     ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Buscar enlace con href="#aifindr"
+        // Find link with href="#aifindr"
         const link = document.querySelector('a[href="#aifindr"]');
         if (link) {
             const button = document.createElement('button');
             button.id = 'ai-findr-trigger';
             button.textContent = link.textContent;
-            button.className = link.className; // Mantener estilos del tema
+            button.className = link.className; // Keep theme styles
             button.style.background = 'none';
             button.style.border = 'none';
             button.style.color = 'inherit';
             button.style.cursor = 'pointer';
-            
-            // Reemplazar enlace por botón
+
+            // Replace link with button
             link.parentNode.replaceChild(button, link);
         }
     });
@@ -182,20 +182,20 @@ function convert_menu_link_to_aifindr_trigger() {
 add_action('wp_footer', 'convert_menu_link_to_aifindr_trigger');
 ```
 
-## Método 4: Page Builders
+## Method 4: Page Builders
 
 ### Elementor
 
-1. **Añadir HTML Widget**
-2. **Insertar código**:
+1. **Add HTML Widget**
+2. **Insert code**:
 
 ```html
 <button id="ai-findr-trigger" class="elementor-button">
-    ¿Necesitas ayuda?
+    Need help?
 </button>
 
 <script>
-// Contexto específico de Elementor
+// Elementor-specific context
 if (window.AIFindrWidget) {
     AIFindrWidget.ready(() => {
         AIFindrWidget.mergeContext({
@@ -208,40 +208,40 @@ if (window.AIFindrWidget) {
 </script>
 ```
 
-### Gutenberg (Editor de bloques)
+### Gutenberg (Block Editor)
 
-1. **Añadir bloque HTML personalizado**
-2. **Insertar**:
+1. **Add Custom HTML block**
+2. **Insert**:
 
 ```html
 <div class="wp-block-group">
     <button id="ai-findr-trigger" class="wp-block-button__link">
-        ¿En qué te puedo ayudar?
+        How can I help you?
     </button>
 </div>
 ```
 
 ### Divi Builder
 
-En un módulo de **Código**:
+In a **Code** module:
 
 ```html
 <button id="ai-findr-trigger" class="et_pb_button">
-    Asistente Virtual
+    Virtual Assistant
 </button>
 ```
 
-## Uso avanzado
+## Advanced Usage
 
-### Contexto por tipo de página
+### Context by page type
 
 ```php
 <?php
 function aifindr_advanced_context() {
     if (is_admin()) return;
-    
+
     $context = array('platform' => 'wordpress');
-    
+
     if (is_woocommerce()) {
         $context['section'] = 'shop';
         if (is_product()) {
@@ -252,17 +252,17 @@ function aifindr_advanced_context() {
             $context['cart_items'] = WC()->cart->get_cart_contents_count();
         }
     }
-    
+
     if (is_single()) {
         $context['post_categories'] = wp_get_post_categories(get_the_ID(), array('fields' => 'names'));
     }
-    
+
     if (is_user_logged_in()) {
         $user = wp_get_current_user();
         $context['user_role'] = $user->roles[0];
         $context['user_registered'] = $user->user_registered;
     }
-    
+
     ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -278,14 +278,14 @@ function aifindr_advanced_context() {
 add_action('wp_footer', 'aifindr_advanced_context');
 ```
 
-### Integración con WooCommerce
+### WooCommerce Integration
 
 ```php
 <?php
-// Contexto específico de WooCommerce
+// WooCommerce-specific context
 function aifindr_woocommerce_context() {
     if (!class_exists('WooCommerce') || is_admin()) return;
-    
+
     ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -319,23 +319,23 @@ function aifindr_woocommerce_context() {
 add_action('wp_footer', 'aifindr_woocommerce_context');
 ```
 
-### Trigger condicional
+### Conditional Trigger
 
 ```php
 <?php
-// Mostrar trigger solo en páginas específicas
+// Show trigger only on specific pages
 function conditional_aifindr_trigger() {
-    // Solo mostrar en páginas de producto, carrito o contacto
-    if (is_product() || is_cart() || is_page('contacto')) {
+    // Only show on product pages, cart or contact
+    if (is_product() || is_cart() || is_page('contact')) {
         ?>
         <button id="ai-findr-trigger" class="conditional-help-btn">
             <?php
             if (is_product()) {
-                echo '¿Preguntas sobre el producto?';
+                echo 'Questions about the product?';
             } elseif (is_cart()) {
-                echo '¿Problemas con tu pedido?';
+                echo 'Problems with your order?';
             } else {
-                echo '¿Necesitas ayuda?';
+                echo 'Need help?';
             }
             ?>
         </button>
@@ -360,22 +360,22 @@ function conditional_aifindr_trigger() {
 add_action('wp_footer', 'conditional_aifindr_trigger');
 ```
 
-## Troubleshooting WordPress
+## WordPress Troubleshooting
 
-### Problemas comunes
+### Common problems
 
-| Problema | Solución |
+| Problem | Solution |
 |----------|----------|
-| Widget no aparece | Verificar que el script se carga desde wp_footer |
-| Conflicto con otros plugins | Usar alta prioridad en add_action: `add_action('wp_footer', 'func', 99)` |
-| No funciona en páginas cacheadas | Excluir script del cache o usar fragmentos dinámicos |
-| Problemas con HTTPS | Verificar que el sitio use SSL válido |
+| Widget doesn't appear | Verify the script loads from wp_footer |
+| Conflict with other plugins | Use high priority in add_action: `add_action('wp_footer', 'func', 99)` |
+| Doesn't work on cached pages | Exclude script from cache or use dynamic fragments |
+| Problems with HTTPS | Verify the site uses valid SSL |
 
-### Debug en WordPress
+### Debug in WordPress
 
 ```php
 <?php
-// Solo en modo debug
+// Only in debug mode
 if (WP_DEBUG) {
     function aifindr_debug_info() {
         ?>
@@ -394,8 +394,8 @@ if (WP_DEBUG) {
 }
 ```
 
-## Próximos pasos
+## Next Steps
 
-- [Personalización visual](../personalizacion) para adaptar estilos del tema
-- [Contexto y metadatos](../contexto-metadatos) para respuestas específicas de WordPress
-- [API Reference](../api-reference) para funcionalidades avanzadas
+- [Visual customization](../personalizacion) to adapt theme styles
+- [Context and metadata](../contexto-metadatos) for WordPress-specific responses
+- [API Reference](../api-reference) for advanced features

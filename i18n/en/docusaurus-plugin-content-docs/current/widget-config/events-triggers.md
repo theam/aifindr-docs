@@ -1,6 +1,6 @@
 ---
-title: Tipos de Triggers
-description: Todos los elementos que pueden abrir el widget y cómo personalizarlos
+title: Trigger Types
+description: All elements that can open the widget and how to customize them
 slug: /widget-config/triggers
 sidebar_position: 4
 ---
@@ -8,29 +8,29 @@ sidebar_position: 4
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Tipos de Triggers
+# Trigger Types
 
-El widget detecta **cualquier elemento** con `id="ai-findr-trigger"`—botones, enlaces, inputs o divs custom—y lo convierte en disparador.
+The widget detects **any element** with `id="ai-findr-trigger"`—buttons, links, inputs, or custom divs—and converts it into a trigger.
 
-## 1 · Botón
-
-```html
-<button id="ai-findr-trigger" type="button">Ayuda</button>
-```
-
-## 2 · Input de búsqueda
+## 1 · Button
 
 ```html
-<input id="ai-findr-trigger" type="text" placeholder="¿En qué te puedo ayudar?" />
+<button id="ai-findr-trigger" type="button">Help</button>
 ```
 
-## 3 · Otros elementos
+## 2 · Search Input
 
 ```html
-<a id="ai-findr-trigger" role="button">Asistente virtual</a>
+<input id="ai-findr-trigger" type="text" placeholder="How can I help you?" />
 ```
 
-## 4 · Control programático
+## 3 · Other Elements
+
+```html
+<a id="ai-findr-trigger" role="button">Virtual Assistant</a>
+```
+
+## 4 · Programmatic Control
 
 ```js
 AIFindrWidget.open();

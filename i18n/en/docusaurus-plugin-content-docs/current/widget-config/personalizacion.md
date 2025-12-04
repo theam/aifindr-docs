@@ -1,62 +1,62 @@
 ---
-title: Personalización Visual
-description: Guía completa para personalizar la apariencia y comportamiento del widget de AIFindr
+title: Visual Customization
+description: Complete guide to customize the appearance and behavior of the AIFindr widget
 slug: /widget-config/personalizacion
 sidebar_position: 7
 ---
 
-# Personalización Visual
+# Visual Customization
 
-El widget de AIFindr ofrece múltiples opciones de personalización para adaptarse perfectamente a tu diseño y marca.
+The AIFindr widget offers multiple customization options to adapt perfectly to your design and brand.
 
-## Configuración del Widget
+## Widget Configuration
 
-La personalización se realiza a través de la **configuración del proyecto** en tu dashboard de AIFindr, que se aplica automáticamente sin necesidad de código adicional.
+Customization is done through the **project configuration** in your AIFindr dashboard, which is applied automatically without additional code.
 
-### Modos de Visualización
+### Display Modes
 
-#### `displayMode: "overlay"` (Por defecto)
-Widget que ocupa toda la pantalla con overlay de fondo.
+#### `displayMode: "overlay"` (Default)
+Widget that occupies the full screen with a background overlay.
 
 ```html
-<!-- Se adapta automáticamente al header fijo -->
-<header id="main-header">Mi Header</header>
+<!-- Automatically adapts to fixed header -->
+<header id="main-header">My Header</header>
 <script
   src="https://hub.aifindr.ai/widget.js"
-  data-client-id="TU_CLIENT_ID"
+  data-client-id="YOUR_CLIENT_ID"
   defer
 ></script>
 ```
 
 #### `displayMode: "floating"`
-Widget flotante en una esquina de la pantalla.
+Floating widget in a corner of the screen.
 
-## CSS Variables Disponibles
+## Available CSS Variables
 
-### Variable de altura del header
+### Header height variable
 
-La variable `--ai-nav-height` controla el desplazamiento del overlay para headers fijos:
+The `--ai-nav-height` variable controls the overlay offset for fixed headers:
 
 ```css
 :root {
-  /* Altura fija */
+  /* Fixed height */
   --ai-nav-height: 64px;
-  
-  /* Cálculo dinámico */
+
+  /* Dynamic calculation */
   --ai-nav-height: calc(60px + 1rem);
-  
+
   /* Responsive */
   --ai-nav-height: clamp(60px, 8vh, 80px);
 }
 ```
 
-### Variables de personalización del botón
+### Button customization variables
 
 ```css
 .ai-findr-trigger-button {
-  /* Estas propiedades se configuran desde el dashboard, 
-     pero puedes sobrescribirlas con CSS */
-  
+  /* These properties are configured from the dashboard,
+     but you can override them with CSS */
+
   --button-gap: 8px;
   --button-padding: 12px 16px;
   --button-border-radius: 8px;
@@ -69,16 +69,16 @@ La variable `--ai-nav-height` controla el desplazamiento del overlay para header
 }
 ```
 
-## Tipos de Trigger y Estilos
+## Trigger Types and Styles
 
-### Botón Trigger
+### Button Trigger
 
-El botón tiene clases específicas para personalización:
+The button has specific classes for customization:
 
 ```css
-/* Botón base */
+/* Base button */
 .ai-findr-trigger-button {
-  /* Estilos base aplicados automáticamente */
+  /* Base styles applied automatically */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -86,19 +86,19 @@ El botón tiene clases específicas para personalización:
   transition: opacity .2s ease, transform .2s ease;
 }
 
-/* Estado hover */
+/* Hover state */
 .ai-findr-trigger-button:hover {
-  opacity: 0.8; /* Configurable desde dashboard */
+  opacity: 0.8; /* Configurable from dashboard */
 }
 
-/* Estado cuando el widget está abierto */
+/* State when widget is open */
 .ai-findr-trigger-button.ai-findr-open {
   opacity: 0;
   transform: scale(.9);
   pointer-events: none;
 }
 
-/* Icono del magnifier con sparkles */
+/* Magnifier icon with sparkles */
 .ai-magnifier {
   position: relative;
   width: 24px;
@@ -106,20 +106,20 @@ El botón tiene clases específicas para personalización:
   color: inherit;
 }
 
-/* Sparkles animados */
+/* Animated sparkles */
 .ai-magnifier::before,
 .ai-magnifier::after {
-  /* Estrellas que aparecen con animación */
+  /* Stars that appear with animation */
   animation: bcp-animar-estrella-ia 2s cubic-bezier(.18,0.89,0.32,1.28) infinite;
 }
 ```
 
 ### Input Trigger
 
-Para triggers de tipo input, se generan automáticamente estas clases:
+For input-type triggers, these classes are automatically generated:
 
 ```css
-/* Container del input */
+/* Input container */
 .ai-findr-trigger-input-container {
   display: inline-flex;
   align-items: center;
@@ -132,14 +132,14 @@ Para triggers de tipo input, se generan automáticamente estas clases:
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Icono dentro del input */
+/* Icon inside input */
 .ai-findr-trigger-icon {
   display: flex;
   align-items: center;
   padding: 0 12px;
 }
 
-/* Campo de texto */
+/* Text field */
 .ai-findr-trigger-input {
   flex: 1;
   border: none;
@@ -147,7 +147,7 @@ Para triggers de tipo input, se generan automáticamente estas clases:
   outline: none;
 }
 
-/* Botón de submit */
+/* Submit button */
 .ai-findr-trigger-submit {
   display: flex;
   align-items: center;
@@ -159,12 +159,12 @@ Para triggers de tipo input, se generan automáticamente estas clases:
 }
 ```
 
-## Estados del Widget
+## Widget States
 
-### Estados del overlay/floating container
+### Overlay/floating container states
 
 ```css
-/* Container oculto */
+/* Hidden container */
 #ai-findr-widget-overlay,
 #ai-findr-floating-container {
   opacity: 0;
@@ -172,14 +172,14 @@ Para triggers de tipo input, se generan automáticamente estas clases:
   transition: opacity .25s ease;
 }
 
-/* Container visible */
+/* Visible container */
 #ai-findr-widget-overlay.ai-findr-visible,
 #ai-findr-floating-container.ai-findr-visible {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Floating container específico */
+/* Specific floating container */
 #ai-findr-floating-container {
   transform: translateY(20px);
   transition: all .3s ease;
@@ -190,7 +190,7 @@ Para triggers de tipo input, se generan automáticamente estas clases:
 }
 ```
 
-### Botón de cerrar
+### Close button
 
 ```css
 .ai-findr-close-button {
@@ -215,25 +215,25 @@ Para triggers de tipo input, se generan automáticamente estas clases:
 }
 ```
 
-## Troubleshooting de Estilos
+## Style Troubleshooting
 
-### Problemas comunes
+### Common problems
 
 ```css
-/* Problema: Estilos no se aplican */
-/* Solución: Aumentar especificidad */
+/* Problem: Styles not applying */
+/* Solution: Increase specificity */
 .ai-findr-trigger-button.ai-findr-trigger-button {
   background: #custom-color !important;
 }
 
-/* Problema: Animaciones conflictivas */
-/* Solución: Resetear animaciones */
+/* Problem: Conflicting animations */
+/* Solution: Reset animations */
 .ai-findr-trigger-button {
   animation: none;
 }
 
-/* Problema: z-index conflicts */
-/* Solución: Asegurar z-index alto */
+/* Problem: z-index conflicts */
+/* Solution: Ensure high z-index */
 #ai-findr-widget-overlay {
   z-index: 2147483646 !important;
 }
@@ -243,25 +243,25 @@ Para triggers de tipo input, se generan automáticamente estas clases:
 }
 ```
 
-### Debug de estilos
+### Style debugging
 
 ```js
-// Ver estilos aplicados
+// View applied styles
 const trigger = document.getElementById('ai-findr-trigger');
-console.log('Estilos computados:', getComputedStyle(trigger));
+console.log('Computed styles:', getComputedStyle(trigger));
 
-// Ver clases aplicadas
-console.log('Clases:', trigger.className);
+// View applied classes
+console.log('Classes:', trigger.className);
 
-// Ver estado del widget
-console.log('Estado widget:', AIFindrWidget.getState());
+// View widget state
+console.log('Widget state:', AIFindrWidget.getState());
 ```
 
-## Mejores Prácticas
+## Best Practices
 
-1. **Consistencia**: Mantener coherencia con el diseño existente
-2. **Accesibilidad**: Asegurar contraste adecuado y focus visible
-3. **Performance**: Evitar animaciones complejas en móviles
-4. **Responsive**: Probar en diferentes tamaños de pantalla
-5. **Testing**: Verificar en diferentes navegadores
-6. **Fallbacks**: Proporcionar estilos de respaldo para navegadores antiguos
+1. **Consistency**: Maintain coherence with existing design
+2. **Accessibility**: Ensure adequate contrast and visible focus
+3. **Performance**: Avoid complex animations on mobile
+4. **Responsive**: Test on different screen sizes
+5. **Testing**: Verify in different browsers
+6. **Fallbacks**: Provide fallback styles for older browsers
