@@ -1,9 +1,0 @@
-{
-  "label": "Integraciones",
-  "position": 3,
-  "link": {
-    "type": "generated-index",
-    "description": "Guías específicas para integrar el widget de AIFindr en diferentes tecnologías y frameworks."
-  },
-  "collapsed": false
-}

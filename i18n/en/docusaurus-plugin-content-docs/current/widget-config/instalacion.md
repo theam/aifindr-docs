@@ -74,19 +74,19 @@ With these two steps, the widget is now working. Users can click on the trigger 
 
 **HTML / JavaScript**
 Simple integration for static sites
-[View guide →](./integraciones/html)
+[View guide →](./integrations/html)
 
 **React & Next.js**
 With optimized hooks and SSR
-[View guide →](./integraciones/react-nextjs)
+[View guide →](./integrations/react-nextjs)
 
 **Angular**
 Integration with TypeScript and routing
-[View guide →](./integraciones/angular)
+[View guide →](./integrations/angular)
 
 **WordPress**
 Plugins and theme customization
-[View guide →](./integraciones/wordpress)
+[View guide →](./integrations/wordpress)
 
 </div>
 
