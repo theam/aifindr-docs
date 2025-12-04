@@ -1,7 +1,7 @@
 ---
 title: Angular
 description: AIFindr widget integration in Angular applications with TypeScript
-slug: /widget-confi./integrations/angular
+slug: /widget-config/integrations/angular
 sidebar_position: 2
 ---
 

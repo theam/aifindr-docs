@@ -1,7 +1,7 @@
 ---
 title: React & Next.js
 description: Widget integration in React or Next.js projects with optimized hooks
-slug: /widget-confi./integrations/react-nextjs
+slug: /widget-config/integrations/react-nextjs
 sidebar_position: 1
 ---
 

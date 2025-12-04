@@ -1,7 +1,7 @@
 ---
 title: HTML / JavaScript
 description: AIFindr widget integration in static websites with HTML and JavaScript
-slug: /widget-confi./integrations/html
+slug: /widget-config/integrations/html
 sidebar_position: 4
 ---
 

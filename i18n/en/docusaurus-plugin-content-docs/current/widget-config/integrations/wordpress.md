@@ -1,7 +1,7 @@
 ---
 title: WordPress
 description: AIFindr widget integration in WordPress sites with plugins and themes
-slug: /widget-confi./integrations/wordpress
+slug: /widget-config/integrations/wordpress
 sidebar_position: 3
 ---
 
