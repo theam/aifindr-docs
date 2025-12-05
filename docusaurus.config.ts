@@ -61,6 +61,7 @@ const config: Config = {
         logo: {
           alt: "AI Findr Logo",
           src: "https://framerusercontent.com/images/P9zJkZIvPqGLxQmLj4rgrJBt8uY.svg?scale-down-to=512",
+          href: "/docs/intro",
         },
         items: [
           {
