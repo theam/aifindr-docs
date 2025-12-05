@@ -1,12 +1,12 @@
 ---
 title: HTML / JavaScript
 description: AIFindr widget integration in static websites with HTML and JavaScript
-slug: /widget-config/integrations/html
+slug: /widget-config/integraciones/html
 sidebar_position: 4
 ---
 
 :::info First time?
-Read the [installation guide](../installation) first to understand the basics.
+Read the [installation guide](../instalacion) first to understand the basics.
 :::
 
 # HTML / JavaScript
@@ -72,7 +72,7 @@ The trigger element can be anything that has `id="ai-findr-trigger"`:
 
 <!-- Custom div -->
 <div id="ai-findr-trigger" class="custom-trigger">
-  <span>💬</span> Chat
+  Chat
 </div>
 ```
 

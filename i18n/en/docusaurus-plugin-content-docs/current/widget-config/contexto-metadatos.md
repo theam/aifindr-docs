@@ -14,8 +14,8 @@ The AIFindr widget allows you to customize assistant responses through two types
 | Aspect | Metadata | Context |
 |---------|-----------|----------|
 | **When is it defined?** | In the `<script>` with `data-meta-*` or by auto-capture | With the JavaScript API |
-| **Can it change?** | ❌ No (immutable) | ✅ Yes (dynamic) |
-| **Does the AI see it?** | ❌ No (analytics only) | ✅ Yes (in conversations) |
+| **Can it change?** | No (immutable) | Yes (dynamic) |
+| **Does the AI see it?** | No (analytics only) | Yes (in conversations) |
 | **Purpose** | Segmentation and metrics | Response personalization |
 | **Persistence** | Entire session | Can be updated in real-time |
 
@@ -547,7 +547,7 @@ The widget **automatically protects** metadata from being overwritten by context
 // If you have metadata: data-meta-environment="production"
 AIFindrWidget.setContext({
   userId: '123',
-  environment: 'development' // ⚠️ Ignored with warning
+  environment: 'development' // Ignored with warning
 });
 
 // Console: "AIFindr Widget: "environment" was declared as metadata in data-meta-environment.
@@ -559,10 +559,10 @@ AIFindrWidget.setContext({
 ### Context not updating
 
 ```js
-// ❌ Wrong: calling before it's ready
+// Wrong: calling before it's ready
 AIFindrWidget.setContext({ userId: '123' });
 
-// ✅ Right: wait until it's ready
+// Right: wait until it's ready
 AIFindrWidget.ready(() => {
   AIFindrWidget.setContext({ userId: '123' });
 });
@@ -582,13 +582,13 @@ console.log('Widget state:', AIFindrWidget._debug.getState());
 ### Context too large
 
 ```js
-// ❌ Avoid very large objects
+// Avoid very large objects
 AIFindrWidget.setContext({
   userId: '123',
   fullUserData: { /* 1000+ properties */ } // Too heavy
 });
 
-// ✅ Better: only relevant data
+// Better: only relevant data
 AIFindrWidget.setContext({
   userId: '123',
   userType: user.type,

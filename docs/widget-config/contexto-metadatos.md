@@ -9,13 +9,13 @@ sidebar_position: 5
 
 El widget de AIFindr permite personalizar las respuestas del asistente mediante dos tipos de datos: **metadatos** (fijos) y **contexto** (dinámico).
 
-## 🏷️ Diferencias clave
+## Diferencias clave
 
 | Aspecto | Metadatos | Contexto |
 |---------|-----------|----------|
 | **¿Cuándo se define?** | En el `<script>` con `data-meta-*` o por autocaptura | Con la API JavaScript |
-| **¿Se puede cambiar?** | ❌ No (inmutable) | ✅ Sí (dinámico) |
-| **¿La IA lo ve?** | ❌ No (solo analíticas) | ✅ Sí (en conversaciones) |
+| **¿Se puede cambiar?** | No (inmutable) | Sí (dinámico) |
+| **¿La IA lo ve?** | No (solo analíticas) | Sí (en conversaciones) |
 | **Propósito** | Segmentación y métricas | Personalización de respuestas |
 | **Persistencia** | Toda la sesión | Se puede actualizar en tiempo real |
 
@@ -23,7 +23,7 @@ El widget de AIFindr permite personalizar las respuestas del asistente mediante 
 
 Los metadatos son **información fija** que defines al cargar el widget. Son como etiquetas permanentes que ayudan a segmentar y analizar el uso del asistente, pero **no afectan las respuestas** que da la IA.
 
-### 📊 Casos de uso comunes
+### Casos de uso comunes
 
 #### 1. Marketing y campañas (UTMs)
 
@@ -108,7 +108,7 @@ Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
 ></script>
 ```
 
-> **💡 Tip:** Si necesitas que la IA personalice respuestas según el usuario, usa **contexto** en lugar de metadatos (ver sección siguiente).
+> **Tip:** Si necesitas que la IA personalice respuestas según el usuario, usa **contexto** en lugar de metadatos (ver sección siguiente).
 
 #### 3. Configuración y entorno
 
@@ -126,7 +126,7 @@ Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
 ></script>
 ```
 
-### 📐 Convenciones recomendadas
+### Convenciones recomendadas
 
 | Tipo de dato | Convención | Ejemplo |
 |--------------|------------|---------|
@@ -138,14 +138,14 @@ Usa metadatos para **clasificar usuarios** sin afectar las respuestas del chat:
 | **UTMs (auto)** | Se capturan de la URL | `utm.source`, `utm.medium` |
 | **UTMs (manual)** | `data-meta-utm-source` | `utmSource`, `utmMedium` |
 
-### ⚠️ Importante: Metadatos vs Contexto
+### Importante: Metadatos vs Contexto
 
 **Regla clave:** Si defines una clave como metadato, NO puedes usarla en contexto:
 
 ```js
 // Si tienes: data-meta-user-id="123"
 AIFindrWidget.setContext({
-  userId: '456' // ⚠️ Se ignorará con warning
+  userId: '456' // Se ignorará con warning
 });
 // Console: "userId was declared as metadata. Metadata is immutable"
 ```
@@ -547,7 +547,7 @@ El widget **protege automáticamente** los metadatos de ser sobrescritos por el 
 // Si tienes metadatos: data-meta-environment="production"
 AIFindrWidget.setContext({
   userId: '123',
-  environment: 'development' // ⚠️ Ignorado con warning
+  environment: 'development' // Ignorado con warning
 });
 
 // Console: "AIFindr Widget: "environment" was declared as metadata in data-meta-environment.
@@ -559,10 +559,10 @@ AIFindrWidget.setContext({
 ### Contexto no se actualiza
 
 ```js
-// ❌ Mal: llamar antes de que esté listo
+// Mal: llamar antes de que esté listo
 AIFindrWidget.setContext({ userId: '123' });
 
-// ✅ Bien: esperar a que esté listo
+// Bien: esperar a que esté listo
 AIFindrWidget.ready(() => {
   AIFindrWidget.setContext({ userId: '123' });
 });
@@ -582,13 +582,13 @@ console.log('Estado widget:', AIFindrWidget._debug.getState());
 ### Contexto demasiado grande
 
 ```js
-// ❌ Evitar objetos muy grandes
+// Evitar objetos muy grandes
 AIFindrWidget.setContext({
   userId: '123',
   fullUserData: { /* 1000+ properties */ } // Muy pesado
 });
 
-// ✅ Mejor: solo datos relevantes
+// Mejor: solo datos relevantes
 AIFindrWidget.setContext({
   userId: '123',
   userType: user.type,

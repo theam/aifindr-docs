@@ -1,7 +1,7 @@
 ---
 title: Installation Guide
 description: How to install the AIFindr widget on your website step by step
-slug: /widget-config/installation
+slug: /widget-config/instalacion
 sidebar_position: 2
 ---
 
@@ -74,19 +74,19 @@ With these two steps, the widget is now working. Users can click on the trigger 
 
 **HTML / JavaScript**
 Simple integration for static sites
-[View guide →](./integrations/html)
+[View guide →](./integraciones/html)
 
 **React & Next.js**
 With optimized hooks and SSR
-[View guide →](./integrations/react-nextjs)
+[View guide →](./integraciones/react-nextjs)
 
 **Angular**
 Integration with TypeScript and routing
-[View guide →](./integrations/angular)
+[View guide →](./integraciones/angular)
 
 **WordPress**
 Plugins and theme customization
-[View guide →](./integrations/wordpress)
+[View guide →](./integraciones/wordpress)
 
 </div>
 

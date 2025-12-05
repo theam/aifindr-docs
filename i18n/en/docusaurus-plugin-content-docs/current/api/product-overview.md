@@ -53,9 +53,9 @@ Unlike the Widget, which is a visual "black box," the API delivers raw data (JSO
 
 Our API is divided into logical modules that allow you to manage the entire AI lifecycle:
 
-*   **💬 Chat and Conversations:** Send messages and receive responses with context, references, and suggestions.
-*   **📊 Analytics:** Extract data about what your users are asking to feed your own BI (Business Intelligence) dashboards.
-*   **🧩 Widget Management:** If you use the widget but want to control it programmatically (open/close based on user actions), you can do that too.
+*   **Chat and Conversations:** Send messages and receive responses with context, references, and suggestions.
+*   **Analytics:** Extract data about what your users are asking to feed your own BI (Business Intelligence) dashboards.
+*   **Widget Management:** If you use the widget but want to control it programmatically (open/close based on user actions), you can do that too.
 
 ## Is it for my team?
 

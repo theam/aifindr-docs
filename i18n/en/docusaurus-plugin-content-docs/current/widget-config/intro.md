@@ -9,7 +9,7 @@ sidebar_position: 1
 
 The **AIFindr** widget integrates a conversational assistant into your website that **answers questions, guides users, and increases conversion** without interrupting navigation.
 
-## ✨ Key Benefits
+## Key Benefits
 
 | Benefit                        | Detail                                                                    |
 | ------------------------------ | ------------------------------------------------------------------------- |
