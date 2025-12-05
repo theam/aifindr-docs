@@ -1,0 +1,165 @@
+---
+id: ai-findr-api
+title: "AI Findr API"
+description: "Programmatic access to the AI Findr platform."
+sidebar_label: Introduction
+sidebar_position: 0
+hide_title: true
+custom_edit_url: null
+---
+
+import ApiLogo from "@theme/ApiLogo";
+import Heading from "@theme/Heading";
+import SchemaTabs from "@theme/SchemaTabs";
+import TabItem from "@theme/TabItem";
+import Export from "@theme/ApiExplorer/Export";
+
+<span
+  className={"theme-doc-version-badge badge badge--secondary"}
+  children={"Version: 0.1.0"}
+>
+</span>
+
+<Export
+  url={"https://raw.githubusercontent.com/PaloAltoNetworks/docusaurus-template-openapi-docs/main/examples/aifindr.yaml"}
+  proxy={undefined}
+>
+  
+</Export>
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"AI Findr API"}
+>
+</Heading>
+
+
+
+Programmatic access to the AI Findr platform.
+
+AI Findr enables organizations to create AI-powered conversational experiences using their own content knowledge base. Our platform provides accurate, context-aware responses while collecting valuable analytics on customer interactions and knowledge gaps.
+
+## Introduction
+This API is documented in **OpenAPI format** and provides complete access to the AI Findr platform.
+It allows developers to integrate AI Findr directly into their applications, offering an alternative to our embeddable widget solution.
+
+**Key Features:**
+- **Conversational AI**: Ask questions and receive intelligent responses based on your ingested content.
+- **Content Management**: Ingest and manage your organization's knowledge base through various sources.
+- **Real-Time Analytics**: Track conversations, identify knowledge gaps, and understand customer needs.
+- **Brand Customization**: Personalize the experience with your organization's branding and styling.
+- **Streaming Support**: Get real-time responses with Server-Sent Events (SSE) for better user experience.
+
+## Authentication
+AI Findr supports two authentication methods:
+
+### API Key Authentication (Recommended for M2M)
+For machine-to-machine integrations, use API key authentication by including the `X-API-KEY` header in your requests.
+API keys can be generated through the AI Findr Hub.
+
+### Bearer Token Authentication
+For user-context operations, use JWT bearer tokens in the `Authorization` header with format: `Bearer {token}`
+
+### Organization Context
+Most API endpoints require the `X-Organization-Id` header to specify which organization context to operate within.
+This ensures proper data isolation and access control.
+
+## API Structure
+The API exposes public endpoints for conversational interactions, project information, and analytics tracking.
+
+## Rate Limits
+API requests are subject to rate limits to ensure fair usage and system stability. Limits vary by endpoint and authentication method.
+
+## Testing the API
+When testing endpoints in Swagger UI:
+1. **Choose Authentication**: Enter your API Key (ApiKeyAuth) in the "Authorize" button
+2. **Test Endpoints**: All requests will now automatically include the required header
+
+## Support
+For technical support and inquiries, contact our engineering team at [producteam@aifindr.ai](mailto:producteam@aifindr.ai).
+
+Learn more about AI Findr at [https://aifindr.ai](https://aifindr.ai).
+
+<div
+  style={{"marginBottom":"2rem"}}
+>
+  <Heading
+    id={"authentication"}
+    as={"h2"}
+    className={"openapi-tabs__heading"}
+    children={"Authentication"}
+  >
+  </Heading><SchemaTabs
+    className={"openapi-tabs__security-schemes"}
+  >
+    <TabItem
+      label={"API Key: ApiKeyAuth"}
+      value={"ApiKeyAuth"}
+    >
+
+
+
+      API key for machine-to-machine authentication. Generate one through the AI Findr Hub. Recommended for server-side integrations and automated workflows.
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-API-KEY
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem><TabItem
+      label={"API Key: OrgIdAuth"}
+      value={"OrgIdAuth"}
+    >
+
+
+
+      Organization ID for multi-tenant data isolation. Required for most endpoints. Find your organization ID in the AI Findr dashboard or retrieve it using the `/admin/api/organization` endpoint. Set this once to test all endpoints within your organization context.
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-Organization-Id
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem>
+  </SchemaTabs>
+</div><div
+  style={{"display":"flex","flexDirection":"column","marginBottom":"var(--ifm-paragraph-margin-bottom)"}}
+>
+  <h3
+    style={{"marginBottom":"0.25rem"}}
+  >
+    Contact
+  </h3><span>
+    AI Findr Product Team: [producteam@aifindr.ai](mailto:producteam@aifindr.ai)
+  </span>
+</div>
+      

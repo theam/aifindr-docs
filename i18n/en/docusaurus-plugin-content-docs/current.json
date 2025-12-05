@@ -1,0 +1,18 @@
+{
+  "sidebar.docsSidebar.category.Cómo se integra": {
+    "message": "How to integrate",
+    "description": "The label for category Cómo se integra in sidebar docsSidebar"
+  },
+  "sidebar.docsSidebar.category.Widget": {
+    "message": "Widget",
+    "description": "The label for category Widget in sidebar docsSidebar"
+  },
+  "sidebar.docsSidebar.category.Integraciones": {
+    "message": "Integrations",
+    "description": "The label for category Integraciones in sidebar docsSidebar"
+  },
+  "sidebar.docsSidebar.category.API": {
+    "message": "API",
+    "description": "The label for category API in sidebar docsSidebar"
+  }
+}

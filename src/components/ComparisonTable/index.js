@@ -8,9 +8,9 @@ export default function ComparisonTable({ data }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Característica</th>
-            <th>⚡️ Widget Web</th>
-            <th>🛠️ API Personalizada</th>
+            <th>Feature</th>
+            <th>⚡️ Web Widget</th>
+            <th>🛠️ Custom API</th>
           </tr>
         </thead>
         <tbody>

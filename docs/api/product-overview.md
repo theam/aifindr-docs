@@ -53,9 +53,9 @@ A diferencia del Widget, que es una "caja negra" visual, la API te entrega los d
 
 Nuestra API se divide en módulos lógicos que te permiten gestionar todo el ciclo de vida de la IA:
 
-*   **💬 Chat y Conversaciones:** Envía mensajes y recibe respuestas con contexto, referencias y sugerencias.
-*   **📊 Analítica:** Extrae datos sobre qué preguntan tus usuarios para alimentar tus propios dashboards de BI (Business Intelligence).
-*   **🧩 Gestión del Widget:** Si usas el widget pero quieres controlarlo programáticamente (abrirlo/cerrarlo según acciones del usuario), también puedes hacerlo.
+*   **Chat y Conversaciones:** Envía mensajes y recibe respuestas con contexto, referencias y sugerencias.
+*   **Analítica:** Extrae datos sobre qué preguntan tus usuarios para alimentar tus propios dashboards de BI (Business Intelligence).
+*   **Gestión del Widget:** Si usas el widget pero quieres controlarlo programáticamente (abrirlo/cerrarlo según acciones del usuario), también puedes hacerlo.
 
 ## ¿Es para mi equipo?
 

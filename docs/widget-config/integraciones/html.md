@@ -72,7 +72,7 @@ El elemento trigger puede ser cualquier cosa que tenga `id="ai-findr-trigger"`:
 
 <!-- Div personalizado -->
 <div id="ai-findr-trigger" class="custom-trigger">
-  <span>💬</span> Chat
+  Chat
 </div>
 ```
 
