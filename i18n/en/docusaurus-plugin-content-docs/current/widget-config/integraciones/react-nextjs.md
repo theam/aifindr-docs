@@ -35,11 +35,14 @@ Add the script in `public/index.html` before `</body>`:
     <script
       src="https://hub.aifindr.ai/widget.js"
       data-client-id="YOUR_CLIENT_ID"
+      data-var="ar"
       defer
     ></script>
   </body>
 </html>
 ```
+
+If you need to force a specific `variant`, add `data-var="ar"` just like in HTML. Here, `ar` is only an example of an Arabic variant. If you do not define it or leave it empty, the project default view will be loaded. Unless you have configured a specific `variant`, you do not need to include this attribute.
 
 ### 2. Custom Hook
 
@@ -156,6 +159,7 @@ export default function App({ Component, pageProps }) {
       <Script
         src="https://hub.aifindr.ai/widget.js"
         data-client-id="YOUR_CLIENT_ID"
+        data-var="ar"
         strategy="afterInteractive"
       />
     </>

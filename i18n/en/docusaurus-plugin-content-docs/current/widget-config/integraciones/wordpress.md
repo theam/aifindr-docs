@@ -2,7 +2,7 @@
 title: WordPress
 description: AIFindr widget integration in WordPress sites with plugins and themes
 slug: /widget-config/integraciones/wordpress
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 :::info First time?
@@ -38,12 +38,15 @@ function add_aifindr_widget() {
     <script
         src="https://hub.aifindr.ai/widget.js"
         data-client-id="YOUR_CLIENT_ID"
+        data-var="ar"
         defer
     ></script>
     <?php
 }
 add_action('wp_footer', 'add_aifindr_widget');
 ```
+
+If you need to load a specific `variant`, add `data-var="ar"` to the script. Here, `ar` is only an example of an Arabic variant. If you do not include it or leave it empty, the project default view will be used. Unless you have configured a specific `variant`, you do not need to include this attribute.
 
 ### 3. Add the trigger
 
@@ -101,6 +104,7 @@ function enqueue_aifindr_widget() {
         <script
             src="https://hub.aifindr.ai/widget.js"
             data-client-id="YOUR_CLIENT_ID"
+            data-var="ar"
             defer
         ></script>
         <?php

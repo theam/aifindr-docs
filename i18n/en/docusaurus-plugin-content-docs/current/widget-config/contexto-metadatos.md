@@ -9,6 +9,10 @@ sidebar_position: 5
 
 The AIFindr widget allows you to customize assistant responses through two types of data: **metadata** (fixed) and **context** (dynamic).
 
+:::info `data-var` is separate
+If you need to select a specific widget `variant`, do it in the `<script>` with `data-var="ar"`. In this example, `ar` represents an Arabic variant. If omitted or empty, the project default view is used. `data-var` is not part of metadata or context, and if you have not configured a specific `variant`, you usually do not need to use it.
+:::
+
 ## Key Differences
 
 | Aspect | Metadata | Context |

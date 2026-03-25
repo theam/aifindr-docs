@@ -55,6 +55,24 @@ The `id="ai-findr-trigger"` attribute is **required** for the widget to detect t
 Replace `YOUR_CLIENT_ID` with the unique identifier provided by AIFindr. Without it, the widget won't work.
 :::
 
+### Optional script attributes
+
+```html
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="YOUR_CLIENT_ID"
+  data-var="ar"
+  data-meta-environment="production"
+  defer
+></script>
+```
+
+- `data-client-id`: required. Identifies your AIFindr project.
+- `data-var`: optional. Selects a specific widget `variant`. In this example, `data-var="ar"` represents an Arabic variant. If omitted or empty, the project default view is used.
+- `data-meta-*`: optional. Adds fixed metadata for segmentation and analytics.
+
+Unless you have configured a specific `variant` and want to force it, you usually do not need to include `data-var`.
+
 ### Where to place the script?
 
 - **Recommended option**: Before the closing `</body>` tag
@@ -79,6 +97,10 @@ Simple integration for static sites
 **React & Next.js**
 With optimized hooks and SSR
 [View guide →](./integraciones/react-nextjs)
+
+**React Native**
+Native app integration with `react-native-webview`
+[View guide →](./integraciones/react-native)
 
 **Angular**
 Integration with TypeScript and routing

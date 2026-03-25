@@ -13,6 +13,26 @@ The AIFindr widget offers multiple customization options to adapt perfectly to y
 
 Customization is done through the **project configuration** in your AIFindr dashboard, which is applied automatically without additional code.
 
+## Select a `variant`
+
+If your project has multiple `variants`, you can choose which one to load directly from the widget script:
+
+```html
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="YOUR_CLIENT_ID"
+  data-var="ar"
+  defer
+></script>
+```
+
+- `data-var` is optional.
+- In this example, `data-var="ar"` represents an Arabic widget `variant`.
+- If omitted or empty, the widget uses the project default view.
+- `data-var` is not part of metadata (`data-meta-*`) or context (`setContext()` / `mergeContext()`).
+
+If you have not configured a specific `variant`, you usually do not need this attribute.
+
 ### Display Modes
 
 #### `displayMode: "overlay"` (Default)
