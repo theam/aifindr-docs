@@ -11,12 +11,12 @@ Lee la [guía de instalación](../instalacion) primero para entender los concept
 
 # React Native
 
-La integración más clara en React Native es separar dos piezas:
+En React Native, la integración del widget se hace cargando una página HTML autocontenida dentro de un `WebView`. Una forma práctica de organizarlo es separar:
 
 - un builder HTML que vive dentro del `WebView`
 - un wrapper `AIFindrWebView` que carga ese HTML y expone una forma segura de actualizar contexto desde React Native
 
-Este patrón está alineado con el repo de ejemplo [aifindr-react-native-webview-example](https://github.com/theam/aifindr-react-native-webview-example).
+Puedes adaptar esta lógica a la estructura que ya tenga tu app. Los nombres de archivos y componentes en esta guía son solo ejemplos.
 
 :::info Patrón recomendado
 El flujo actual es **auto-open-only**: el HTML renderiza un trigger oculto con `id="ai-findr-trigger"`, espera `AIFindrWidget.ready()` y abre el widget automáticamente con `AIFindrWidget.open()`.
@@ -26,27 +26,11 @@ El flujo actual es **auto-open-only**: el HTML renderiza un trigger oculto con `
 No pruebes esta integración en la preview web. `react-native-webview` necesita un runtime nativo: Expo Go, simulador iOS, emulador Android o dispositivo físico.
 :::
 
-## Estructura recomendada
+## 1. Construir el HTML del widget
 
-```text
-components/
-  AIFindrWebView.tsx
-  aifindrWidgetHTML.ts
-
-app/
-  index.tsx
-```
-
-- `aifindrWidgetHTML.ts` construye el HTML autocontenido que carga `https://hub.aifindr.ai/widget.js`
-- `AIFindrWebView.tsx` monta el `WebView`, reenvía eventos y permite actualizar contexto con `injectJavaScript(...)`
-- `app/index.tsx` decide cuándo mostrar el widget y cuándo actualizar el contexto desde la navegación nativa
-
-## 1. Builder HTML dentro del WebView
-
-Este archivo concentra la parte delicada: trigger oculto, `data-client-id`, metadatos por `data-meta-*`, `data-var` opcional, cola de contexto hasta `ready()` y bridge de eventos hacia React Native.
+La parte delicada está en el HTML que vive dentro del `WebView`: trigger oculto, `data-client-id`, metadatos por `data-meta-*`, `data-var` opcional, cola de contexto hasta `ready()` y bridge de eventos hacia React Native.
 
 ```ts
-// components/aifindrWidgetHTML.ts
 export type AIFindrMetadata = Record<
   string,
   string | number | boolean | null | undefined
@@ -262,12 +246,11 @@ export function buildWidgetHTML(
 - Encola el contexto hasta que `AIFindrWidget.ready()` dispara y entonces llama `setContext()`
 - Reenvía eventos a React Native con `window.ReactNativeWebView.postMessage(...)`
 
-## 2. Wrapper `AIFindrWebView` en React Native
+## 2. Envolver el `WebView` en React Native
 
 Este wrapper es código de tu app nativa, no una API oficial adicional del widget. Internamente sigue usando `AIFindrWidget.ready()`, `setContext()` y `AIFindrWidget.on(...)`.
 
 ```tsx
-// components/AIFindrWebView.tsx
 import React, { useCallback, useRef } from 'react';
 import { Platform, Text, View } from 'react-native';
 
@@ -388,12 +371,11 @@ export default AIFindrWebView;
 - `onWidgetEvent`: eventos reenviados desde `AIFindrWidget.on(...)`
 - `hideCloseButton`: forma práctica de ocultar `.ai-findr-close-button`
 
-## 3. Uso desde una pantalla React Native
+## 3. Caso práctico: una pantalla que abre el widget
 
-El ejemplo completo mantiene el `WebView` siempre montado y lo oculta con `opacity: 0` cuando otra tab está activa. Eso evita recargas y evita que iOS cierre el proceso del `WKWebView`.
+Si tu app usa tabs, stacks o navegación interna, un patrón útil es mantener el `WebView` montado y solo ocultarlo visualmente cuando no está activo. Eso evita recargas y evita que iOS cierre el proceso del `WKWebView`.
 
 ```tsx
-// app/index.tsx
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -449,11 +431,11 @@ export default function HomeScreen() {
 
       {activeTab !== 'plus-ai' && (
         <View style={StyleSheet.absoluteFillObject}>
-          {/* Resto de pantallas o tabs */}
+          {/* Resto de contenido de la app */}
         </View>
       )}
 
-      {/* En tu UI real, llama handleTabPress('plus-ai') para abrir la vista del widget */}
+      {/* En tu UI real, abre la vista del widget desde tu navegación */}
     </View>
   );
 }
@@ -473,6 +455,8 @@ const styles = StyleSheet.create({
 - `WIDGET_METADATA` y `WIDGET_INITIAL_CONTEXT` viven fuera del render, así el HTML no se regenera en cada render
 - `updateContext(...)` se ejecuta antes de cambiar a la tab del widget, por lo que el contexto ya está listo cuando el chat se abre
 - el `WebView` no se desmonta al cambiar de tab
+
+Si tu app no usa tabs, quédate con la misma idea base: no recrees el `WebView` sin necesidad y actualiza el contexto antes de abrir o mostrar el widget.
 
 ## `variant` es opcional
 
@@ -517,4 +501,4 @@ Los eventos más útiles para bridgear son:
 - [Contexto y metadatos](../contexto-metadatos) para separar bien datos fijos y dinámicos
 - [Personalización visual](../personalizacion) para estilos y `variants`
 - [API Reference](../api-reference) para ampliar el uso de métodos y eventos
-- [Ejemplo completo en GitHub](https://github.com/theam/aifindr-react-native-webview-example)
+- [Ejemplo completo en GitHub](https://github.com/theam/aifindr-react-native-webview-example) si necesitas una implementación más extensa
