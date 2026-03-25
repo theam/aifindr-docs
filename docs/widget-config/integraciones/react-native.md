@@ -11,352 +11,510 @@ Lee la [guía de instalación](../instalacion) primero para entender los concept
 
 # React Native
 
-En React Native, la integración del widget se hace cargando una página HTML autocontenida dentro de un `WebView`. Ese HTML carga `https://hub.aifindr.ai/widget.js`, mantiene el trigger que el widget necesita y se comunica con la app nativa usando `window.ReactNativeWebView.postMessage(...)`.
+La integración más clara en React Native es separar dos piezas:
+
+- un builder HTML que vive dentro del `WebView`
+- un wrapper `AIFindrWebView` que carga ese HTML y expone una forma segura de actualizar contexto desde React Native
+
+Este patrón está alineado con el repo de ejemplo [aifindr-react-native-webview-example](https://github.com/theam/aifindr-react-native-webview-example).
 
 :::info Patrón recomendado
-El wrapper actual está pensado como flujo **auto-open-only**: el `WebView` monta el HTML, espera `AIFindrWidget.ready()` y abre el widget automáticamente con `AIFindrWidget.open()`.
+El flujo actual es **auto-open-only**: el HTML renderiza un trigger oculto con `id="ai-findr-trigger"`, espera `AIFindrWidget.ready()` y abre el widget automáticamente con `AIFindrWidget.open()`.
 :::
 
 :::caution Entorno de prueba
-La preview web no es el camino correcto para validar esta integración. Pruébala en un runtime nativo real: simulador iOS/Android, emulador o Expo Go.
+No pruebes esta integración en la preview web. `react-native-webview` necesita un runtime nativo: Expo Go, simulador iOS, emulador Android o dispositivo físico.
 :::
 
-## Cómo se estructura la integración
+## Estructura recomendada
 
-- El `WebView` carga un HTML autocontenido.
-- Ese HTML renderiza un trigger oculto con `id="ai-findr-trigger"` porque el widget lo espera internamente.
-- El script del widget se configura con `data-client-id`, metadatos opcionales por `data-meta-*` y `variant` opcional por `data-var`.
-- El contexto debe respetar `AIFindrWidget.ready()`: primero se encola y luego se aplica con `setContext()`.
-- Los eventos del widget se escuchan con `AIFindrWidget.on(...)` y se reenvían a React Native con `window.ReactNativeWebView.postMessage(JSON.stringify({ type, payload }))`.
+```text
+components/
+  AIFindrWebView.tsx
+  aifindrWidgetHTML.ts
 
-## Ejemplo base completo
+app/
+  index.tsx
+```
 
-```tsx
-import React, { useRef } from 'react';
-import { Button, SafeAreaView, View } from 'react-native';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
+- `aifindrWidgetHTML.ts` construye el HTML autocontenido que carga `https://hub.aifindr.ai/widget.js`
+- `AIFindrWebView.tsx` monta el `WebView`, reenvía eventos y permite actualizar contexto con `injectJavaScript(...)`
+- `app/index.tsx` decide cuándo mostrar el widget y cuándo actualizar el contexto desde la navegación nativa
 
-const WIDGET_EVENTS = [
-  'widget.ready',
-  'widget.opened',
-  'widget.closed',
-  'widget.error',
-  'conversation.started',
-  'message.sent',
-  'message.received',
-] as const;
+## 1. Builder HTML dentro del WebView
 
-type WidgetMessage = {
-  type: (typeof WIDGET_EVENTS)[number] | string;
-  payload?: unknown;
-};
+Este archivo concentra la parte delicada: trigger oculto, `data-client-id`, metadatos por `data-meta-*`, `data-var` opcional, cola de contexto hasta `ready()` y bridge de eventos hacia React Native.
 
-function escapeHtmlAttribute(value: string) {
+```ts
+// components/aifindrWidgetHTML.ts
+export type AIFindrMetadata = Record<
+  string,
+  string | number | boolean | null | undefined
+>;
+export type AIFindrInitialContext = Record<string, unknown>;
+
+export const WIDGET_BASE_URL = 'https://hub.aifindr.ai/';
+const WIDGET_SCRIPT = `${WIDGET_BASE_URL}widget.js`;
+
+function escapeHTMLAttribute(value: string): string {
   return value
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 }
 
-function buildWidgetHtml({
-  clientId,
-  metadata,
-  variant,
-  initialContext,
-}: {
-  clientId: string;
-  metadata?: Record<string, string>;
-  variant?: string;
-  initialContext?: Record<string, unknown>;
-}) {
+export function buildWidgetHTML(
+  clientId: string,
+  metadata?: AIFindrMetadata,
+  options?: {
+    hideCloseButton?: boolean;
+    initialContext?: AIFindrInitialContext;
+    /** Ejemplo: "ar" para una variant en árabe. Omite este valor para usar la vista por defecto del proyecto. */
+    variant?: string;
+  }
+): string {
   const metadataAttributes = Object.entries(metadata ?? {})
-    .map(([key, value]) => {
-      return `data-meta-${key}="${escapeHtmlAttribute(String(value))}"`;
+    .filter(([key, value]) => {
+      return value !== undefined && value !== null && key.trim() !== '';
     })
-    .join('\n      ');
+    .map(([key, value]) => {
+      return `data-meta-${key}="${escapeHTMLAttribute(String(value))}"`;
+    })
+    .join('\n          ');
 
-  const variantAttribute =
-    variant && variant.trim()
-      ? `data-var="${escapeHtmlAttribute(variant)}"`
-      : '';
+  const shouldHideCloseButton = options?.hideCloseButton ?? false;
+  const initialContext = options?.initialContext ?? null;
+  const variant = options?.variant ?? '';
 
-  return `<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover"
-    />
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        background: #ffffff;
-      }
-
-      #ai-findr-trigger {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-        pointer-events: none;
-      }
-    </style>
-  </head>
-  <body>
-    <button
-      id="ai-findr-trigger"
-      type="button"
-      aria-hidden="true"
-      tabindex="-1"
-    >
-      Abrir asistente
-    </button>
-
+  const widgetBootstrapScript = `
     <script>
       (function () {
-        var widgetReady = false;
-        var pendingContext = ${JSON.stringify(initialContext ?? {})};
-        var eventNames = ${JSON.stringify(WIDGET_EVENTS)};
+        var initialContext = ${JSON.stringify(initialContext)};
+        var pendingContext = typeof window.__AIFindrPendingContext === 'undefined'
+          ? initialContext
+          : window.__AIFindrPendingContext;
+        var eventNames = [
+          'widget.opened',
+          'widget.closed',
+          'widget.error',
+          'conversation.started',
+          'message.sent',
+          'message.received'
+        ];
 
-        function postToNative(type, payload) {
+        function postEventToReactNative(type, payload) {
           if (
-            window.ReactNativeWebView &&
-            typeof window.ReactNativeWebView.postMessage === 'function'
+            !window.ReactNativeWebView ||
+            typeof window.ReactNativeWebView.postMessage !== 'function'
           ) {
-            window.ReactNativeWebView.postMessage(
-              JSON.stringify({ type: type, payload: payload })
-            );
-          }
-        }
-
-        function flushPendingContext() {
-          if (!widgetReady || !window.AIFindrWidget || !pendingContext) {
             return;
           }
 
-          window.AIFindrWidget.setContext(pendingContext);
-          pendingContext = null;
+          var message = payload === undefined
+            ? { type: type }
+            : { type: type, payload: payload };
+
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
         }
 
-        window.__AIFINDR_BRIDGE__ = {
-          setContext: function (nextContext) {
-            pendingContext = nextContext || {};
-
-            if (widgetReady && window.AIFindrWidget) {
-              window.AIFindrWidget.setContext(pendingContext);
+        var contextBridge = {
+          pendingContext: pendingContext,
+          isReady: false,
+          hasAutoOpened: false,
+          readyEventPosted: false,
+          widgetEventListenersRegistered: false,
+          flushPendingContext: function () {
+            if (
+              !this.isReady ||
+              this.pendingContext === null ||
+              typeof window.AIFindrWidget === 'undefined' ||
+              typeof window.AIFindrWidget.setContext !== 'function'
+            ) {
+              return;
             }
+
+            window.AIFindrWidget.setContext(this.pendingContext);
+            this.pendingContext = null;
+            window.__AIFindrPendingContext = null;
           },
-          mergeContext: function (partialContext) {
-            if (!partialContext) {
+          setPendingContext: function (context) {
+            this.pendingContext = context;
+            window.__AIFindrPendingContext = context;
+            this.flushPendingContext();
+          },
+          registerWidgetEventListeners: function () {
+            if (
+              this.widgetEventListenersRegistered ||
+              typeof window.AIFindrWidget === 'undefined' ||
+              typeof window.AIFindrWidget.on !== 'function'
+            ) {
               return;
             }
 
-            if (!widgetReady || !window.AIFindrWidget) {
-              pendingContext = Object.assign({}, pendingContext || {}, partialContext);
-              return;
-            }
+            this.widgetEventListenersRegistered = true;
 
-            window.AIFindrWidget.mergeContext(partialContext);
+            eventNames.forEach(function (eventName) {
+              window.AIFindrWidget.on(eventName, function (payload) {
+                postEventToReactNative(eventName, payload);
+              });
+            });
           }
         };
 
-        window.addEventListener('load', function () {
-          if (!window.AIFindrWidget) {
-            postToNative('widget.error', {
-              message: 'AIFindrWidget no está disponible en window'
-            });
+        window.__AIFindrContextBridge = contextBridge;
+
+        function registerReadyCallback() {
+          if (
+            typeof window.AIFindrWidget === 'undefined' ||
+            typeof window.AIFindrWidget.ready !== 'function'
+          ) {
             return;
           }
 
-          eventNames.forEach(function (eventName) {
-            window.AIFindrWidget.on(eventName, function (payload) {
-              postToNative(eventName, payload);
-            });
-          });
-
           window.AIFindrWidget.ready(function () {
-            widgetReady = true;
-            flushPendingContext();
-            window.AIFindrWidget.open();
+            contextBridge.isReady = true;
+            contextBridge.registerWidgetEventListeners();
+            contextBridge.flushPendingContext();
+
+            if (!contextBridge.readyEventPosted) {
+              contextBridge.readyEventPosted = true;
+              postEventToReactNative('widget.ready');
+            }
+
+            if (!contextBridge.hasAutoOpened) {
+              contextBridge.hasAutoOpened = true;
+              Promise.resolve(window.AIFindrWidget.open()).catch(function () {});
+            }
           });
-        });
+        }
+
+        var loader = document.getElementById('aifindr-loader');
+        if (loader) {
+          loader.addEventListener('load', registerReadyCallback);
+        }
+
+        window.addEventListener('load', registerReadyCallback);
+        registerReadyCallback();
       })();
     </script>
+  `;
 
-    <script
-      src="https://hub.aifindr.ai/widget.js"
-      data-client-id="${escapeHtmlAttribute(clientId)}"
-      ${variantAttribute}
-      ${metadataAttributes}
-      defer
-    ></script>
-  </body>
-</html>`;
-}
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        >
+        <base href="${WIDGET_BASE_URL}">
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { height: 100vh; overflow: hidden; background: #fff; }
+          #ai-findr-trigger,
+          .ai-findr-trigger-button {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+          }
+          ${
+            shouldHideCloseButton
+              ? `
+          .ai-findr-close-button {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+          }
+          `
+              : ''
+          }
+        </style>
+      </head>
+      <body>
+        <div id="ai-findr-trigger" aria-hidden="true"></div>
 
-export function AIFindrSupportScreen() {
-  const webViewRef = useRef<WebView>(null);
-  const htmlRef = useRef(
-    buildWidgetHtml({
-      clientId: 'TU_CLIENT_ID',
-      variant: 'ar', // Ejemplo: variant en árabe
-      metadata: {
-        platform: 'react-native',
-        environment: 'production',
-        tenant: 'mobile-app',
-      },
-      initialContext: {
-        source: 'native-app',
-        appSection: 'support',
-        locale: 'es-AR',
-        userId: 'user_123',
-      },
-    })
-  );
-  const handleMessage = (event: WebViewMessageEvent) => {
-    try {
-      const message = JSON.parse(event.nativeEvent.data) as WidgetMessage;
+        <script
+          id="aifindr-loader"
+          src="${WIDGET_SCRIPT}"
+          data-client-id="${escapeHTMLAttribute(clientId)}"
+          ${variant ? `data-var="${escapeHTMLAttribute(variant)}"` : ''}
+          ${metadataAttributes}
+          defer
+        ></script>
 
-      if (message.type === 'conversation.started') {
-        console.log('Conversación iniciada:', message.payload);
-      }
-
-      if (message.type === 'widget.error') {
-        console.warn('Error del widget:', message.payload);
-      }
-    } catch (error) {
-      console.warn('Mensaje inválido desde el WebView:', error);
-    }
-  };
-
-  const mergeWidgetContext = (partialContext: Record<string, unknown>) => {
-    const serializedContext = JSON.stringify(partialContext);
-
-    webViewRef.current?.injectJavaScript(`
-      window.__AIFINDR_BRIDGE__?.mergeContext(${serializedContext});
-      true;
-    `);
-  };
-
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Button
-        title="Actualizar contexto"
-        onPress={() =>
-          mergeWidgetContext({
-            currentScreen: 'checkout',
-            cartTotal: 129.99,
-            hasOpenTicket: false,
-          })
-        }
-      />
-
-      <View style={{ flex: 1 }}>
-        <WebView
-          ref={webViewRef}
-          originWhitelist={['*']}
-          source={{ html: htmlRef.current }}
-          javaScriptEnabled
-          onMessage={handleMessage}
-        />
-      </View>
-    </SafeAreaView>
-  );
+        ${widgetBootstrapScript}
+      </body>
+    </html>
+  `;
 }
 ```
 
-### Qué resuelve este patrón
+### Qué hace este HTML
 
-- Mantiene un trigger oculto con `id="ai-findr-trigger"` para cumplir la expectativa del widget.
-- Respeta `AIFindrWidget.ready()` antes de aplicar contexto.
-- Encola el contexto inicial y lo aplica con `setContext()` cuando el widget ya está listo.
-- Reenvía a React Native los eventos `widget.ready`, `widget.opened`, `widget.closed`, `widget.error`, `conversation.started`, `message.sent` y `message.received`.
-- Permite fijar una `variant` concreta con `data-var="ar"`. En este ejemplo, `ar` representa una variante en árabe. Si omites `data-var` o lo envías vacío, se usa la vista por defecto del proyecto. Salvo que tengas una `variant` específica configurada, normalmente no hace falta enviarlo.
+- Sigue cargando el widget oficial desde `https://hub.aifindr.ai/widget.js`
+- Mantiene el trigger oculto con `id="ai-findr-trigger"` porque el widget lo necesita
+- Pasa metadatos estáticos como atributos `data-meta-*`
+- Encola el contexto hasta que `AIFindrWidget.ready()` dispara y entonces llama `setContext()`
+- Reenvía eventos a React Native con `window.ReactNativeWebView.postMessage(...)`
 
-## Actualizar contexto desde React Native
+## 2. Wrapper `AIFindrWebView` en React Native
 
-Si el estado de la app cambia después de montar el `WebView`, actualiza el contexto usando `injectJavaScript(...)` contra el bridge interno:
+Este wrapper es código de tu app nativa, no una API oficial adicional del widget. Internamente sigue usando `AIFindrWidget.ready()`, `setContext()` y `AIFindrWidget.on(...)`.
 
 ```tsx
-function runInWidget(
-  method: 'setContext' | 'mergeContext',
-  payload: Record<string, unknown>
-) {
-  const serializedPayload = JSON.stringify(payload);
+// components/AIFindrWebView.tsx
+import React, { useCallback, useRef } from 'react';
+import { Platform, Text, View } from 'react-native';
 
-  webViewRef.current?.injectJavaScript(`
-    window.__AIFINDR_BRIDGE__?.${method}(${serializedPayload});
-    true;
-  `);
+import {
+  AIFindrInitialContext,
+  AIFindrMetadata,
+  buildWidgetHTML,
+  WIDGET_BASE_URL,
+} from './aifindrWidgetHTML';
+
+export type WidgetEventType =
+  | 'widget.ready'
+  | 'widget.opened'
+  | 'widget.closed'
+  | 'widget.error'
+  | 'conversation.started'
+  | 'message.sent'
+  | 'message.received';
+
+export type WidgetEvent = {
+  type: WidgetEventType;
+  payload?: unknown;
+};
+
+export interface AIFindrWebViewProps {
+  clientId: string;
+  metadata?: AIFindrMetadata;
+  initialContext?: AIFindrInitialContext;
+  variant?: string;
+  hideCloseButton?: boolean;
+  onWidgetEvent?: (event: WidgetEvent) => void;
 }
 
-runInWidget('setContext', {
-  userId: 'user_123',
-  plan: 'pro',
-  currentScreen: 'account',
-});
+export interface AIFindrWebViewRef {
+  updateContext: (context: Record<string, unknown>) => void;
+}
 
-runInWidget('mergeContext', {
-  currentScreen: 'checkout',
-  cartItems: 3,
-});
-```
+type NativeWebViewHandle = {
+  injectJavaScript: (script: string) => void;
+};
 
-Usa `setContext()` cuando quieras reemplazar todo el contexto y `mergeContext()` para añadir o actualizar claves concretas.
+const NativeWebView =
+  Platform.OS === 'web' ? null : require('react-native-webview').WebView;
 
-## Reenviar eventos del widget a React Native
+const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
+  ({ clientId, metadata, initialContext, variant, hideCloseButton = false, onWidgetEvent }, ref) => {
+    const webViewRef = useRef<NativeWebViewHandle | null>(null);
 
-El bridge del HTML puede reenviar cualquier evento soportado por el widget. Este es el patrón base:
+    const updateContext = useCallback((context: Record<string, unknown>) => {
+      const script = `
+        (function () {
+          var nextContext = ${JSON.stringify(context)};
+          var contextBridge = window.__AIFindrContextBridge;
 
-```js
-var eventNames = [
-  'widget.ready',
-  'widget.opened',
-  'widget.closed',
-  'widget.error',
-  'conversation.started',
-  'message.sent',
-  'message.received'
-];
+          if (contextBridge && typeof contextBridge.setPendingContext === 'function') {
+            contextBridge.setPendingContext(nextContext);
+            return true;
+          }
 
-eventNames.forEach(function (eventName) {
-  window.AIFindrWidget.on(eventName, function (payload) {
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({ type: eventName, payload: payload })
+          window.__AIFindrPendingContext = nextContext;
+          return true;
+        })();
+      `;
+
+      webViewRef.current?.injectJavaScript(script);
+    }, []);
+
+    React.useImperativeHandle(ref, () => ({ updateContext }), [updateContext]);
+
+    if (!NativeWebView) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <Text>
+            Abre esta pantalla en Expo Go, simulador iOS o emulador Android para probar
+            la integración real.
+          </Text>
+        </View>
+      );
+    }
+
+    const WebViewComponent = NativeWebView as any;
+
+    return (
+      <WebViewComponent
+        ref={webViewRef}
+        source={{
+          html: buildWidgetHTML(clientId, metadata, {
+            hideCloseButton,
+            initialContext,
+            variant,
+          }),
+          baseUrl: WIDGET_BASE_URL,
+        }}
+        originWhitelist={['*']}
+        javaScriptEnabled
+        domStorageEnabled
+        onMessage={(event: { nativeEvent: { data: string } }) => {
+          try {
+            onWidgetEvent?.(JSON.parse(event.nativeEvent.data));
+          } catch {}
+        }}
+        style={{ flex: 1 }}
+      />
     );
-  });
+  }
+);
+
+AIFindrWebView.displayName = 'AIFindrWebView';
+
+export default AIFindrWebView;
+```
+
+### Qué expone este wrapper
+
+- `metadata`: datos fijos que terminan como `data-meta-*`
+- `initialContext`: contexto inicial que el HTML encola hasta `ready()`
+- `updateContext(...)`: puente desde React Native hacia `setContext()`
+- `onWidgetEvent`: eventos reenviados desde `AIFindrWidget.on(...)`
+- `hideCloseButton`: forma práctica de ocultar `.ai-findr-close-button`
+
+## 3. Uso desde una pantalla React Native
+
+El ejemplo completo mantiene el `WebView` siempre montado y lo oculta con `opacity: 0` cuando otra tab está activa. Eso evita recargas y evita que iOS cierre el proceso del `WKWebView`.
+
+```tsx
+// app/index.tsx
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+
+import AIFindrWebView, {
+  AIFindrWebViewRef,
+  WidgetEvent,
+} from '@/components/AIFindrWebView';
+
+const WIDGET_METADATA = {
+  'user-id': 'user-12345',
+  tenant: 'mobile-app',
+} as const;
+
+const WIDGET_INITIAL_CONTEXT = {
+  entrypoint: 'home',
+} as const;
+
+export default function HomeScreen() {
+  const webViewRef = React.useRef<AIFindrWebViewRef>(null);
+  const [activeTab, setActiveTab] = React.useState<'home' | 'plus-ai' | 'profile'>('home');
+
+  const handleTabPress = React.useCallback(
+    (tab: 'home' | 'plus-ai' | 'profile') => {
+      if (tab === 'plus-ai' && activeTab !== 'plus-ai') {
+        webViewRef.current?.updateContext({
+          entrypoint: activeTab,
+        });
+      }
+
+      setActiveTab(tab);
+    },
+    [activeTab]
+  );
+
+  const handleWidgetEvent = React.useCallback((event: WidgetEvent) => {
+    console.log(event);
+  }, []);
+
+  return (
+    <View style={styles.fill}>
+      <View style={styles.fill} pointerEvents={activeTab === 'plus-ai' ? 'auto' : 'none'}>
+        <View style={[styles.fill, activeTab !== 'plus-ai' && styles.invisible]}>
+          <AIFindrWebView
+            ref={webViewRef}
+            clientId="TU_CLIENT_ID"
+            metadata={WIDGET_METADATA}
+            initialContext={WIDGET_INITIAL_CONTEXT}
+            onWidgetEvent={handleWidgetEvent}
+            hideCloseButton
+          />
+        </View>
+      </View>
+
+      {activeTab !== 'plus-ai' && (
+        <View style={StyleSheet.absoluteFillObject}>
+          {/* Resto de pantallas o tabs */}
+        </View>
+      )}
+
+      {/* En tu UI real, llama handleTabPress('plus-ai') para abrir la vista del widget */}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  fill: {
+    flex: 1,
+  },
+  invisible: {
+    opacity: 0,
+  },
 });
 ```
 
-En React Native, captura esos mensajes con `onMessage` para analítica, logging o sincronización de UI nativa.
+### Por qué este ejemplo es más estable
 
-## Ajustes visuales opcionales
+- `WIDGET_METADATA` y `WIDGET_INITIAL_CONTEXT` viven fuera del render, así el HTML no se regenera en cada render
+- `updateContext(...)` se ejecuta antes de cambiar a la tab del widget, por lo que el contexto ya está listo cuando el chat se abre
+- el `WebView` no se desmonta al cambiar de tab
 
-Si quieres que la pantalla nativa controle totalmente el cierre, puedes ocultar el botón interno del widget con CSS:
+## `variant` es opcional
 
-```css
-.ai-findr-close-button {
-  display: none !important;
-}
+Si necesitas forzar una `variant` concreta, añádela en el wrapper:
+
+```tsx
+<AIFindrWebView
+  clientId="TU_CLIENT_ID"
+  variant="ar"
+/>
 ```
 
-Hazlo solo si tu flujo nativo ya ofrece una salida clara para cerrar o desmontar la vista.
+- `variant="ar"` es solo un ejemplo de una `variant` en árabe
+- si omites `variant` o lo dejas vacío, el widget usa la vista por defecto del proyecto
+- si no has configurado una `variant` específica, normalmente no necesitas enviarla
+
+## Eventos que conviene reenviar a React Native
+
+Los eventos más útiles para bridgear son:
+
+- `widget.ready`
+- `widget.opened`
+- `widget.closed`
+- `widget.error`
+- `conversation.started`
+- `message.sent`
+- `message.received`
 
 ## Troubleshooting React Native
 
 | Problema | Solución |
 |----------|----------|
-| El contexto se actualiza antes de `ready()` | No llames `setContext()` directamente desde React Native. Encola el contexto y aplícalo dentro de `AIFindrWidget.ready()` |
-| El `WebView` se recarga en cada render | Mantén el HTML estable con `useRef` para no regenerar `source={{ html }}` en cada render |
-| Se pierde el estado del widget al desmontar la pantalla | Evita desmontar/remontar el `WebView` si quieres conservar la conversación; mantén viva la vista o el contenedor |
-| No llegan eventos al lado nativo | Verifica que existe `onMessage` en el `WebView` y que el HTML llama `window.ReactNativeWebView.postMessage(...)` |
-| La integración parece rota en web | No la valides en preview web. Usa simulador, emulador, dispositivo físico o Expo Go |
+| Lo pruebas en web y no funciona | Usa Expo Go, simulador iOS, emulador Android o dispositivo físico |
+| El `WebView` se recarga al cambiar de tab | No lo desmontes. Mantenlo montado y ocúltalo con `opacity: 0` y `pointerEvents: 'none'` |
+| El contexto se pierde antes de `ready()` | Encola el contexto en `window.__AIFindrContextBridge` y haz `setContext()` solo cuando el widget ya esté listo |
+| El `WebView` se recarga en cada render de React | No crees `metadata` ni `initialContext` inline dentro del render |
+| El widget abre con el `entrypoint` equivocado | Llama `updateContext(...)` antes de cambiar a la tab del widget |
+| No llegan eventos al lado nativo | Verifica `onMessage` en el `WebView` y `window.ReactNativeWebView.postMessage(...)` dentro del HTML |
 
 ## Próximos pasos
 
-- [Contexto y metadatos](../contexto-metadatos) para separar datos fijos y dinámicos correctamente
-- [Personalización visual](../personalizacion) para estilos y variants
+- [Contexto y metadatos](../contexto-metadatos) para separar bien datos fijos y dinámicos
+- [Personalización visual](../personalizacion) para estilos y `variants`
 - [API Reference](../api-reference) para ampliar el uso de métodos y eventos
+- [Ejemplo completo en GitHub](https://github.com/theam/aifindr-react-native-webview-example)
