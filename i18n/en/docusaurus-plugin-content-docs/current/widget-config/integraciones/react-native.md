@@ -6,7 +6,7 @@ sidebar_position: 2
 ---
 
 :::info First time?
-Read the [installation guide](../instalacion) first to understand the basics.
+Read the [installation guide](../instalacion.md) first to understand the basics.
 :::
 
 # React Native
@@ -498,7 +498,7 @@ The most useful events to bridge back are:
 
 ## Next steps
 
-- [Context and metadata](../contexto-metadatos) to separate fixed and dynamic data correctly
-- [Visual customization](../personalizacion) for styles and `variants`
-- [API Reference](../api-reference) for more advanced methods and events
+- [Context and metadata](../contexto-metadatos.md) to separate fixed and dynamic data correctly
+- [Visual customization](../personalizacion.md) for styles and `variants`
+- [API Reference](../javascript-api.md) for more advanced methods and events
 - [Full GitHub example](https://github.com/theam/aifindr-react-native-webview-example) if you need a more complete implementation

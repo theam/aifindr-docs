@@ -6,7 +6,7 @@ sidebar_position: 5
 ---
 
 :::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+Lee la [guía de instalación](../instalacion.md) primero para entender los conceptos básicos.
 :::
 
 # HTML / JavaScript
@@ -247,6 +247,6 @@ window.addEventListener('load', function() {
 
 ## Próximos pasos
 
-- [Personalización visual](../personalizacion) para adaptar el estilo
-- [Contexto y metadatos](../contexto-metadatos) para respuestas más precisas
-- [Tipos de triggers](../triggers) para diferentes elementos de activación
+- [Personalización visual](../personalizacion.md) para adaptar el estilo
+- [Contexto y metadatos](../contexto-metadatos.md) para respuestas más precisas
+- [Tipos de triggers](../events-triggers.md) para diferentes elementos de activación

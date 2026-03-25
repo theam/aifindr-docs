@@ -6,7 +6,7 @@ sidebar_position: 4
 ---
 
 :::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+Lee la [guía de instalación](../instalacion.md) primero para entender los conceptos básicos.
 :::
 
 # WordPress
@@ -400,6 +400,6 @@ if (WP_DEBUG) {
 
 ## Próximos pasos
 
-- [Personalización visual](../personalizacion) para adaptar estilos del tema
-- [Contexto y metadatos](../contexto-metadatos) para respuestas específicas de WordPress
-- [API Reference](../api-reference) para funcionalidades avanzadas
+- [Personalización visual](../personalizacion.md) para adaptar estilos del tema
+- [Contexto y metadatos](../contexto-metadatos.md) para respuestas específicas de WordPress
+- [API Reference](../javascript-api.md) para funcionalidades avanzadas

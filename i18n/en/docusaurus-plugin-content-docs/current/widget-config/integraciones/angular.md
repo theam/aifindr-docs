@@ -6,7 +6,7 @@ sidebar_position: 3
 ---
 
 :::info First time?
-Read the [installation guide](../instalacion) first to understand the basics.
+Read the [installation guide](../instalacion.md) first to understand the basics.
 :::
 
 # Angular
@@ -378,6 +378,6 @@ if (!environment.production) {
 
 ## Next Steps
 
-- [Visual customization](../personalizacion) for Angular Material styles
-- [API Reference](../api-reference) for advanced methods
-- [Context and metadata](../contexto-metadatos) for dynamic personalization
+- [Visual customization](../personalizacion.md) for Angular Material styles
+- [API Reference](../javascript-api.md) for advanced methods
+- [Context and metadata](../contexto-metadatos.md) for dynamic personalization
