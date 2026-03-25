@@ -2,7 +2,7 @@
 title: HTML / JavaScript
 description: AIFindr widget integration in static websites with HTML and JavaScript
 slug: /widget-config/integraciones/html
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 :::info First time?
@@ -41,11 +41,14 @@ The simplest and most straightforward integration of the AIFindr widget. Ideal f
   <script
     src="https://hub.aifindr.ai/widget.js"
     data-client-id="YOUR_CLIENT_ID"
+    data-var="ar"
     defer
   ></script>
 </body>
 </html>
 ```
+
+If you need a specific `variant`, add `data-var="ar"` to the script. Here, `ar` is just an example of an Arabic variant. If omitted or empty, the widget uses the project default view. Unless you have configured a specific `variant`, you do not need to include this attribute.
 
 ### 2. Trigger customization
 
