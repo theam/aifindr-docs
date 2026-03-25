@@ -2,7 +2,7 @@
 title: HTML / JavaScript
 description: Integración del widget de AIFindr en sitios web estáticos con HTML y JavaScript
 slug: /widget-config/integraciones/html
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 :::info ¿Primera vez?
@@ -41,11 +41,14 @@ La integración más simple y directa del widget de AIFindr. Ideal para sitios e
   <script
     src="https://hub.aifindr.ai/widget.js"
     data-client-id="TU_CLIENT_ID"
+    data-var="ar"
     defer
   ></script>
 </body>
 </html>
 ```
+
+Si necesitas una `variant` concreta, añade `data-var="ar"` al script. Aquí `ar` es solo un ejemplo de una variante en árabe. Si se omite o va vacío, el widget usa la vista por defecto del proyecto. Salvo que tengas una `variant` específica configurada, no necesitas incluir este atributo.
 
 ### 2. Personalización del trigger
 
@@ -165,6 +168,7 @@ function updateContext(newData) {
   <script
     src="https://hub.aifindr.ai/widget.js"
     data-client-id="TU_CLIENT_ID"
+    data-var="ar"
     defer
   ></script>
 

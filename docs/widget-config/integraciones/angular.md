@@ -2,7 +2,7 @@
 title: Angular
 description: Integración del widget de AIFindr en aplicaciones Angular con TypeScript
 slug: /widget-config/integraciones/angular
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 :::info ¿Primera vez?
@@ -35,11 +35,14 @@ Añade el script en `src/index.html` antes de `</body>`:
   <script
     src="https://hub.aifindr.ai/widget.js"
     data-client-id="TU_CLIENT_ID"
+    data-var="ar"
     defer
   ></script>
 </body>
 </html>
 ```
+
+Si tu proyecto usa varias `variants`, puedes fijar una con `data-var="ar"`. Aquí `ar` es solo un ejemplo de una variante en árabe. Cuando se omite o va vacío, el widget carga la vista por defecto del proyecto. Salvo que tengas una `variant` específica configurada, no necesitas incluir este atributo.
 
 ### 2. Tipado TypeScript
 

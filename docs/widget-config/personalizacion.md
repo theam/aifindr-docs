@@ -13,7 +13,27 @@ El widget de AIFindr ofrece múltiples opciones de personalización para adaptar
 
 La personalización se realiza a través de la **configuración del proyecto** en tu dashboard de AIFindr, que se aplica automáticamente sin necesidad de código adicional.
 
-### Modos de Visualización
+## Seleccionar una `variant`
+
+Si tu proyecto tiene varias `variants` configuradas, puedes elegir cuál cargar directamente desde el script del widget:
+
+```html
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="TU_CLIENT_ID"
+  data-var="ar"
+  defer
+></script>
+```
+
+- `data-var` es opcional.
+- En el ejemplo, `data-var="ar"` representa una `variant` del widget en idioma árabe.
+- Si se omite o va vacío, el widget usa la vista por defecto del proyecto.
+- `data-var` no forma parte ni de los metadatos (`data-meta-*`) ni del contexto (`setContext()` / `mergeContext()`).
+
+Si no has configurado una `variant` específica, normalmente no necesitas añadir este atributo.
+
+## Modos de Visualización
 
 #### `displayMode: "overlay"` (Por defecto)
 Widget que ocupa toda la pantalla con overlay de fondo.
