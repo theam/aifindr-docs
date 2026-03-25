@@ -6,7 +6,7 @@ sidebar_position: 4
 ---
 
 :::info First time?
-Read the [installation guide](../instalacion) first to understand the basics.
+Read the [installation guide](../instalacion.md) first to understand the basics.
 :::
 
 # WordPress
@@ -400,6 +400,6 @@ if (WP_DEBUG) {
 
 ## Next Steps
 
-- [Visual customization](../personalizacion) to adapt theme styles
-- [Context and metadata](../contexto-metadatos) for WordPress-specific responses
-- [API Reference](../api-reference) for advanced features
+- [Visual customization](../personalizacion.md) to adapt theme styles
+- [Context and metadata](../contexto-metadatos.md) for WordPress-specific responses
+- [API Reference](../javascript-api.md) for advanced features

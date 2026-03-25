@@ -6,7 +6,7 @@ sidebar_position: 2
 ---
 
 :::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+Lee la [guía de instalación](../instalacion.md) primero para entender los conceptos básicos.
 :::
 
 # React Native
@@ -498,7 +498,7 @@ Los eventos más útiles para bridgear son:
 
 ## Próximos pasos
 
-- [Contexto y metadatos](../contexto-metadatos) para separar bien datos fijos y dinámicos
-- [Personalización visual](../personalizacion) para estilos y `variants`
-- [API Reference](../api-reference) para ampliar el uso de métodos y eventos
+- [Contexto y metadatos](../contexto-metadatos.md) para separar bien datos fijos y dinámicos
+- [Personalización visual](../personalizacion.md) para estilos y `variants`
+- [API Reference](../javascript-api.md) para ampliar el uso de métodos y eventos
 - [Ejemplo completo en GitHub](https://github.com/theam/aifindr-react-native-webview-example) si necesitas una implementación más extensa

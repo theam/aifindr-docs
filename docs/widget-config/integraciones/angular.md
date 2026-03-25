@@ -6,7 +6,7 @@ sidebar_position: 3
 ---
 
 :::info ¿Primera vez?
-Lee la [guía de instalación](../instalacion) primero para entender los conceptos básicos.
+Lee la [guía de instalación](../instalacion.md) primero para entender los conceptos básicos.
 :::
 
 # Angular
@@ -378,6 +378,6 @@ if (!environment.production) {
 
 ## Próximos pasos
 
-- [Personalización visual](../personalizacion) para estilos Angular Material
-- [API Reference](../api-reference) para métodos avanzados
-- [Contexto y metadatos](../contexto-metadatos) para personalización dinámica
+- [Personalización visual](../personalizacion.md) para estilos Angular Material
+- [API Reference](../javascript-api.md) para métodos avanzados
+- [Contexto y metadatos](../contexto-metadatos.md) para personalización dinámica

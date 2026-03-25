@@ -6,7 +6,7 @@ sidebar_position: 1
 ---
 
 :::info First time?
-Read the [installation guide](../instalacion) first to understand the basics.
+Read the [installation guide](../instalacion.md) first to understand the basics.
 :::
 
 # React & Next.js
@@ -473,6 +473,6 @@ if (process.env.NODE_ENV === 'development') {
 
 ## Next Steps
 
-- [Visual customization](../personalizacion) for styles with CSS-in-JS
-- [API Reference](../api-reference) for advanced methods
-- [Context and metadata](../contexto-metadatos) for dynamic personalization
+- [Visual customization](../personalizacion.md) for styles with CSS-in-JS
+- [API Reference](../javascript-api.md) for advanced methods
+- [Context and metadata](../contexto-metadatos.md) for dynamic personalization
