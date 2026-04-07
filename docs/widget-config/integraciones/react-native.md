@@ -28,7 +28,7 @@ No pruebes esta integración en la preview web. `react-native-webview` necesita 
 
 ## 1. Construir el HTML del widget
 
-La parte delicada está en el HTML que vive dentro del `WebView`: trigger oculto, `data-client-id`, metadatos por `data-meta-*`, `data-var` opcional, cola de contexto hasta `ready()` y bridge de eventos hacia React Native.
+La parte delicada está en el HTML que vive dentro del `WebView`: trigger oculto, `data-client-id`, metadatos por `data-meta-*`, `data-var` opcional, `data-widget-url` opcional, cola de contexto hasta `ready()` y bridge de eventos hacia React Native.
 
 ```ts
 export type AIFindrMetadata = Record<
@@ -57,6 +57,8 @@ export function buildWidgetHTML(
     initialContext?: AIFindrInitialContext;
     /** Ejemplo: "ar" para una variant en árabe. Omite este valor para usar la vista por defecto del proyecto. */
     variant?: string;
+    /** Ejemplo: "https://hub.ksa.aifindr.ai". Solo úsalo si el equipo de AIFindr te indica apuntar a otro hub. */
+    widgetUrl?: string;
   }
 ): string {
   const metadataAttributes = Object.entries(metadata ?? {})
@@ -71,6 +73,7 @@ export function buildWidgetHTML(
   const shouldHideCloseButton = options?.hideCloseButton ?? false;
   const initialContext = options?.initialContext ?? null;
   const variant = options?.variant ?? '';
+  const widgetUrl = options?.widgetUrl ?? '';
 
   const widgetBootstrapScript = `
     <script>
@@ -226,6 +229,7 @@ export function buildWidgetHTML(
           id="aifindr-loader"
           src="${WIDGET_SCRIPT}"
           data-client-id="${escapeHTMLAttribute(clientId)}"
+          ${widgetUrl ? `data-widget-url="${escapeHTMLAttribute(widgetUrl)}"` : ''}
           ${variant ? `data-var="${escapeHTMLAttribute(variant)}"` : ''}
           ${metadataAttributes}
           defer
@@ -243,6 +247,7 @@ export function buildWidgetHTML(
 - Sigue cargando el widget oficial desde `https://hub.aifindr.ai/widget.js`
 - Mantiene el trigger oculto con `id="ai-findr-trigger"` porque el widget lo necesita
 - Pasa metadatos estáticos como atributos `data-meta-*`
+- Permite pasar `data-widget-url` si el equipo te pide apuntar a otro hub
 - Encola el contexto hasta que `AIFindrWidget.ready()` dispara y entonces llama `setContext()`
 - Reenvía eventos a React Native con `window.ReactNativeWebView.postMessage(...)`
 
@@ -280,6 +285,7 @@ export interface AIFindrWebViewProps {
   metadata?: AIFindrMetadata;
   initialContext?: AIFindrInitialContext;
   variant?: string;
+  widgetUrl?: string;
   hideCloseButton?: boolean;
   onWidgetEvent?: (event: WidgetEvent) => void;
 }
@@ -296,7 +302,7 @@ const NativeWebView =
   Platform.OS === 'web' ? null : require('react-native-webview').WebView;
 
 const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
-  ({ clientId, metadata, initialContext, variant, hideCloseButton = false, onWidgetEvent }, ref) => {
+  ({ clientId, metadata, initialContext, variant, widgetUrl, hideCloseButton = false, onWidgetEvent }, ref) => {
     const webViewRef = useRef<NativeWebViewHandle | null>(null);
 
     const updateContext = useCallback((context: Record<string, unknown>) => {
@@ -341,6 +347,7 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
             hideCloseButton,
             initialContext,
             variant,
+            widgetUrl,
           }),
           baseUrl: WIDGET_BASE_URL,
         }}
@@ -367,6 +374,7 @@ export default AIFindrWebView;
 
 - `metadata`: datos fijos que terminan como `data-meta-*`
 - `initialContext`: contexto inicial que el HTML encola hasta `ready()`
+- `widgetUrl`: se traduce a `data-widget-url` si el equipo te pide apuntar a otro hub
 - `updateContext(...)`: puente desde React Native hacia `setContext()`
 - `onWidgetEvent`: eventos reenviados desde `AIFindrWidget.on(...)`
 - `hideCloseButton`: forma práctica de ocultar `.ai-findr-close-button`
@@ -472,6 +480,20 @@ Si necesitas forzar una `variant` concreta, añádela en el wrapper:
 - `variant="ar"` es solo un ejemplo de una `variant` en árabe
 - si omites `variant` o lo dejas vacío, el widget usa la vista por defecto del proyecto
 - si no has configurado una `variant` específica, normalmente no necesitas enviarla
+
+## `widgetUrl` solo si lo indica el equipo
+
+Si el equipo de AIFindr te pide apuntar el widget a otro hub, pásalo al wrapper para que termine como `data-widget-url` en el `<script>` interno del `WebView`:
+
+```tsx
+<AIFindrWebView
+  clientId="TU_CLIENT_ID"
+  widgetUrl="https://hub.ksa.aifindr.ai"
+/>
+```
+
+- `widgetUrl="https://hub.ksa.aifindr.ai"` es solo un ejemplo
+- no cambies este valor salvo que el equipo de AIFindr te lo indique
 
 ## Eventos que conviene reenviar a React Native
 

@@ -50,6 +50,21 @@ La integración más simple y directa del widget de AIFindr. Ideal para sitios e
 
 Si necesitas una `variant` concreta, añade `data-var="ar"` al script. Aquí `ar` es solo un ejemplo de una variante en árabe. Si se omite o va vacío, el widget usa la vista por defecto del proyecto. Salvo que tengas una `variant` específica configurada, no necesitas incluir este atributo.
 
+### Hub alternativo solo si lo indica el equipo
+
+Si el equipo de AIFindr te pide apuntar el widget a otro hub, puedes añadir `data-widget-url` al script:
+
+```html
+<script
+  src="https://hub.aifindr.ai/widget.js"
+  data-client-id="TU_CLIENT_ID"
+  data-widget-url="https://hub.ksa.aifindr.ai"
+  defer
+></script>
+```
+
+En este ejemplo, `data-widget-url` apunta a `https://hub.ksa.aifindr.ai`. No cambies este valor por tu cuenta: solo debe modificarse si lo indica el equipo de AIFindr.
+
 ### 2. Personalización del trigger
 
 El elemento trigger puede ser cualquier cosa que tenga `id="ai-findr-trigger"`:
