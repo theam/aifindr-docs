@@ -62,6 +62,7 @@ Replace `YOUR_CLIENT_ID` with the unique identifier provided by AIFindr. Without
   src="https://hub.aifindr.ai/widget.js"
   data-client-id="YOUR_CLIENT_ID"
   data-var="ar"
+  data-widget-url="https://hub.ksa.aifindr.ai"
   data-meta-environment="production"
   defer
 ></script>
@@ -69,9 +70,11 @@ Replace `YOUR_CLIENT_ID` with the unique identifier provided by AIFindr. Without
 
 - `data-client-id`: required. Identifies your AIFindr project.
 - `data-var`: optional. Selects a specific widget `variant`. In this example, `data-var="ar"` represents an Arabic variant. If omitted or empty, the project default view is used.
+- `data-widget-url`: optional. Points the widget to another hub. In this example it uses `https://hub.ksa.aifindr.ai`. Only change this value if the AIFindr team tells you to.
 - `data-meta-*`: optional. Adds fixed metadata for segmentation and analytics.
 
 Unless you have configured a specific `variant` and want to force it, you usually do not need to include `data-var`.
+Unless the AIFindr team tells you to use another hub, you usually do not need to include `data-widget-url`.
 
 ### Where to place the script?
 
