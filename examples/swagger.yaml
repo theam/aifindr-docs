@@ -1381,10 +1381,10 @@ paths:
   /api/private/conversations/{conversationId}:
     get:
       description: |-
-        Recupera el detalle completo de una conversación concreta para análisis e investigación. Devuelve el transcript cronológico, feedbacks asociados, eventos analíticos, tags, metadata y memoria de producto registrada durante la sesión.
+        Recupera el detalle completo de una conversación concreta para ver exactamente qué preguntó un visitante, qué respondió el asistente y si hubo feedback. Devuelve el transcript cronológico, feedbacks asociados, eventos analíticos, tags, metadata y memoria de producto registrada durante la sesión.
 
         **Cuándo usarlo:**
-        Usa este endpoint después de identificar una conversación relevante desde el listado de conversaciones. Es el último paso del flujo de análisis cuando necesitas entender el caso exacto.
+        Úsalo cuando quieras revisar un caso concreto, entender mejor cómo fue la interacción o compartir un ejemplo con tu equipo.
 
         **Headers requeridos:**
         - `Authorization: Bearer {api_key}`
@@ -1431,10 +1431,10 @@ paths:
   /api/private/projects/{projectId}/analytics:
     get:
       description: |-
-        Recupera el resumen agregado de analíticas del dashboard para un proyecto. Devuelve métricas de usuarios, conversaciones, funnel, feedback, KPIs y acciones dentro del rango solicitado.
+        Recupera la analítica general de un proyecto en un periodo concreto. Devuelve métricas de uso, conversaciones, satisfacción, funnel, KPIs y acciones para entender si el asistente está ayudando a los visitantes.
 
         **Cuándo usarlo:**
-        Este suele ser el primer endpoint del flujo de análisis. Úsalo para detectar un periodo problemático o una métrica que quieras investigar y luego baja al detalle con el listado de conversaciones.
+        Úsalo para revisar cómo está funcionando el asistente, ver tendencias en el tiempo y comprobar si un cambio de contenido o una campaña ha tenido impacto.
 
         **Headers requeridos:**
         - `Authorization: Bearer {api_key}`
@@ -1489,10 +1489,10 @@ paths:
   /api/private/projects/{projectId}/conversations:
     get:
       description: |-
-        Lista conversaciones de un proyecto con filtros por rango temporal, búsqueda, feedback, metadata o usuario. Devuelve resultados paginados con el primer mensaje del usuario, metadata, tags y evaluación más reciente.
+        Lista las conversaciones de un proyecto con filtros por rango temporal, búsqueda, feedback, metadata o usuario. Devuelve resultados paginados con el primer mensaje del usuario, metadata, tags y evaluación más reciente.
 
         **Cuándo usarlo:**
-        Este endpoint enlaza el resumen agregado con el caso concreto. Después de detectar un periodo o una anomalía en las métricas, úsalo para localizar las conversaciones relevantes y luego abrir una en detalle.
+        Úsalo para ver qué están preguntando los visitantes, revisar conversaciones de un periodo o campaña y detectar casos que merecen una revisión más de cerca.
 
         **Restricción importante:**
         - `metadata` es mutuamente excluyente con `search` y `voteType`
@@ -1770,12 +1770,12 @@ tags:
     conversación
   name: Chat
 - description: |-
-    Endpoints para registrar eventos analíticos y consultar analíticas privadas de lectura.
+    Endpoints para registrar eventos analíticos y consultar cómo está funcionando el asistente.
 
-    Flujo recomendado para investigar un caso:
-    1. Usa **Obtener analítica del proyecto** para detectar una métrica o un rango sospechoso.
-    2. Usa **Listar conversaciones del proyecto** para localizar las conversaciones relevantes dentro de ese rango.
-    3. Usa **Obtener detalle de una conversación** para inspeccionar transcript, eventos, feedback y metadata.
+    Flujo recomendado para revisar resultados:
+    1. Usa **Obtener analítica del proyecto** para ver tendencias, uso y satisfacción.
+    2. Usa **Listar conversaciones del proyecto** para entender qué están preguntando los visitantes.
+    3. Usa **Obtener detalle de una conversación** para revisar un caso concreto cuando necesites más contexto.
   name: Analytics
 - description: Endpoints para obtener los answer components de un proyecto
   name: Answer Components
