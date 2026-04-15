@@ -58,6 +58,8 @@ AI Findr supports two authentication methods:
 For machine-to-machine integrations, use API key authentication by including the `X-API-KEY` header in your requests.
 API keys can be generated through the AI Findr Hub.
 
+For the **private analytics API** documented in this section under `/api/private/...`, send the key in the `Authorization` header using the `Bearer {api_key}` format and always include `X-Organization-Id`.
+
 ### Bearer Token Authentication
 For user-context operations, use JWT bearer tokens in the `Authorization` header with format: `Bearer {token}`
 
@@ -67,6 +69,8 @@ This ensures proper data isolation and access control.
 
 ## API Structure
 The API exposes public endpoints for conversational interactions, project information, and analytics tracking.
+
+The OpenAPI explorer on this page mainly covers public and widget endpoints. If you need to **read dashboard metrics, list conversations, or inspect a conversation in detail** from your own backend or dashboard, see the [Analytics](./analytics) section.
 
 ## Rate Limits
 API requests are subject to rate limits to ensure fair usage and system stability. Limits vary by endpoint and authentication method.

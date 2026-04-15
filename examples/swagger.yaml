@@ -308,6 +308,200 @@ definitions:
           $ref: '#/definitions/admin.UserActionDataPoint'
         type: array
     type: object
+  privateapi.ConversationDetailResponse:
+    properties:
+      createdAt:
+        type: string
+      events:
+        items:
+          $ref: '#/definitions/admin.ConversationEvent'
+        type: array
+      feedbacks:
+        items:
+          $ref: '#/definitions/privateapi.ConversationFeedback'
+        type: array
+      id:
+        type: string
+      latestEvaluation:
+        type: object
+      messages:
+        items:
+          $ref: '#/definitions/privateapi.ConversationMessage'
+        type: array
+      metadata:
+        type: object
+      productMemory:
+        type: object
+      summary:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+    type: object
+  privateapi.ConversationFeedback:
+    properties:
+      comment:
+        type: string
+      id:
+        type: string
+      messageId:
+        type: string
+      selectedOptions:
+        items:
+          type: string
+        type: array
+      source:
+        type: string
+      userEmail:
+        type: string
+      userId:
+        description: Vacío para usuarios anónimos; `sub` JWT para admins
+        type: string
+      userName:
+        type: string
+      userRole:
+        type: string
+      vote:
+        type: string
+    type: object
+  privateapi.ConversationMessage:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      role:
+        type: string
+    type: object
+  privateapi.ConversationSummary:
+    properties:
+      date:
+        type: string
+      firstUserMessage:
+        type: string
+      id:
+        type: string
+      latestEvaluation:
+        type: object
+      metadata:
+        type: object
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+    type: object
+  privateapi.DashboardFeedback:
+    properties:
+      negative:
+        $ref: '#/definitions/privateapi.DashboardFeedbackMetricCount'
+      positive:
+        $ref: '#/definitions/privateapi.DashboardFeedbackMetricCount'
+      total:
+        $ref: '#/definitions/privateapi.DashboardFeedbackMetricCount'
+    type: object
+  privateapi.DashboardFeedbackMetricCount:
+    properties:
+      total:
+        type: integer
+    type: object
+  privateapi.DashboardFunnelStage:
+    properties:
+      key:
+        type: string
+      label:
+        type: string
+      previousTotal:
+        type: integer
+      total:
+        type: integer
+      variancePct:
+        type: integer
+    type: object
+  privateapi.DashboardKPIs:
+    properties:
+      charactersWritten:
+        $ref: '#/definitions/privateapi.DashboardMetricCount'
+      chatsWithLinkClicks:
+        $ref: '#/definitions/privateapi.DashboardMetricCount'
+      interactions:
+        $ref: '#/definitions/privateapi.DashboardMetricCount'
+    type: object
+  privateapi.DashboardMetricCount:
+    properties:
+      previousTotal:
+        type: integer
+      total:
+        type: integer
+      variancePct:
+        type: integer
+    type: object
+  privateapi.DashboardMetricRate:
+    properties:
+      previousValue:
+        type: number
+      value:
+        type: number
+      variancePct:
+        type: integer
+    type: object
+  privateapi.DashboardMetrics:
+    properties:
+      actions:
+        additionalProperties:
+          $ref: '#/definitions/privateapi.DashboardMetricCount'
+        type: object
+      feedback:
+        $ref: '#/definitions/privateapi.DashboardFeedback'
+      funnel:
+        items:
+          $ref: '#/definitions/privateapi.DashboardFunnelStage'
+        type: array
+      kpis:
+        $ref: '#/definitions/privateapi.DashboardKPIs'
+      summary:
+        $ref: '#/definitions/privateapi.DashboardSummary'
+    type: object
+  privateapi.DashboardMetricsResponse:
+    properties:
+      from:
+        type: string
+      interval:
+        type: string
+      metrics:
+        $ref: '#/definitions/privateapi.DashboardMetrics'
+      to:
+        type: string
+    type: object
+  privateapi.DashboardSummary:
+    properties:
+      recurrence:
+        $ref: '#/definitions/privateapi.DashboardMetricRate'
+      successRate:
+        $ref: '#/definitions/privateapi.DashboardMetricRate'
+      uniqueConversations:
+        $ref: '#/definitions/privateapi.DashboardMetricCount'
+      uniqueUsers:
+        $ref: '#/definitions/privateapi.DashboardMetricCount'
+    type: object
+  privateapi.ListConversationsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/privateapi.ConversationSummary'
+        type: array
+      pagination:
+        properties:
+          currentPage:
+            type: integer
+          perPage:
+            type: integer
+          total:
+            type: integer
+        type: object
+    type: object
   admin.OrganizationCreateRequest:
     properties:
       name:
@@ -1045,6 +1239,8 @@ info:
     Para integraciones de máquina a máquina, utiliza la autenticación por clave API incluyendo el encabezado `X-API-KEY` en tus solicitudes.
     Las claves API se pueden generar a través del AI Findr Hub.
 
+    Para la **API privada de analíticas** documentada en esta sección bajo `/api/private/...`, utiliza la clave en el encabezado `Authorization` con formato `Bearer {api_key}` y acompáñala siempre con `X-Organization-Id`.
+
     ### Autenticación con Token Bearer
     Para operaciones en contexto de usuario, utiliza tokens JWT bearer en el encabezado `Authorization` con el formato: `Bearer {token}`
 
@@ -1054,6 +1250,8 @@ info:
 
     ## Estructura de la API
     La API expone endpoints públicos para interacciones conversacionales, información de proyectos y seguimiento analítico.
+
+    La referencia OpenAPI de esta página cubre principalmente los endpoints públicos y del widget. Si necesitas **leer métricas del dashboard, listar conversaciones o revisar el detalle de una conversación** desde un backend o dashboard propio, consulta la sección [Analytics](./analytics).
 
     ## Límites de Frecuencia
     Las solicitudes a la API están sujetas a límites de frecuencia para garantizar el uso justo y la estabilidad del sistema. Los límites varían según el endpoint y el método de autenticación.
@@ -1178,6 +1376,199 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Registrar evento analítico
+      tags:
+      - Analytics
+  /api/private/conversations/{conversationId}:
+    get:
+      description: |-
+        Recupera el detalle completo de una conversación concreta para análisis e investigación. Devuelve el transcript cronológico, feedbacks asociados, eventos analíticos, tags, metadata y memoria de producto registrada durante la sesión.
+
+        **Cuándo usarlo:**
+        Usa este endpoint después de identificar una conversación relevante desde el listado de conversaciones. Es el último paso del flujo de análisis cuando necesitas entender el caso exacto.
+
+        **Headers requeridos:**
+        - `Authorization: Bearer {api_key}`
+        - `X-Organization-Id`
+      parameters:
+      - description: Identificador único de la conversación
+        in: path
+        name: conversationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Detalle completo de la conversación con mensajes, feedback y eventos
+          schema:
+            $ref: '#/definitions/privateapi.ConversationDetailResponse'
+        "400":
+          description: Solicitud incorrecta - conversationId inválido
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: No autorizado - API key inválida o ausente
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Prohibido - la API key no tiene acceso a la organización o al proyecto
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Conversación no encontrada
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Error interno del servidor
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - OrgIdAuth: []
+        PrivateApiKeyAuth: []
+      summary: Obtener detalle de una conversación
+      tags:
+      - Analytics
+  /api/private/projects/{projectId}/analytics:
+    get:
+      description: |-
+        Recupera el resumen agregado de analíticas del dashboard para un proyecto. Devuelve métricas de usuarios, conversaciones, funnel, feedback, KPIs y acciones dentro del rango solicitado.
+
+        **Cuándo usarlo:**
+        Este suele ser el primer endpoint del flujo de análisis. Úsalo para detectar un periodo problemático o una métrica que quieras investigar y luego baja al detalle con el listado de conversaciones.
+
+        **Headers requeridos:**
+        - `Authorization: Bearer {api_key}`
+        - `X-Organization-Id`
+      parameters:
+      - description: Identificador del proyecto
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Fecha inicial en formato YYYY-MM-DD o RFC3339
+        in: query
+        name: from
+        type: string
+      - description: Fecha final en formato YYYY-MM-DD o RFC3339
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Resumen agregado de analíticas del proyecto
+          schema:
+            $ref: '#/definitions/privateapi.DashboardMetricsResponse'
+        "400":
+          description: Solicitud incorrecta - rango de fechas inválido
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: No autorizado - API key inválida o ausente
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Prohibido - la API key no tiene acceso a la organización o al proyecto
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Proyecto no encontrado
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Error interno del servidor
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - OrgIdAuth: []
+        PrivateApiKeyAuth: []
+      summary: Obtener analítica del proyecto
+      tags:
+      - Analytics
+  /api/private/projects/{projectId}/conversations:
+    get:
+      description: |-
+        Lista conversaciones de un proyecto con filtros por rango temporal, búsqueda, feedback, metadata o usuario. Devuelve resultados paginados con el primer mensaje del usuario, metadata, tags y evaluación más reciente.
+
+        **Cuándo usarlo:**
+        Este endpoint enlaza el resumen agregado con el caso concreto. Después de detectar un periodo o una anomalía en las métricas, úsalo para localizar las conversaciones relevantes y luego abrir una en detalle.
+
+        **Restricción importante:**
+        - `metadata` es mutuamente excluyente con `search` y `voteType`
+
+        **Headers requeridos:**
+        - `Authorization: Bearer {api_key}`
+        - `X-Organization-Id`
+      parameters:
+      - description: Identificador del proyecto
+        in: path
+        name: projectId
+        required: true
+        type: string
+      - description: Fecha inicial del filtro en formato YYYY-MM-DD
+        in: query
+        name: startDate
+        type: string
+      - description: Fecha final del filtro en formato YYYY-MM-DD
+        in: query
+        name: endDate
+        type: string
+      - description: Número de página
+        in: query
+        name: page
+        type: integer
+      - description: Número de elementos por página
+        in: query
+        name: perPage
+        type: integer
+      - description: Búsqueda de texto dentro de los mensajes
+        in: query
+        name: search
+        type: string
+      - description: Filtro por voto de feedback (`up` o `down`)
+        in: query
+        name: voteType
+        type: string
+      - description: Búsqueda textual sobre el metadata serializado
+        in: query
+        name: metadata
+        type: string
+      - description: Filtra conversaciones asociadas a un usuario concreto
+        in: query
+        name: userId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Listado paginado de conversaciones del proyecto
+          schema:
+            $ref: '#/definitions/privateapi.ListConversationsResponse'
+        "400":
+          description: Solicitud incorrecta - filtros o paginación inválidos
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "401":
+          description: No autorizado - API key inválida o ausente
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "403":
+          description: Prohibido - la API key no tiene acceso a la organización o al proyecto
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "404":
+          description: Proyecto no encontrado
+          schema:
+            $ref: '#/definitions/apierror.Response'
+        "500":
+          description: Error interno del servidor
+          schema:
+            $ref: '#/definitions/apierror.Response'
+      security:
+      - OrgIdAuth: []
+        PrivateApiKeyAuth: []
+      summary: Listar conversaciones del proyecto
       tags:
       - Analytics
   /api/widget/projects/{projectId}/ask:
@@ -1363,6 +1754,13 @@ securityDefinitions:
     in: header
     name: X-Organization-Id
     type: apiKey
+  PrivateApiKeyAuth:
+    description: API key privada para endpoints de analíticas de lectura. Envíala
+      en el header `Authorization` con formato `Bearer {api_key}` y acompáñala siempre
+      con `X-Organization-Id`.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
 tags:
 - description: Endpoints para obtener los valores de estilo del widget para integrar
@@ -1371,7 +1769,13 @@ tags:
 - description: Endpoints de IA conversacional para hacer preguntas y crear una nueva
     conversación
   name: Chat
-- description: Endpoints de envío de eventos de conversación
+- description: |-
+    Endpoints para registrar eventos analíticos y consultar analíticas privadas de lectura.
+
+    Flujo recomendado para investigar un caso:
+    1. Usa **Obtener analítica del proyecto** para detectar una métrica o un rango sospechoso.
+    2. Usa **Listar conversaciones del proyecto** para localizar las conversaciones relevantes dentro de ese rango.
+    3. Usa **Obtener detalle de una conversación** para inspeccionar transcript, eventos, feedback y metadata.
   name: Analytics
 - description: Endpoints para obtener los answer components de un proyecto
   name: Answer Components

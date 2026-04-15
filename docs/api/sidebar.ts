@@ -61,6 +61,24 @@ const sidebar: SidebarsConfig = {
           label: "Registrar evento analítico",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "api/obtener-detalle-de-una-conversacion",
+          label: "Obtener detalle de una conversación",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "api/obtener-analitica-del-proyecto",
+          label: "Obtener analítica del proyecto",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "api/listar-conversaciones-del-proyecto",
+          label: "Listar conversaciones del proyecto",
+          className: "api-method get",
+        },
       ],
     },
     {

@@ -63,8 +63,26 @@ const sidebar: SidebarsConfig = {
       items: [
         {
           type: "doc",
+          id: "api/obtener-analitica-del-proyecto",
+          label: "Get Project Analytics",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "api/listar-conversaciones-del-proyecto",
+          label: "List Project Conversations",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "api/obtener-detalle-de-una-conversacion",
+          label: "Get Conversation Detail",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
           id: "api/registrar-evento-analitico",
-          label: "Registrar evento analítico",
+          label: "Register Analytics Event",
           className: "api-method post",
         },
       ],
