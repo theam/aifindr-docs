@@ -70,7 +70,7 @@ Esto asegura el aislamiento adecuado de los datos y el control de acceso.
 ## Estructura de la API
 La API expone endpoints públicos para interacciones conversacionales, información de proyectos y seguimiento analítico.
 
-La referencia OpenAPI de esta página cubre principalmente los endpoints públicos y del widget. Si necesitas **leer métricas del dashboard, listar conversaciones o revisar el detalle de una conversación** desde un backend o dashboard propio, consulta [Acceder a las analíticas con API privada](./private-analytics-api).
+La referencia OpenAPI de esta página cubre principalmente los endpoints públicos y del widget. Si necesitas **leer métricas del dashboard, listar conversaciones o revisar el detalle de una conversación** desde un backend o dashboard propio, consulta la sección [Analytics](./analytics).
 
 ## Límites de Frecuencia
 Las solicitudes a la API están sujetas a límites de frecuencia para garantizar el uso justo y la estabilidad del sistema. Los límites varían según el endpoint y el método de autenticación.
@@ -146,6 +146,33 @@ Aprende más sobre AI Findr en [https://aifindr.ai](https://aifindr.ai).
                 Header parameter name:
               </th><td>
                 X-Organization-Id
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem><TabItem
+      label={"API Key: PrivateApiKeyAuth"}
+      value={"PrivateApiKeyAuth"}
+    >
+      
+      
+      API key privada para endpoints de analíticas de lectura. Envíala en el header `Authorization` con formato `Bearer {api_key}` y acompáñala siempre con `X-Organization-Id`.
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                Authorization
               </td>
             </tr>
           </tbody>

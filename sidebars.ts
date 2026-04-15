@@ -1,11 +1,24 @@
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 const generatedApiSidebar = require("./docs/api/sidebar.ts").default as any[];
-const apiSidebar = generatedApiSidebar.map((item) =>
+const analyticsOrder = [
+  "api/obtener-analitica-del-proyecto",
+  "api/listar-conversaciones-del-proyecto",
+  "api/obtener-detalle-de-una-conversacion",
+  "api/registrar-evento-analitico",
+];
+const analyticsOrderIndex = new Map(
+  analyticsOrder.map((id, index) => [id, index]),
+);
+const orderedApiSidebar = generatedApiSidebar.map((item) =>
   item.type === "category" && item.link?.id === "api/analytics"
     ? {
         ...item,
-        items: ["api/private-analytics-api", ...item.items],
+        items: [...item.items].sort((a: any, b: any) => {
+          const aIndex = analyticsOrderIndex.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+          const bIndex = analyticsOrderIndex.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+          return aIndex - bIndex;
+        }),
       }
     : item,
 );
@@ -51,7 +64,7 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "API",
-          items: apiSidebar,
+          items: orderedApiSidebar,
         },
       ],
     },
