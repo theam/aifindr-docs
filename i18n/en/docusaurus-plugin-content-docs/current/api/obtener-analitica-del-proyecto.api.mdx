@@ -1,7 +1,7 @@
 ---
 id: obtener-analitica-del-proyecto
 title: "Get Project Analytics"
-description: "Retrieve the aggregated analytics dashboard summary for a project, including users, conversations, funnel, feedback, KPIs, and actions."
+description: "Retrieve the overall analytics for a project in a given period, including usage, conversations, satisfaction, funnel, KPIs, and actions."
 sidebar_label: "Get Project Analytics"
 hide_title: true
 hide_table_of_contents: true
@@ -36,10 +36,10 @@ import Heading from "@theme/Heading";
 
 
 
-Retrieve the aggregated analytics dashboard summary for a project. It returns user, conversation, funnel, feedback, KPI, and action metrics for the requested range.
+Retrieve the overall analytics for a project in a given period. It returns usage, conversation, satisfaction, funnel, KPI, and action metrics to understand whether the assistant is helping visitors.
 
 **When to use it:**
-This is usually the first endpoint in the analysis flow. Use it to detect a problematic date range or metric, then drill down with the conversations list.
+Use it to review how the assistant is performing, see trends over time, and check whether a content change or campaign had an impact.
 
 **Required headers:**
 - `Authorization: Bearer {api_key}`
