@@ -1,5 +1,15 @@
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
+const generatedApiSidebar = require("./docs/api/sidebar.ts").default as any[];
+const apiSidebar = generatedApiSidebar.map((item) =>
+  item.type === "category" && item.link?.id === "api/analytics"
+    ? {
+        ...item,
+        items: ["api/private-analytics-api", ...item.items],
+      }
+    : item,
+);
+
 const sidebars: SidebarsConfig = {
   docsSidebar: [
     "intro",
@@ -41,7 +51,7 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "API",
-          items: require("./docs/api/sidebar.ts").default,
+          items: apiSidebar,
         },
       ],
     },
