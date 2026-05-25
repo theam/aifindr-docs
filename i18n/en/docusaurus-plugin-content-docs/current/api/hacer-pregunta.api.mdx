@@ -53,6 +53,8 @@ Sends a question to AI Findr within a project conversation. This endpoint suppor
 When streaming is enabled, you'll receive these event types:
 - `knowledge-retrieved`: Knowledge sources found and retrieved from your content
 - `answer-delta`: Real-time chunks of the AI's response as it's being generated
+- `system:search-workflow-tool-needed`: Agent workflow event emitted when the AI is about to use a tool. To show the visible reason (`reason`) for that step, read `data.reason`
+- `search-workflow-usage-generated`: Usage metadata, including `reasoningTokens` and `reasoningEffort` when applicable
 - `answer-full`: Complete final response with the response message ID
 - `error`: Error information if any issues occur during processing
 
@@ -89,6 +91,3 @@ When streaming is enabled, you'll receive these event types:
 >
   
 </StatusCodes>
-
-
-      

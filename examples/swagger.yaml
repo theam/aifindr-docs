@@ -1593,6 +1593,8 @@ paths:
         Cuando el streaming está habilitado, recibirás estos tipos de eventos:
         - `knowledge-retrieved`: Fuentes de conocimiento encontradas y recuperadas de tu contenido
         - `answer-delta`: Fragmentos en tiempo real de la respuesta de la IA a medida que se genera
+        - `system:search-workflow-tool-needed`: Evento del flujo de agente cuando la IA va a usar una herramienta. Para mostrar la razón visible (`reason`) de ese paso, lee `data.reason`
+        - `search-workflow-usage-generated`: Metadatos de uso, incluyendo `reasoningTokens` y `reasoningEffort` cuando aplican
         - `answer-full`: Respuesta final completa con el ID del mensaje de respuesta
         - `error`: Información de error si ocurre algún problema durante el procesamiento
 
