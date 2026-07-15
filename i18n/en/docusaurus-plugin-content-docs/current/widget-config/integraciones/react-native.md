@@ -55,6 +55,8 @@ export function buildWidgetHTML(
   options?: {
     hideCloseButton?: boolean;
     initialContext?: AIFindrInitialContext;
+    /** Enable only when the app has a real navigation.request handler. */
+    nativeNavigationEnabled?: boolean;
     /** Example: "ar" for an Arabic variant. Omit this value to use the project default view. */
     variant?: string;
     /** Example: "https://hub.ksa.aifindr.ai". Only use this if the AIFindr team tells you to point to another hub. */
@@ -72,6 +74,7 @@ export function buildWidgetHTML(
 
   const shouldHideCloseButton = options?.hideCloseButton ?? false;
   const initialContext = options?.initialContext ?? null;
+  const nativeNavigationEnabled = options?.nativeNavigationEnabled ?? false;
   const variant = options?.variant ?? '';
   const widgetUrl = options?.widgetUrl ?? '';
 
@@ -79,6 +82,7 @@ export function buildWidgetHTML(
     <script>
       (function () {
         var initialContext = ${JSON.stringify(initialContext)};
+        var nativeNavigationEnabled = ${JSON.stringify(nativeNavigationEnabled)};
         var pendingContext = typeof window.__AIFindrPendingContext === 'undefined'
           ? initialContext
           : window.__AIFindrPendingContext;
@@ -104,6 +108,18 @@ export function buildWidgetHTML(
             : { type: type, payload: payload };
 
           window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        }
+
+        function postNavigationRequestToReactNative(request) {
+          if (
+            !nativeNavigationEnabled ||
+            !window.ReactNativeWebView ||
+            typeof window.ReactNativeWebView.postMessage !== 'function'
+          ) {
+            return;
+          }
+
+          window.ReactNativeWebView.postMessage(JSON.stringify(request));
         }
 
         var contextBridge = {
@@ -147,6 +163,17 @@ export function buildWidgetHTML(
                 postEventToReactNative(eventName, payload);
               });
             });
+
+            if (
+              nativeNavigationEnabled &&
+              window.ReactNativeWebView &&
+              typeof window.ReactNativeWebView.postMessage === 'function'
+            ) {
+              window.AIFindrWidget.on(
+                'navigation.request',
+                postNavigationRequestToReactNative
+              );
+            }
           }
         };
 
@@ -250,6 +277,7 @@ export function buildWidgetHTML(
 - Lets you pass `data-widget-url` if the team asks you to point to another hub
 - Queues context until `AIFindrWidget.ready()` fires and then calls `setContext()`
 - Sends widget events back to React Native with `window.ReactNativeWebView.postMessage(...)`
+- If a native router exists, registers `navigation.request` before opening the widget and forwards its envelope unchanged
 
 ## 2. Wrap the `WebView` in React Native
 
@@ -275,10 +303,29 @@ export type WidgetEventType =
   | 'message.sent'
   | 'message.received';
 
+export type NavigationParamValue = string | number | boolean | null;
+export type NavigationParams = Record<string, NavigationParamValue>;
+
+export type NavigationRequest = {
+  source: 'aifindr';
+  version: 1;
+  type: 'navigation.request';
+  requestId: string;
+  payload: {
+    destination: string;
+    params: NavigationParams;
+  };
+};
+
+export type NavigationHandlingResult = {
+  type: 'navigation.opened' | 'navigation.failed';
+  payload?: Record<string, unknown>;
+};
+
 export type WidgetEvent = {
   type: WidgetEventType;
   payload?: unknown;
-};
+} | NavigationRequest;
 
 export interface AIFindrWebViewProps {
   clientId: string;
@@ -288,10 +335,18 @@ export interface AIFindrWebViewProps {
   widgetUrl?: string;
   hideCloseButton?: boolean;
   onWidgetEvent?: (event: WidgetEvent) => void;
+  onNavigationRequest?: (
+    request: NavigationRequest
+  ) => NavigationHandlingResult | Promise<NavigationHandlingResult>;
 }
 
 export interface AIFindrWebViewRef {
   updateContext: (context: Record<string, unknown>) => void;
+  sendNavigationAcknowledgement: (
+    type: 'navigation.opened' | 'navigation.closed' | 'navigation.failed',
+    requestId: string,
+    payload?: Record<string, unknown>
+  ) => void;
 }
 
 type NativeWebViewHandle = {
@@ -301,8 +356,43 @@ type NativeWebViewHandle = {
 const NativeWebView =
   Platform.OS === 'web' ? null : require('react-native-webview').WebView;
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isNavigationRequest(value: unknown): value is NavigationRequest {
+  if (!isRecord(value) || !isRecord(value.payload) || !isRecord(value.payload.params)) {
+    return false;
+  }
+
+  const params = value.payload.params;
+  return (
+    value.source === 'aifindr' &&
+    value.version === 1 &&
+    value.type === 'navigation.request' &&
+    typeof value.requestId === 'string' &&
+    value.requestId.length > 0 &&
+    value.requestId.length <= 128 &&
+    typeof value.payload.destination === 'string' &&
+    value.payload.destination.length <= 128 &&
+    /^[a-z][A-Za-z0-9_-]*(?:\.[a-z][A-Za-z0-9_-]*)+$/.test(
+      value.payload.destination
+    ) &&
+    Object.keys(params).length <= 20 &&
+    Object.entries(params).every(([key, param]) =>
+      /^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(key) &&
+      (
+        param === null ||
+        typeof param === 'string' ||
+        (typeof param === 'number' && Number.isFinite(param)) ||
+        typeof param === 'boolean'
+      )
+    )
+  );
+}
+
 const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
-  ({ clientId, metadata, initialContext, variant, widgetUrl, hideCloseButton = false, onWidgetEvent }, ref) => {
+  ({ clientId, metadata, initialContext, variant, widgetUrl, hideCloseButton = false, onWidgetEvent, onNavigationRequest }, ref) => {
     const webViewRef = useRef<NativeWebViewHandle | null>(null);
 
     const updateContext = useCallback((context: Record<string, unknown>) => {
@@ -324,7 +414,65 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
       webViewRef.current?.injectJavaScript(script);
     }, []);
 
-    React.useImperativeHandle(ref, () => ({ updateContext }), [updateContext]);
+    const sendNavigationAcknowledgement = useCallback((
+      type: 'navigation.opened' | 'navigation.closed' | 'navigation.failed',
+      requestId: string,
+      payload?: Record<string, unknown>
+    ) => {
+      const acknowledgement = {
+        source: 'your-app',
+        version: 1,
+        type,
+        requestId,
+        payload,
+      };
+
+      webViewRef.current?.injectJavaScript(`
+        window.AIFindrWidget.dispatch(
+          ${JSON.stringify(type)},
+          ${JSON.stringify(acknowledgement)}
+        );
+        true;
+      `);
+    }, []);
+
+    const handleMessage = useCallback((event: { nativeEvent: { data: string } }) => {
+      try {
+        const message: unknown = JSON.parse(event.nativeEvent.data);
+
+        if (isRecord(message) && message.type === 'navigation.request') {
+          if (!isNavigationRequest(message) || !onNavigationRequest) return;
+
+          onWidgetEvent?.(message);
+          void Promise.resolve(onNavigationRequest(message))
+            .then((result) => {
+              sendNavigationAcknowledgement(
+                result.type,
+                message.requestId,
+                result.payload
+              );
+            })
+            .catch(() => {
+              sendNavigationAcknowledgement(
+                'navigation.failed',
+                message.requestId,
+                { reason: 'handler_error' }
+              );
+            });
+          return;
+        }
+
+        if (isRecord(message) && typeof message.type === 'string') {
+          onWidgetEvent?.(message as WidgetEvent);
+        }
+      } catch {}
+    }, [onNavigationRequest, onWidgetEvent, sendNavigationAcknowledgement]);
+
+    React.useImperativeHandle(
+      ref,
+      () => ({ updateContext, sendNavigationAcknowledgement }),
+      [sendNavigationAcknowledgement, updateContext]
+    );
 
     if (!NativeWebView) {
       return (
@@ -346,6 +494,7 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
           html: buildWidgetHTML(clientId, metadata, {
             hideCloseButton,
             initialContext,
+            nativeNavigationEnabled: Boolean(onNavigationRequest),
             variant,
             widgetUrl,
           }),
@@ -354,11 +503,7 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
         originWhitelist={['*']}
         javaScriptEnabled
         domStorageEnabled
-        onMessage={(event: { nativeEvent: { data: string } }) => {
-          try {
-            onWidgetEvent?.(JSON.parse(event.nativeEvent.data));
-          } catch {}
-        }}
+        onMessage={handleMessage}
         style={{ flex: 1 }}
       />
     );
@@ -377,9 +522,177 @@ export default AIFindrWebView;
 - `widgetUrl`: becomes `data-widget-url` if the team asks you to point to another hub
 - `updateContext(...)`: bridge from React Native into `setContext()`
 - `onWidgetEvent`: events forwarded from `AIFindrWidget.on(...)`
+- `onNavigationRequest`: native router. Passing it registers the capability; omitting it preserves web/query fallbacks
+- `sendNavigationAcknowledgement(...)`: optional acknowledgement for observability
 - `hideCloseButton`: a practical way to hide `.ai-findr-close-button`
 
-## 3. Practical case: a screen that opens the widget
+## 3. Native navigation from cards
+
+The integration has three distinct responsibilities:
+
+1. The agent generates an `MC` card with `nav` and `params`. It does not construct a `postMessage`.
+2. `widget.js` validates those attributes and creates the envelope with a unique `requestId`.
+3. The host app registers the listener, receives the envelope, validates the destination, and opens its native screen.
+
+A card can declare a native destination while preserving a browser fallback:
+
+```html
+<MC
+  t="Kudu Restaurant"
+  img="..."
+  nav="store.detail"
+  params='{"storeId":252648}'
+  url="https://..."
+/>
+```
+
+Omit `params` for parameterless actions. The widget will send `{}`:
+
+```html
+<MC t="View all offers" nav="offers.tab" />
+```
+
+`nav` must be a dot-separated destination such as `store.detail`. `params` must be flat JSON with at most 20 keys and `string`, `number`, `boolean`, or `null` values. If the attribute exceeds 2048 characters or is invalid, navigation is ignored and the card keeps its `q`/`url` behavior.
+
+Inside a string value, use entities for characters that could interfere with the markup. The host receives the decoded text:
+
+```html
+<MC t="Fashion" nav="search.results" params='{"query":"women&#39;s shoes &amp; bags"}' />
+```
+
+### Complete flow
+
+1. The wrapper registers `navigation.request` during `AIFindrWidget.ready()` and before calling `open()`.
+2. `widget.js` synchronizes the capability with the iframe, including after an internal reload.
+3. When a valid card is pressed, the iframe sends `navigation.request` to the web host.
+4. The host forwards the same envelope through `window.ReactNativeWebView.postMessage(...)`.
+5. `onMessage` validates the envelope, applies the destination allowlist, and validates the route parameters.
+6. The app opens the native screen immediately. It never waits for an acknowledgement.
+7. The app may return `navigation.opened`, `navigation.closed`, or `navigation.failed` for observability.
+
+Enable the capability only when the wrapper has a real router:
+
+```tsx
+html: buildWidgetHTML(clientId, metadata, {
+  hideCloseButton,
+  initialContext,
+  nativeNavigationEnabled: Boolean(onNavigationRequest),
+  variant,
+  widgetUrl,
+})
+```
+
+The listener receives this exact envelope, generated by the widget:
+
+```json
+{
+  "source": "aifindr",
+  "version": 1,
+  "type": "navigation.request",
+  "requestId": "nav_550e8400-e29b-41d4-a716-446655440000",
+  "payload": {
+    "destination": "store.detail",
+    "params": { "storeId": 252648 }
+  }
+}
+```
+
+### Precedence and fallback
+
+| State | Click result |
+|---|---|
+| Valid `nav` and registered listener | Sends `navigation.request`; does not run `q` or `url` |
+| No listener and a `q` or `url` exists | Runs the existing fallback, with `q` before `url` |
+| No listener and no fallback | The card stays inactive |
+| Invalid `nav` or `params` | Ignores navigation and preserves `q`/`url` |
+| Listener registered but destination unsupported by the app | The app returns `navigation.failed`; no fallback runs after the click |
+
+The listener advertises support for `navigation.request`, not for individual destinations. The host allowlist and the destinations permitted by the prompt must therefore evolve together.
+
+### Cenomi example contract
+
+Destinations are not reserved by AIFindr: they are a contract between the prompt and the host app. The React Native example implements this contract:
+
+| Destination | Parameters | ID the agent must copy |
+|---|---|---|
+| `store.detail` | `{ "storeId": number }` | `brand_id` |
+| `offer.detail` | `{ "offerId": number }` | `engagement_id` with type `offers` |
+| `event.detail` | `{ "eventId": number }` | `engagement_id` with type `events` |
+| `movie.detail` | `{ "movieId": number }` | `muvilist[].id`, exposed as `filmId` by the current Product Search |
+| `service.detail` | `{ "serviceId": number }` | `service.id` |
+| `offers.tab` | `{}` | Not applicable |
+| `events.list` | `{}` | Not applicable |
+| `loyalty.mallOffers` | `{}` | Not applicable |
+
+Detail IDs must be positive integers copied literally from source data, never inferred from names. Parameterless destinations reject unexpected keys. Indoor map is outside this contract and should continue using the existing `Map` component.
+
+Validate the envelope and explicitly allow each destination before navigating:
+
+```tsx
+const DETAIL_PARAM_BY_DESTINATION = {
+  'store.detail': 'storeId',
+  'offer.detail': 'offerId',
+  'event.detail': 'eventId',
+  'movie.detail': 'movieId',
+  'service.detail': 'serviceId',
+} as const;
+
+const PARAMETERLESS_DESTINATIONS = new Set([
+  'offers.tab',
+  'events.list',
+  'loyalty.mallOffers',
+]);
+
+function handleNavigationRequest(request: NavigationRequest) {
+  const { destination, params } = request.payload;
+  const paramName = DETAIL_PARAM_BY_DESTINATION[
+    destination as keyof typeof DETAIL_PARAM_BY_DESTINATION
+  ];
+
+  if (paramName) {
+    const id = params[paramName];
+    if (
+      Object.keys(params).length !== 1 ||
+      typeof id !== 'number' ||
+      !Number.isSafeInteger(id) ||
+      id <= 0
+    ) {
+      return {
+        type: 'navigation.failed' as const,
+        payload: { destination, reason: 'invalid_navigation_params' },
+      };
+    }
+  } else if (
+    !PARAMETERLESS_DESTINATIONS.has(destination) ||
+    Object.keys(params).length !== 0
+  ) {
+    return {
+      type: 'navigation.failed' as const,
+      payload: { destination, reason: 'unsupported_or_invalid_destination' },
+    };
+  }
+
+  openNativeScreen(destination, params);
+  return {
+    type: 'navigation.opened' as const,
+    payload: { destination, params },
+  };
+}
+```
+
+The wrapper above forwards the request without wrapping it again and sends the handler result back to the iframe. When the user closes the native screen, the app can correlate that action with the same `requestId`:
+
+```tsx
+webViewRef.current?.sendNavigationAcknowledgement(
+  'navigation.closed',
+  requestId,
+  { destination, reason: 'user_back' }
+);
+```
+
+Acknowledgements are optional and exist only for observability. They do not control fallback and must never include credentials, tokens, or unrelated routing parameters.
+
+## 4. Practical case: a screen that opens the widget
 
 If your app uses tabs, stacks, or internal navigation, one useful pattern is to keep the `WebView` mounted and only hide it visually when inactive. That avoids reloads and helps prevent iOS from killing the `WKWebView` process.
 

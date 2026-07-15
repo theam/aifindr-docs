@@ -254,25 +254,82 @@ AIFindrWidget.on(EVENTS.MESSAGE_SENT, (message) => {
 AIFindrWidget.on(EVENTS.MESSAGE_RECV, (message) => {
   console.log('Message received:', message);
 });
+
+// Native navigation requests
+AIFindrWidget.on(EVENTS.NAVIGATION_REQUEST, handleNavigationRequest);
 ```
 
 ### Event List
 
-| Event | Description | Data |
-|--------|-------------|-------|
-| `widget.ready` | Widget initialized and ready | `undefined` |
-| `widget.opened` | Widget opened successfully | `undefined` |
-| `widget.closed` | Widget closed | `undefined` |
-| `widget.error` | Error in widget | `Error object` |
-| `conversation.started` | New conversation started | `{ conversationId, timestamp }` |
-| `message.sent` | User sent a message | `{ message, timestamp }` |
-| `message.received` | AI responded with a message | `{ message, timestamp }` |
+| Event | Direction | Description | Data |
+|--------|-----------|-------------|------|
+| `widget.ready` | iframe → host | Widget initialized and ready | `undefined` |
+| `widget.opened` | iframe → host | Widget opened successfully | `undefined` |
+| `widget.closed` | iframe → host | Widget closed | `undefined` |
+| `widget.error` | iframe → host | Error in widget | `Error object` |
+| `conversation.started` | iframe → host | New conversation started | `{ conversationId, timestamp }` |
+| `message.sent` | iframe → host | User sent a message | `{ message, timestamp }` |
+| `message.received` | iframe → host | AI responded with a message | `{ message, timestamp }` |
+| `navigation.request` | iframe → host | A card requests host navigation | `NavigationRequest` |
+| `navigation.opened` | host → iframe | The host confirms it opened the destination | `NavigationAcknowledgement` |
+| `navigation.closed` | host → iframe | The host confirms it closed the destination | `NavigationAcknowledgement` |
+| `navigation.failed` | host → iframe | The host reports that it could not open the destination | `NavigationAcknowledgement` |
+
+### Native navigation
+
+The agent declares the intent in an `MC` card. It must not construct the envelope or `requestId`:
+
+```html
+<MC
+  t="Kudu Restaurant"
+  nav="store.detail"
+  params='{"storeId":252648}'
+  url="https://..."
+/>
+```
+
+`widget.js` validates the attributes, creates the request, and delivers it to the listener. Registering `navigation.request` marks that capability as available inside the iframe. Register it before opening the widget and only when a real router exists for every destination the prompt may emit.
+
+```js
+AIFindrWidget.on('navigation.request', (request) => {
+  if (
+    request.source !== 'aifindr' ||
+    request.version !== 1 ||
+    request.type !== 'navigation.request'
+  ) {
+    return;
+  }
+
+  nativeRouter.open(request.payload.destination, request.payload.params);
+});
+```
+
+The callback receives the complete envelope:
+
+```json
+{
+  "source": "aifindr",
+  "version": 1,
+  "type": "navigation.request",
+  "requestId": "nav_...",
+  "payload": {
+    "destination": "store.detail",
+    "params": { "storeId": 252648 }
+  }
+}
+```
+
+`params` is always a flat object with at most 20 keys and `string`, `number`, `boolean`, or `null` values. When omitted from `MC`, it arrives as `{}`. The attribute is limited to 2048 characters. Strings containing markup delimiters must use entities, for example `women&#39;s shoes &amp; bags`; the request contains the decoded text.
+
+The host must validate the envelope, explicitly allow destinations, and validate each screen's exact parameters. A registered listener owns the click: if the app does not support the destination, it should send `navigation.failed`, but the widget will not run `q` or `url` afterwards. Without a listener, the existing fallback is preserved; a native-only card remains inactive.
+
+Direction matters: `navigation.request` travels from the iframe to the host; `navigation.opened`, `navigation.closed`, and `navigation.failed` travel from the host to the iframe through `dispatch`. See the [React Native integration](./integraciones/react-native.md#3-native-navigation-from-cards) for the complete bridge, validation, and routing flow.
 
 ## Advanced Methods
 
 ### `AIFindrWidget.dispatch(event, payload)`
 
-Sends a custom event to the widget iframe.
+Sends a supported event to the widget iframe.
 
 **Parameters:**
 - `event` (string): Event name
@@ -283,12 +340,18 @@ Sends a custom event to the widget iframe.
 - Automatically queues if widget is not ready
 
 ```js
-// Send custom event
-AIFindrWidget.dispatch('custom.event', {
-  action: 'highlight_feature',
-  featureId: 'new-dashboard'
-});
+const acknowledgement = {
+  source: 'your-app',
+  version: 1,
+  type: 'navigation.opened',
+  requestId: request.requestId,
+  payload: { destination: request.payload.destination }
+};
+
+AIFindrWidget.dispatch(acknowledgement.type, acknowledgement);
 ```
+
+The `navigation.opened`, `navigation.closed`, and `navigation.failed` acknowledgements are optional and exist only for observability. Cards never wait for them before navigating or using a fallback.
 
 ### `AIFindrWidget.getState()`
 
@@ -382,6 +445,10 @@ declare global {
         CONV_STARTED: 'conversation.started';
         MESSAGE_SENT: 'message.sent';
         MESSAGE_RECV: 'message.received';
+        NAVIGATION_REQUEST: 'navigation.request';
+        NAVIGATION_OPENED: 'navigation.opened';
+        NAVIGATION_CLOSED: 'navigation.closed';
+        NAVIGATION_FAILED: 'navigation.failed';
       };
 
       // Widget control
@@ -429,6 +496,24 @@ interface WidgetEventData {
   'conversation.started': { conversationId: string; timestamp: string };
   'message.sent': { message: string; timestamp: string };
   'message.received': { message: string; timestamp: string };
+  'navigation.request': {
+    source: 'aifindr';
+    version: 1;
+    type: 'navigation.request';
+    requestId: string;
+    payload: {
+      destination: string;
+      params: Record<string, string | number | boolean | null>;
+    };
+  };
+}
+
+interface NavigationAcknowledgement {
+  source: string;
+  version: 1;
+  type: 'navigation.opened' | 'navigation.closed' | 'navigation.failed';
+  requestId: string;
+  payload?: Record<string, unknown>;
 }
 
 // Helper for typed listeners
