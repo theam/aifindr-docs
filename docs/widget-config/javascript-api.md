@@ -277,32 +277,16 @@ AIFindrWidget.on(EVENTS.NAVIGATION_REQUEST, handleNavigationRequest);
 
 ### Navegación nativa
 
-El agente declara la intención en una tarjeta `MC`; no debe construir el envelope ni el `requestId`:
-
-```html
-<MC
-  t="Kudu Restaurant"
-  nav="store.detail"
-  params='{"storeId":252648}'
-  url="https://..."
-/>
-```
-
-`widget.js` valida los atributos, crea el request y lo entrega al listener. Registrar `navigation.request` marca la capacidad como disponible en el iframe. Hazlo antes de abrir el widget y solo si existe un router real para los destinos que el prompt puede emitir.
+Registra `navigation.request` antes de abrir el widget. Este listener funciona como un handshake de capacidad: informa al widget de que el host puede recibir solicitudes y abrir pantallas nativas. Regístralo solo cuando exista un router real para todos los destinos habilitados en el proyecto.
 
 ```js
 AIFindrWidget.on('navigation.request', (request) => {
-  if (
-    request.source !== 'aifindr' ||
-    request.version !== 1 ||
-    request.type !== 'navigation.request'
-  ) {
-    return;
-  }
-
-  nativeRouter.open(request.payload.destination, request.payload.params);
+  if (!isValidNavigationRequest(request)) return;
+  handleNavigationRequest(request);
 });
 ```
+
+`isValidNavigationRequest` debe verificar el envelope completo. `handleNavigationRequest` debe aplicar una allowlist de destinos, validar los parámetros exactos de cada pantalla y abrir la ruta nativa correspondiente. La [integración React Native](./integraciones/react-native.md#3-navegación-nativa-desde-tarjetas) incluye una implementación completa.
 
 El callback recibe el envelope completo:
 
@@ -319,11 +303,11 @@ El callback recibe el envelope completo:
 }
 ```
 
-`params` siempre es un objeto plano de hasta 20 claves con valores `string`, `number`, `boolean` o `null`. Si se omite en `MC`, llega como `{}`. El atributo tiene un máximo de 2048 caracteres. Los strings con delimitadores de markup deben usar entidades, por ejemplo `women&#39;s shoes &amp; bags`; el request contiene el texto ya decodificado.
+`params` siempre es un objeto plano de hasta 20 claves con valores `string`, `number`, `boolean` o `null`. Las operaciones sin parámetros llegan como `{}`.
 
-El host debe validar el envelope, permitir destinos explícitamente y validar los parámetros exactos de cada pantalla. Un listener registrado toma posesión del click: si la app no soporta el destino debe enviar `navigation.failed`, pero el widget no ejecutará `q` o `url` después. Sin listener, se conserva el fallback existente; una tarjeta nativa sin fallback queda inactiva.
+El host debe validar el envelope, permitir destinos explícitamente y validar los parámetros exactos de cada pantalla. Un listener registrado toma posesión de la interacción: si la app no soporta el destino debe enviar `navigation.failed`, pero el widget no ejecutará el comportamiento anterior después. Sin listener, las tarjetas conservan su comportamiento actual.
 
-La dirección es importante: `navigation.request` viaja del iframe al host; `navigation.opened`, `navigation.closed` y `navigation.failed` viajan del host al iframe mediante `dispatch`. Consulta la [integración React Native](./integraciones/react-native.md#3-navegación-nativa-desde-tarjetas) para ver el bridge completo, validación y routing.
+La dirección es importante: `navigation.request` viaja del iframe al host; `navigation.opened`, `navigation.closed` y `navigation.failed` viajan del host al iframe mediante `dispatch`.
 
 ## Métodos Avanzados
 

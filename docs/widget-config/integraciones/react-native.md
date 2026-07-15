@@ -522,43 +522,13 @@ export default AIFindrWebView;
 - `widgetUrl`: se traduce a `data-widget-url` si el equipo te pide apuntar a otro hub
 - `updateContext(...)`: puente desde React Native hacia `setContext()`
 - `onWidgetEvent`: eventos reenviados desde `AIFindrWidget.on(...)`
-- `onNavigationRequest`: router nativo. Incluirlo registra la capacidad; omitirlo conserva los fallbacks web/query
+- `onNavigationRequest`: router nativo. Incluirlo registra la capacidad; omitirlo conserva el comportamiento actual de las tarjetas
 - `sendNavigationAcknowledgement(...)`: confirmación opcional para observabilidad
 - `hideCloseButton`: forma práctica de ocultar `.ai-findr-close-button`
 
 ## 3. Navegación nativa desde tarjetas
 
-La integración tiene tres responsabilidades distintas:
-
-1. El agente genera una tarjeta `MC` con `nav` y `params`. No construye ningún `postMessage`.
-2. `widget.js` valida esos atributos y crea el envelope con un `requestId` único.
-3. La app host registra el listener, recibe el envelope, valida el destino y abre su pantalla nativa.
-
-Una tarjeta puede declarar un destino nativo y conservar un fallback web:
-
-```html
-<MC
-  t="Kudu Restaurant"
-  img="..."
-  nav="store.detail"
-  params='{"storeId":252648}'
-  url="https://..."
-/>
-```
-
-Para acciones sin parámetros, omite `params`. El widget enviará `{}`:
-
-```html
-<MC t="Ver todas las ofertas" nav="offers.tab" />
-```
-
-`nav` debe ser un destino separado por puntos, como `store.detail`. `params` debe ser JSON plano, con un máximo de 20 claves y valores `string`, `number`, `boolean` o `null`. Si el atributo supera 2048 caracteres o no es válido, la navegación se ignora y la tarjeta conserva su comportamiento `q`/`url`.
-
-Dentro de un valor string usa entidades para los caracteres que pueden interferir con el markup. El host recibe el texto ya decodificado:
-
-```html
-<MC t="Moda" nav="search.results" params='{"query":"women&#39;s shoes &amp; bags"}' />
-```
+Para habilitar la navegación nativa, la app registra un listener de `navigation.request` antes de abrir el widget. Este registro funciona como un handshake de capacidad: informa al widget de que la app puede recibir solicitudes y abrir pantallas nativas. Si la app no registra el listener, las tarjetas conservan su comportamiento actual.
 
 ### Flujo completo
 
@@ -601,30 +571,28 @@ El listener recibe este envelope exacto, generado por el widget:
 
 | Estado | Resultado del click |
 |---|---|
-| `nav` válido y listener registrado | Envía `navigation.request`; no ejecuta `q` ni `url` |
-| Sin listener y con `q` o `url` | Ejecuta el fallback existente, con `q` antes que `url` |
-| Sin listener y sin fallback | La tarjeta queda inactiva |
-| `nav` o `params` inválido | Ignora la navegación y conserva `q`/`url` |
-| Listener registrado pero destino no soportado por la app | La app devuelve `navigation.failed`; no se ejecuta fallback después del click |
+| Listener registrado y navegación disponible | Envía `navigation.request` y la app controla la interacción |
+| Sin listener | La tarjeta conserva su comportamiento actual |
+| Listener registrado pero destino no soportado por la app | La app devuelve `navigation.failed`; no se ejecuta el comportamiento anterior después del click |
 
-El listener anuncia capacidad para `navigation.request`, no para cada destino individual. Por eso la allowlist del host y los destinos permitidos en el prompt deben evolucionar juntos.
+El listener anuncia capacidad para `navigation.request`, no para cada destino individual. Por eso la allowlist del host debe cubrir todos los destinos habilitados para el proyecto.
 
-### Contrato del ejemplo Cenomi
+### Contrato de postMessage de Cenomi
 
-Los destinos no están reservados por AIFindr: son un contrato entre el prompt y la app host. El ejemplo de React Native implementa este contrato:
+El ejemplo de React Native implementa los siguientes destinos y validaciones:
 
-| Destino | Parámetros | ID que debe copiar el agente |
+| Destino | Parámetros | Validación de la app |
 |---|---|---|
-| `store.detail` | `{ "storeId": number }` | `brand_id` |
-| `offer.detail` | `{ "offerId": number }` | `engagement_id` de tipo `offers` |
-| `event.detail` | `{ "eventId": number }` | `engagement_id` de tipo `events` |
-| `movie.detail` | `{ "movieId": number }` | `muvilist[].id`, expuesto como `filmId` por el Product Search actual |
-| `service.detail` | `{ "serviceId": number }` | `service.id` |
-| `offers.tab` | `{}` | No aplica |
-| `events.list` | `{}` | No aplica |
-| `loyalty.mallOffers` | `{}` | No aplica |
+| `store.detail` | `{ "storeId": number }` | `storeId` es un entero positivo |
+| `offer.detail` | `{ "offerId": number }` | `offerId` es un entero positivo |
+| `event.detail` | `{ "eventId": number }` | `eventId` es un entero positivo |
+| `movie.detail` | `{ "movieId": number }` | `movieId` es un entero positivo |
+| `service.detail` | `{ "serviceId": number }` | `serviceId` es un entero positivo |
+| `offers.tab` | `{}` | No acepta parámetros |
+| `events.list` | `{}` | No acepta parámetros |
+| `loyalty.mallOffers` | `{}` | No acepta parámetros |
 
-Los IDs de detalle deben ser enteros positivos copiados literalmente de la fuente, nunca inferidos desde nombres. Los destinos sin parámetros rechazan claves inesperadas. El mapa indoor no forma parte de este contrato y debe seguir usando el componente `Map` existente.
+El mapa indoor no forma parte de este contrato y debe seguir usando el componente `Map` existente.
 
 Valida el envelope y permite explícitamente cada destino antes de navegar:
 
