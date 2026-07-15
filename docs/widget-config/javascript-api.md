@@ -254,25 +254,66 @@ AIFindrWidget.on(EVENTS.MESSAGE_SENT, (message) => {
 AIFindrWidget.on(EVENTS.MESSAGE_RECV, (message) => {
   console.log('Mensaje recibido:', message);
 });
+
+// Requests de navegación nativa
+AIFindrWidget.on(EVENTS.NAVIGATION_REQUEST, handleNavigationRequest);
 ```
 
 ### Lista de Eventos
 
-| Evento | Descripción | Datos |
-|--------|-------------|-------|
-| `widget.ready` | Widget inicializado y listo | `undefined` |
-| `widget.opened` | Widget abierto exitosamente | `undefined` |
-| `widget.closed` | Widget cerrado | `undefined` |
-| `widget.error` | Error en el widget | `Error object` |
-| `conversation.started` | Nueva conversación iniciada | `{ conversationId, timestamp }` |
-| `message.sent` | Usuario envió un mensaje | `{ message, timestamp }` |
-| `message.received` | IA respondió con un mensaje | `{ message, timestamp }` |
+| Evento | Dirección | Descripción | Datos |
+|--------|-----------|-------------|-------|
+| `widget.ready` | iframe → host | Widget inicializado y listo | `undefined` |
+| `widget.opened` | iframe → host | Widget abierto exitosamente | `undefined` |
+| `widget.closed` | iframe → host | Widget cerrado | `undefined` |
+| `widget.error` | iframe → host | Error en el widget | `Error object` |
+| `conversation.started` | iframe → host | Nueva conversación iniciada | `{ conversationId, timestamp }` |
+| `message.sent` | iframe → host | Usuario envió un mensaje | `{ message, timestamp }` |
+| `message.received` | iframe → host | IA respondió con un mensaje | `{ message, timestamp }` |
+| `navigation.request` | iframe → host | Una tarjeta solicita navegación del host | `NavigationRequest` |
+| `navigation.opened` | host → iframe | El host confirma que abrió el destino | `NavigationAcknowledgement` |
+| `navigation.closed` | host → iframe | El host confirma que cerró el destino | `NavigationAcknowledgement` |
+| `navigation.failed` | host → iframe | El host informa que no pudo abrir el destino | `NavigationAcknowledgement` |
+
+### Navegación nativa
+
+Registra `navigation.request` antes de abrir el widget. Este listener funciona como un handshake de capacidad: informa al widget de que el host puede recibir solicitudes y abrir pantallas nativas. Regístralo solo cuando exista un router real para todos los destinos habilitados en el proyecto.
+
+```js
+AIFindrWidget.on('navigation.request', (request) => {
+  if (!isValidNavigationRequest(request)) return;
+  handleNavigationRequest(request);
+});
+```
+
+`isValidNavigationRequest` debe verificar el envelope completo. `handleNavigationRequest` debe aplicar una allowlist de destinos, validar los parámetros exactos de cada pantalla y abrir la ruta nativa correspondiente. La [integración React Native](./integraciones/react-native.md#3-navegación-nativa-desde-tarjetas) incluye una implementación completa.
+
+El callback recibe el envelope completo:
+
+```json
+{
+  "source": "aifindr",
+  "version": 1,
+  "type": "navigation.request",
+  "requestId": "nav_...",
+  "payload": {
+    "destination": "store.detail",
+    "params": { "storeId": 252648 }
+  }
+}
+```
+
+`params` siempre es un objeto plano de hasta 20 claves con valores `string`, `number`, `boolean` o `null`. Las operaciones sin parámetros llegan como `{}`.
+
+El host debe validar el envelope, permitir destinos explícitamente y validar los parámetros exactos de cada pantalla. Un listener registrado toma posesión de la interacción: si la app no soporta el destino debe enviar `navigation.failed`, pero el widget no ejecutará el comportamiento anterior después. Sin listener, las tarjetas conservan su comportamiento actual.
+
+La dirección es importante: `navigation.request` viaja del iframe al host; `navigation.opened`, `navigation.closed` y `navigation.failed` viajan del host al iframe mediante `dispatch`.
 
 ## Métodos Avanzados
 
 ### `AIFindrWidget.dispatch(event, payload)`
 
-Envía un evento personalizado al iframe del widget.
+Envía un evento soportado al iframe del widget.
 
 **Parámetros:**
 - `event` (string): Nombre del evento
@@ -283,12 +324,18 @@ Envía un evento personalizado al iframe del widget.
 - Se encola automáticamente si el widget no está listo
 
 ```js
-// Enviar evento personalizado
-AIFindrWidget.dispatch('custom.event', {
-  action: 'highlight_feature',
-  featureId: 'new-dashboard'
-});
+const acknowledgement = {
+  source: 'your-app',
+  version: 1,
+  type: 'navigation.opened',
+  requestId: request.requestId,
+  payload: { destination: request.payload.destination }
+};
+
+AIFindrWidget.dispatch(acknowledgement.type, acknowledgement);
 ```
+
+Los acknowledgements `navigation.opened`, `navigation.closed` y `navigation.failed` son opcionales y solo sirven para observabilidad. La tarjeta nunca espera su respuesta antes de navegar o usar un fallback.
 
 ### `AIFindrWidget.getState()`
 
@@ -382,6 +429,10 @@ declare global {
         CONV_STARTED: 'conversation.started';
         MESSAGE_SENT: 'message.sent';
         MESSAGE_RECV: 'message.received';
+        NAVIGATION_REQUEST: 'navigation.request';
+        NAVIGATION_OPENED: 'navigation.opened';
+        NAVIGATION_CLOSED: 'navigation.closed';
+        NAVIGATION_FAILED: 'navigation.failed';
       };
       
       // Control del widget
@@ -429,6 +480,24 @@ interface WidgetEventData {
   'conversation.started': { conversationId: string; timestamp: string };
   'message.sent': { message: string; timestamp: string };
   'message.received': { message: string; timestamp: string };
+  'navigation.request': {
+    source: 'aifindr';
+    version: 1;
+    type: 'navigation.request';
+    requestId: string;
+    payload: {
+      destination: string;
+      params: Record<string, string | number | boolean | null>;
+    };
+  };
+}
+
+interface NavigationAcknowledgement {
+  source: string;
+  version: 1;
+  type: 'navigation.opened' | 'navigation.closed' | 'navigation.failed';
+  requestId: string;
+  payload?: Record<string, unknown>;
 }
 
 // Helper para listeners tipados
