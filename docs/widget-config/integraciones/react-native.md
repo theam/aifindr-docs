@@ -577,70 +577,48 @@ El listener recibe este envelope exacto, generado por el widget:
 
 El listener anuncia capacidad para `navigation.request`, no para cada destino individual. Por eso la allowlist del host debe cubrir todos los destinos habilitados para el proyecto.
 
-### Contrato de postMessage de Cenomi
-
-El ejemplo de React Native implementa los siguientes destinos y validaciones:
-
-| Destino | Parámetros | Validación de la app |
-|---|---|---|
-| `store.detail` | `{ "storeId": number }` | `storeId` es un entero positivo |
-| `offer.detail` | `{ "offerId": number }` | `offerId` es un entero positivo |
-| `event.detail` | `{ "eventId": number }` | `eventId` es un entero positivo |
-| `movie.detail` | `{ "movieId": number }` | `movieId` es un entero positivo |
-| `service.detail` | `{ "serviceId": number }` | `serviceId` es un entero positivo |
-| `offers.tab` | `{}` | No acepta parámetros |
-| `events.list` | `{}` | No acepta parámetros |
-| `loyalty.mallOffers` | `{}` | No acepta parámetros |
-
-El mapa indoor no forma parte de este contrato y debe seguir usando el componente `Map` existente.
-
 Valida el envelope y permite explícitamente cada destino antes de navegar:
 
 ```tsx
-const DETAIL_PARAM_BY_DESTINATION = {
-  'store.detail': 'storeId',
-  'offer.detail': 'offerId',
-  'event.detail': 'eventId',
-  'movie.detail': 'movieId',
-  'service.detail': 'serviceId',
-} as const;
+type NativeRoute = {
+  validate: (params: NavigationParams) => boolean;
+  open: (params: NavigationParams) => void;
+};
 
-const PARAMETERLESS_DESTINATIONS = new Set([
-  'offers.tab',
-  'events.list',
-  'loyalty.mallOffers',
-]);
+const nativeRoutes: Record<string, NativeRoute> = {
+  'store.detail': {
+    validate: (params) => {
+      const storeId = params.storeId;
+      return (
+        Object.keys(params).length === 1 &&
+        typeof storeId === 'number' &&
+        Number.isSafeInteger(storeId) &&
+        storeId > 0
+      );
+    },
+    open: (params) => nativeRouter.openStoreDetail(params.storeId as number),
+  },
+};
 
 function handleNavigationRequest(request: NavigationRequest) {
   const { destination, params } = request.payload;
-  const paramName = DETAIL_PARAM_BY_DESTINATION[
-    destination as keyof typeof DETAIL_PARAM_BY_DESTINATION
-  ];
+  const route = nativeRoutes[destination];
 
-  if (paramName) {
-    const id = params[paramName];
-    if (
-      Object.keys(params).length !== 1 ||
-      typeof id !== 'number' ||
-      !Number.isSafeInteger(id) ||
-      id <= 0
-    ) {
-      return {
-        type: 'navigation.failed' as const,
-        payload: { destination, reason: 'invalid_navigation_params' },
-      };
-    }
-  } else if (
-    !PARAMETERLESS_DESTINATIONS.has(destination) ||
-    Object.keys(params).length !== 0
-  ) {
+  if (!route) {
     return {
       type: 'navigation.failed' as const,
-      payload: { destination, reason: 'unsupported_or_invalid_destination' },
+      payload: { destination, reason: 'unsupported_destination' },
     };
   }
 
-  openNativeScreen(destination, params);
+  if (!route.validate(params)) {
+    return {
+      type: 'navigation.failed' as const,
+      payload: { destination, reason: 'invalid_navigation_params' },
+    };
+  }
+
+  route.open(params);
   return {
     type: 'navigation.opened' as const,
     payload: { destination, params },
