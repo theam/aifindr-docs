@@ -48,6 +48,7 @@ const sidebars: SidebarsConfig = {
             "widget-config/personalizacion",
             "widget-config/contexto-metadatos",
             "widget-config/javascript-api",
+            "widget-config/native-link-schemes",
             "widget-config/events-triggers",
             {
               type: "category",
