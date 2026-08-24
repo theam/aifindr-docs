@@ -63,6 +63,7 @@ Replace `YOUR_CLIENT_ID` with the unique identifier provided by AIFindr. Without
   data-client-id="YOUR_CLIENT_ID"
   data-var="ar"
   data-widget-url="https://hub.ksa.aifindr.ai"
+  data-native-link-schemes="acme"
   data-meta-environment="production"
   defer
 ></script>
@@ -71,10 +72,12 @@ Replace `YOUR_CLIENT_ID` with the unique identifier provided by AIFindr. Without
 - `data-client-id`: required. Identifies your AIFindr project.
 - `data-var`: optional. Selects a specific widget `variant`. In this example, `data-var="ar"` represents an Arabic variant. If omitted or empty, the project default view is used.
 - `data-widget-url`: optional. Points the widget to another hub. In this example it uses `https://hub.ksa.aifindr.ai`. Only change this value if the AIFindr team tells you to.
+- `data-native-link-schemes`: optional. Enables custom media-card protocols that the host can intercept and validate. See [Native links (URL)](./native-link-schemes.md).
 - `data-meta-*`: optional. Adds fixed metadata for segmentation and analytics.
 
 Unless you have configured a specific `variant` and want to force it, you usually do not need to include `data-var`.
 Unless the AIFindr team tells you to use another hub, you usually do not need to include `data-widget-url`.
+Do not include `data-native-link-schemes` unless the host has an allowlist and a real handler for every declared scheme.
 
 ### Where to place the script?
 
