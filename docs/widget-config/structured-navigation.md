@@ -7,17 +7,7 @@ sidebar_position: 8
 
 # Eventos de navegación (`navigation.request`)
 
-Una media card puede declarar un destino lógico y sus parámetros sin conocer las URLs internas de la aplicación:
-
-```html
-<MC
-  t="Product 123"
-  nav="product.detail"
-  params='{"productId":123}'
-/>
-```
-
-Este mecanismo está pensado para integraciones en las que AIFindr y el host acuerdan destinos lógicos. Para activarlo, el host registra `navigation.request` antes de abrir el widget. El listener funciona como un handshake de capacidad: si no existe, las tarjetas conservan su comportamiento habitual.
+Este mecanismo está pensado para integraciones en las que AIFindr y el host acuerdan destinos lógicos y sus parámetros. Para activarlo, el host registra `navigation.request` antes de abrir el widget. El listener funciona como un handshake de capacidad: si no existe, las tarjetas conservan su comportamiento habitual.
 
 Si la aplicación utiliza `react-native-webview`, consulta [Implementar eventos de navegación en React Native](./integraciones/react-native.md#32-eventos-de-navegación-navigationrequest). Esa guía contiene el wrapper completo; esta página define el contrato y la validación del mecanismo.
 
