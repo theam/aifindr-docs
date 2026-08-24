@@ -609,7 +609,7 @@ Configura únicamente el contrato utilizado por el proyecto. No combines `url` y
 
 ### 3.1. Enlaces nativos (URL)
 
-Consulta [Enlaces nativos (URL)](../native-link-schemes.md) para conocer el contrato completo, incluida la configuración del widget, el fallback conversacional y la política de seguridad.
+Consulta [Enlaces nativos (URL)](../native-link-schemes.md) para conocer la configuración del widget y la política de seguridad.
 
 El wrapper anterior solo anuncia `nativeLinkSchemes` cuando también recibe `onNativeLink`. El callback debe validar la URL completa y devolver `true` cuando reconoce el esquema, incluso si la ruta es inválida, para impedir que el `WebView` intente abrirla:
 
