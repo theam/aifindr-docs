@@ -55,6 +55,8 @@ export function buildWidgetHTML(
   options?: {
     hideCloseButton?: boolean;
     initialContext?: AIFindrInitialContext;
+    /** Declara únicamente esquemas que onNativeLink pueda validar y gestionar. */
+    nativeLinkSchemes?: readonly string[];
     /** Actívalo solo cuando la app tenga un handler real para navigation.request. */
     nativeNavigationEnabled?: boolean;
     /** Ejemplo: "ar" para una variant en árabe. Omite este valor para usar la vista por defecto del proyecto. */
@@ -74,6 +76,10 @@ export function buildWidgetHTML(
 
   const shouldHideCloseButton = options?.hideCloseButton ?? false;
   const initialContext = options?.initialContext ?? null;
+  const nativeLinkSchemes = options?.nativeLinkSchemes ?? [];
+  const nativeLinkSchemesAttribute = nativeLinkSchemes.length > 0
+    ? `data-native-link-schemes="${escapeHTMLAttribute(nativeLinkSchemes.join(','))}"`
+    : '';
   const nativeNavigationEnabled = options?.nativeNavigationEnabled ?? false;
   const variant = options?.variant ?? '';
   const widgetUrl = options?.widgetUrl ?? '';
@@ -256,6 +262,7 @@ export function buildWidgetHTML(
           id="aifindr-loader"
           src="${WIDGET_SCRIPT}"
           data-client-id="${escapeHTMLAttribute(clientId)}"
+          ${nativeLinkSchemesAttribute}
           ${widgetUrl ? `data-widget-url="${escapeHTMLAttribute(widgetUrl)}"` : ''}
           ${variant ? `data-var="${escapeHTMLAttribute(variant)}"` : ''}
           ${metadataAttributes}
@@ -275,6 +282,7 @@ export function buildWidgetHTML(
 - Mantiene el trigger oculto con `id="ai-findr-trigger"` porque el widget lo necesita
 - Pasa metadatos estáticos como atributos `data-meta-*`
 - Permite pasar `data-widget-url` si el equipo te pide apuntar a otro hub
+- Declara `data-native-link-schemes` cuando la aplicación configura enlaces nativos
 - Encola el contexto hasta que `AIFindrWidget.ready()` dispara y entonces llama `setContext()`
 - Reenvía eventos a React Native con `window.ReactNativeWebView.postMessage(...)`
 - Si existe un router nativo, registra `navigation.request` antes de abrir el widget y reenvía su envelope sin modificarlo
@@ -285,7 +293,7 @@ Este wrapper es código de tu app nativa, no una API oficial adicional del widge
 
 ```tsx
 import React, { useCallback, useRef } from 'react';
-import { Platform, Text, View } from 'react-native';
+import { Linking, Platform, Text, View } from 'react-native';
 
 import {
   AIFindrInitialContext,
@@ -334,6 +342,8 @@ export interface AIFindrWebViewProps {
   variant?: string;
   widgetUrl?: string;
   hideCloseButton?: boolean;
+  nativeLinkSchemes?: readonly string[];
+  onNativeLink?: (url: string) => boolean;
   onWidgetEvent?: (event: WidgetEvent) => void;
   onNavigationRequest?: (
     request: NavigationRequest
@@ -353,8 +363,33 @@ type NativeWebViewHandle = {
   injectJavaScript: (script: string) => void;
 };
 
+type WebViewLoadRequest = {
+  isTopFrame?: boolean;
+  url: string;
+};
+
+type WebViewOpenWindowEvent = {
+  nativeEvent: { targetUrl?: string };
+};
+
 const NativeWebView =
   Platform.OS === 'web' ? null : require('react-native-webview').WebView;
+
+function shouldOpenInBrowser(
+  url: string,
+  activeWidgetUrl = WIDGET_BASE_URL
+): boolean {
+  try {
+    const parsed = new URL(url);
+    const widgetHostname = new URL(activeWidgetUrl).hostname;
+    return (
+      (parsed.protocol === 'http:' || parsed.protocol === 'https:') &&
+      parsed.hostname !== widgetHostname
+    );
+  } catch {
+    return false;
+  }
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -392,8 +427,14 @@ function isNavigationRequest(value: unknown): value is NavigationRequest {
 }
 
 const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
-  ({ clientId, metadata, initialContext, variant, widgetUrl, hideCloseButton = false, onWidgetEvent, onNavigationRequest }, ref) => {
+  ({ clientId, metadata, initialContext, variant, widgetUrl, hideCloseButton = false, nativeLinkSchemes, onNativeLink, onWidgetEvent, onNavigationRequest }, ref) => {
     const webViewRef = useRef<NativeWebViewHandle | null>(null);
+
+    const openUrlInBrowser = useCallback((url: string) => {
+      Linking.openURL(url).catch((error: unknown) => {
+        console.warn('Failed to open external URL:', url, error);
+      });
+    }, []);
 
     const updateContext = useCallback((context: Record<string, unknown>) => {
       const script = `
@@ -468,6 +509,31 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
       } catch {}
     }, [onNavigationRequest, onWidgetEvent, sendNavigationAcknowledgement]);
 
+    const handleShouldStartLoad = useCallback((request: WebViewLoadRequest) => {
+      if (request.isTopFrame === false) return true;
+
+      const handledByNativeApp = onNativeLink?.(request.url) ?? false;
+      const opensInBrowser =
+        !handledByNativeApp &&
+        shouldOpenInBrowser(request.url, widgetUrl ?? WIDGET_BASE_URL);
+
+      if (opensInBrowser) openUrlInBrowser(request.url);
+      return !handledByNativeApp && !opensInBrowser;
+    }, [onNativeLink, openUrlInBrowser, widgetUrl]);
+
+    const handleOpenWindow = useCallback((event: WebViewOpenWindowEvent) => {
+      const targetUrl = event.nativeEvent.targetUrl;
+      if (!targetUrl) return;
+
+      const handledByNativeApp = onNativeLink?.(targetUrl) ?? false;
+      if (
+        !handledByNativeApp &&
+        shouldOpenInBrowser(targetUrl, widgetUrl ?? WIDGET_BASE_URL)
+      ) {
+        openUrlInBrowser(targetUrl);
+      }
+    }, [onNativeLink, openUrlInBrowser, widgetUrl]);
+
     React.useImperativeHandle(
       ref,
       () => ({ updateContext, sendNavigationAcknowledgement }),
@@ -494,6 +560,7 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
           html: buildWidgetHTML(clientId, metadata, {
             hideCloseButton,
             initialContext,
+            nativeLinkSchemes: onNativeLink ? nativeLinkSchemes : undefined,
             nativeNavigationEnabled: Boolean(onNavigationRequest),
             variant,
             widgetUrl,
@@ -504,6 +571,9 @@ const AIFindrWebView = React.forwardRef<AIFindrWebViewRef, AIFindrWebViewProps>(
         javaScriptEnabled
         domStorageEnabled
         onMessage={handleMessage}
+        setSupportMultipleWindows
+        onShouldStartLoadWithRequest={handleShouldStartLoad}
+        onOpenWindow={handleOpenWindow}
         style={{ flex: 1 }}
       />
     );
@@ -522,121 +592,65 @@ export default AIFindrWebView;
 - `widgetUrl`: se traduce a `data-widget-url` si el equipo te pide apuntar a otro hub
 - `updateContext(...)`: puente desde React Native hacia `setContext()`
 - `onWidgetEvent`: eventos reenviados desde `AIFindrWidget.on(...)`
+- `nativeLinkSchemes` + `onNativeLink`: esquemas URL que el host declara, valida y gestiona
+- Los enlaces HTTP/HTTPS externos se delegan a `Linking.openURL(...)`; adapta `shouldOpenInBrowser` a la política de navegación de tu aplicación
 - `onNavigationRequest`: router nativo. Incluirlo registra la capacidad; omitirlo conserva el comportamiento actual de las tarjetas
 - `sendNavigationAcknowledgement(...)`: confirmación opcional para observabilidad
 - `hideCloseButton`: forma práctica de ocultar `.ai-findr-close-button`
 
 ## 3. Navegación nativa desde tarjetas
 
-Para habilitar la navegación nativa, la app registra un listener de `navigation.request` antes de abrir el widget. Este registro funciona como un handshake de capacidad: informa al widget de que la app puede recibir solicitudes y abrir pantallas nativas. Si la app no registra el listener, las tarjetas conservan su comportamiento actual.
+El widget soporta dos contratos diferentes para abrir pantallas nativas desde una media card:
 
-### Flujo completo
+- [Enlaces nativos (URL)](../native-link-schemes.md), para aplicaciones que ya exponen deep links propios.
+- [Eventos de navegación (`navigation.request`)](../structured-navigation.md), generados mediante `nav` y `params`.
 
-1. El wrapper registra `navigation.request` durante `AIFindrWidget.ready()` y antes de llamar a `open()`.
-2. `widget.js` sincroniza la capacidad con el iframe, también después de una recarga interna.
-3. Al pulsar una tarjeta válida, el iframe envía `navigation.request` al host web.
-4. El host reenvía el mismo envelope con `window.ReactNativeWebView.postMessage(...)`.
-5. `onMessage` valida el envelope, aplica la allowlist de destinos y valida los parámetros de esa ruta.
-6. La app abre la pantalla nativa inmediatamente. Nunca espera un acknowledgement.
-7. La app puede devolver `navigation.opened`, `navigation.closed` o `navigation.failed` para observabilidad.
+Configura únicamente el contrato utilizado por el proyecto. No combines `url` y `nav` para representar la misma acción en una tarjeta.
 
-Activa la capacidad solo cuando el wrapper tenga un router real:
+### 3.1. Enlaces nativos (URL)
+
+Consulta [Enlaces nativos (URL)](../native-link-schemes.md) para conocer el contrato completo, incluida la configuración del widget, el fallback conversacional y la política de seguridad.
+
+El wrapper anterior solo anuncia `nativeLinkSchemes` cuando también recibe `onNativeLink`. El callback debe validar la URL completa y devolver `true` cuando reconoce el esquema, incluso si la ruta es inválida, para impedir que el `WebView` intente abrirla:
 
 ```tsx
-html: buildWidgetHTML(clientId, metadata, {
-  hideCloseButton,
-  initialContext,
-  nativeNavigationEnabled: Boolean(onNavigationRequest),
-  variant,
-  widgetUrl,
-})
-```
+function parseAcmeProductUrl(rawUrl: string): { productId: number } | undefined {
+  try {
+    const url = new URL(rawUrl);
+    if (url.protocol !== 'acme:' || url.hostname !== 'product') return;
 
-El listener recibe este envelope exacto, generado por el widget:
+    const rawProductId = url.pathname.slice(1);
+    if (!/^[1-9]\d*$/.test(rawProductId)) return;
 
-```json
-{
-  "source": "aifindr",
-  "version": 1,
-  "type": "navigation.request",
-  "requestId": "nav_550e8400-e29b-41d4-a716-446655440000",
-  "payload": {
-    "destination": "store.detail",
-    "params": { "storeId": 252648 }
+    return { productId: Number(rawProductId) };
+  } catch {
+    return;
   }
 }
-```
 
-### Precedencia y fallback
+function consumeNativeUrl(rawUrl: string): boolean {
+  if (!/^acme:/i.test(rawUrl)) return false;
 
-| Estado | Resultado del click |
-|---|---|
-| Listener registrado y navegación disponible | Envía `navigation.request` y la app controla la interacción |
-| Sin listener | La tarjeta conserva su comportamiento actual |
-| Listener registrado pero destino no soportado por la app | La app devuelve `navigation.failed`; no se ejecuta el comportamiento anterior después del click |
+  const target = parseAcmeProductUrl(rawUrl);
+  if (target) nativeRouter.openProductDetail(target.productId);
 
-El listener anuncia capacidad para `navigation.request`, no para cada destino individual. Por eso la allowlist del host debe cubrir todos los destinos habilitados para el proyecto.
-
-Valida el envelope y permite explícitamente cada destino antes de navegar:
-
-```tsx
-type NativeRoute = {
-  validate: (params: NavigationParams) => boolean;
-  open: (params: NavigationParams) => void;
-};
-
-const nativeRoutes: Record<string, NativeRoute> = {
-  'store.detail': {
-    validate: (params) => {
-      const storeId = params.storeId;
-      return (
-        Object.keys(params).length === 1 &&
-        typeof storeId === 'number' &&
-        Number.isSafeInteger(storeId) &&
-        storeId > 0
-      );
-    },
-    open: (params) => nativeRouter.openStoreDetail(params.storeId as number),
-  },
-};
-
-function handleNavigationRequest(request: NavigationRequest) {
-  const { destination, params } = request.payload;
-  const route = nativeRoutes[destination];
-
-  if (!route) {
-    return {
-      type: 'navigation.failed' as const,
-      payload: { destination, reason: 'unsupported_destination' },
-    };
-  }
-
-  if (!route.validate(params)) {
-    return {
-      type: 'navigation.failed' as const,
-      payload: { destination, reason: 'invalid_navigation_params' },
-    };
-  }
-
-  route.open(params);
-  return {
-    type: 'navigation.opened' as const,
-    payload: { destination, params },
-  };
+  return true;
 }
+
+<AIFindrWebView
+  clientId="TU_CLIENT_ID"
+  nativeLinkSchemes={['acme']}
+  onNativeLink={consumeNativeUrl}
+/>
 ```
 
-El wrapper anterior reenvía el request sin envolverlo otra vez y devuelve el resultado del handler al iframe. Cuando el usuario cierre la pantalla nativa, la app puede correlacionar el cierre con el mismo `requestId`:
+El wrapper propaga los esquemas al script e intercepta tanto la navegación del frame principal como las solicitudes de nueva ventana. Las URLs HTTP/HTTPS no reconocidas como enlaces nativos se delegan a la política de enlaces externos del host. Si `onNativeLink` abre el enlace mediante `Linking.openURL(...)` en lugar del router interno, registra también el esquema en iOS y Android.
 
-```tsx
-webViewRef.current?.sendNavigationAcknowledgement(
-  'navigation.closed',
-  requestId,
-  { destination, reason: 'user_back' }
-);
-```
+### 3.2. Eventos de navegación (`navigation.request`)
 
-Los acknowledgements son opcionales y solo sirven para observabilidad. No controlan el fallback y no deben incluir credenciales, tokens ni parámetros ajenos al routing.
+Consulta [Eventos de navegación (`navigation.request`)](../structured-navigation.md) para conocer el contrato completo, el envelope, la validación de destinos y los acknowledgements.
+
+El wrapper anterior implementa este mecanismo mediante `onNavigationRequest`. Incluir el callback registra la capacidad y reenvía cada solicitud válida a React Native; omitirlo conserva el comportamiento habitual de las tarjetas.
 
 ## 4. Caso práctico: una pantalla que abre el widget
 

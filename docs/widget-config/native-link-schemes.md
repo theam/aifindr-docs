@@ -1,15 +1,15 @@
 ---
-title: Esquemas de enlaces nativos
+title: Enlaces nativos (URL)
 description: Habilita enlaces de media cards hacia pantallas nativas de forma explícita y segura
 slug: /widget-config/native-link-schemes
 sidebar_position: 7
 ---
 
-# Esquemas de enlaces nativos
+# Enlaces nativos (URL)
 
 `nativeLinkSchemes` permite que las media cards utilicen URLs con protocolos propios de una aplicación, por ejemplo `acme://product/123`.
 
-Los esquemas personalizados están deshabilitados por defecto. Debes habilitar únicamente los que el host pueda interceptar y validar.
+Este mecanismo está pensado para aplicaciones que ya tienen deep links y quieren reutilizarlos desde el widget. Los esquemas personalizados están deshabilitados por defecto. Habilita únicamente los que el host pueda interceptar y validar.
 
 :::caution Responsabilidad del host
 Esta opción permite el esquema, pero no valida sus rutas ni identificadores. Antes de abrir una pantalla nativa, el host debe comprobar la URL completa y rechazar cualquier destino que no esté expresamente soportado.
@@ -66,42 +66,11 @@ El comportamiento al pulsarla es:
 
 El fallback depende de la configuración, no del resultado de navegación. Si el host habilita `acme` pero después rechaza `acme://product/123`, el widget no ejecutará `q` automáticamente.
 
-## Validación en una WebView
+## React Native
 
-El host debe interceptar el enlace, validar su estructura completa y cancelar la navegación de la WebView tanto si lo acepta como si lo rechaza:
+Si la aplicación integra el widget dentro de `react-native-webview`, debe propagar los esquemas al script, interceptar las URLs y validarlas antes de abrir una pantalla.
 
-```ts
-function parseAcmeProductUrl(rawUrl: string): { productId: number } | undefined {
-  try {
-    const url = new URL(rawUrl);
-    if (url.protocol !== 'acme:' || url.hostname !== 'product') return;
-
-    const rawProductId = url.pathname.slice(1);
-    if (!/^[1-9]\d*$/.test(rawProductId)) return;
-
-    return { productId: Number(rawProductId) };
-  } catch {
-    return;
-  }
-}
-
-function onShouldStartLoadWithRequest({ url }: { url: string }): boolean {
-  if (!/^acme:/i.test(url)) return true;
-
-  const target = parseAcmeProductUrl(url);
-  if (target) openNativeProduct(target.productId);
-
-  return false;
-}
-```
-
-Conecta el handler a la WebView que contiene el widget:
-
-```tsx
-<WebView onShouldStartLoadWithRequest={onShouldStartLoadWithRequest} />
-```
-
-La allowlist debe cubrir el esquema, la ruta, los parámetros y el formato de cada identificador. No abras una URL solo porque su protocolo coincide.
+Consulta [Implementar enlaces nativos en React Native](./integraciones/react-native.md#31-enlaces-nativos-url) para ver el wrapper y el ejemplo completos. La guía de React Native enlaza de vuelta a esta página como referencia del contrato, el fallback y la seguridad.
 
 ## Política de seguridad
 
@@ -115,5 +84,6 @@ La allowlist debe cubrir el esquema, la ruta, los parámetros y el formato de ca
 
 1. Prueba la tarjeta sin `nativeLinkSchemes` y confirma que ejecuta el fallback `q`.
 2. Habilita el esquema y confirma que el host recibe la URL completa.
-3. Prueba rutas e identificadores inválidos y confirma que el host los rechaza sin permitir la navegación de la WebView.
-4. Verifica el comportamiento en un dispositivo real; una preview web no reproduce de forma fiable la navegación entre la WebView y una app nativa.
+3. Prueba tanto navegación normal como enlaces que solicitan una nueva ventana.
+4. Prueba rutas e identificadores inválidos y confirma que el host los rechaza sin permitir la navegación de la WebView.
+5. Verifica el comportamiento en un dispositivo real; una preview web no reproduce de forma fiable la navegación entre la WebView y una app nativa.

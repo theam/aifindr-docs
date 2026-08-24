@@ -72,7 +72,7 @@ Reemplaza `TU_CLIENT_ID` con el identificador único proporcionado por AIFindr. 
 - `data-client-id`: obligatorio. Identifica tu proyecto en AIFindr.
 - `data-var`: opcional. Selecciona una `variant` concreta del widget. En el ejemplo, `data-var="ar"` representa una variante en idioma árabe. Si se omite o va vacío, se usa la vista por defecto del proyecto.
 - `data-widget-url`: opcional. Apunta el widget a otro hub. En el ejemplo usa `https://hub.ksa.aifindr.ai`. Solo debes cambiar este valor si te lo indica el equipo de AIFindr.
-- `data-native-link-schemes`: opcional. Habilita protocolos personalizados de media cards que el host pueda interceptar y validar. Consulta [Esquemas de enlaces nativos](./native-link-schemes.md).
+- `data-native-link-schemes`: opcional. Habilita protocolos personalizados de media cards que el host pueda interceptar y validar. Consulta [Enlaces nativos (URL)](./native-link-schemes.md).
 - `data-meta-*`: opcionales. Añaden metadatos fijos para segmentación y analítica.
 
 Salvo que hayas configurado una `variant` específica y quieras forzarla, no hace falta incluir `data-var`.

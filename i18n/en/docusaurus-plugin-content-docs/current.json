@@ -11,6 +11,10 @@
     "message": "Integrations",
     "description": "The label for category Integraciones in sidebar docsSidebar"
   },
+  "sidebar.docsSidebar.category.Navegación nativa": {
+    "message": "Native navigation",
+    "description": "The label for category Navegación nativa in sidebar docsSidebar"
+  },
   "sidebar.docsSidebar.category.API": {
     "message": "API",
     "description": "The label for category API in sidebar docsSidebar"

@@ -48,7 +48,15 @@ const sidebars: SidebarsConfig = {
             "widget-config/personalizacion",
             "widget-config/contexto-metadatos",
             "widget-config/javascript-api",
-            "widget-config/native-link-schemes",
+            {
+              type: "category",
+              label: "Navegación nativa",
+              collapsed: true,
+              items: [
+                "widget-config/native-link-schemes",
+                "widget-config/structured-navigation",
+              ],
+            },
             "widget-config/events-triggers",
             {
               type: "category",
