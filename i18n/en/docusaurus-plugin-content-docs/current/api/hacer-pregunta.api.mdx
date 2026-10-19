@@ -42,7 +42,6 @@ Sends a question to AI Findr within a project conversation. This endpoint suppor
 - `query` (required): The user's question or message
 - `conversationId` (optional): Conversation ID obtained from the conversation creation endpoint. If omitted, a new conversation will be automatically created
 - `stream` (optional): Enable streaming response with Server-Sent Events (default: true)
-- `filters` (optional): JSON string to filter knowledge sources during retrieval
 - `context` (optional): Additional context data sent directly to the AI to provide more relevant responses. Use it to include information about the user's current page, scenario, form data, or any other contextual information that helps the AI give more accurate and personalized responses.
 
 **Streaming vs Non-Streaming:**
@@ -79,7 +78,7 @@ When streaming is enabled, you'll receive these event types:
 
 <RequestSchema
   title={"Body"}
-  body={{"content":{"application/json":{"schema":{"properties":{"context":{"additionalProperties":true,"type":"object"},"conversationId":{"type":"string"},"filters":{"type":"string"},"query":{"type":"string"},"stream":{"description":"True by default.","type":"boolean"}},"type":"object"}}},"description":"Question and conversation parameters","required":true}}
+  body={{"content":{"application/json":{"schema":{"properties":{"context":{"additionalProperties":true,"type":"object"},"conversationId":{"type":"string"},"query":{"type":"string"},"stream":{"description":"True by default.","type":"boolean"}},"type":"object"}}},"description":"Question and conversation parameters","required":true}}
 >
 
 </RequestSchema>
