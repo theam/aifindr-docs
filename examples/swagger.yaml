@@ -661,8 +661,6 @@ definitions:
         type: object
       conversationId:
         type: string
-      filters:
-        type: string
       query:
         type: string
       stream:
@@ -1582,7 +1580,6 @@ paths:
         - `query` (requerido): La pregunta o mensaje del usuario
         - `conversationId` (opcional): ID de conversación obtenido desde el endpoint de creación de conversación. Si se omite, se creará automáticamente una nueva conversación
         - `stream` (opcional): Habilitar respuesta en streaming con Server-Sent Events (por defecto: true)
-        - `filters` (opcional): Cadena JSON para filtrar fuentes de conocimiento durante la recuperación
         - `context` (opcional): Datos de contexto adicionales enviados directamente a la IA para proporcionar respuestas más relevantes. Utilízalo para incluir información sobre la página actual del usuario, escenario, datos de formularios, o cualquier otra información contextual que ayude a la IA a dar respuestas más precisas y personalizadas.
 
         **Streaming vs No Streaming:**
